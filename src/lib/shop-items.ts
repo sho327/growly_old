@@ -1,0 +1,128 @@
+import type { ShopItem } from "@/lib/types/shop-item"
+
+export const shopItems: ShopItem[] = [
+  // アバター
+  {
+    id: "avatar_cat",
+    name: "🐱 ねこちゃん",
+    description: "かわいい猫のアバター",
+    price: 100,
+    category: "avatar",
+    imageUrl: "/placeholder.svg?height=80&width=80&text=🐱",
+    rarity: "common",
+  },
+  {
+    id: "avatar_dog",
+    name: "🐶 わんちゃん",
+    description: "元気な犬のアバター",
+    price: 100,
+    category: "avatar",
+    imageUrl: "/placeholder.svg?height=80&width=80&text=🐶",
+    rarity: "common",
+  },
+  {
+    id: "avatar_panda",
+    name: "🐼 パンダ",
+    description: "のんびりパンダのアバター",
+    price: 150,
+    category: "avatar",
+    imageUrl: "/placeholder.svg?height=80&width=80&text=🐼",
+    rarity: "rare",
+  },
+  {
+    id: "avatar_unicorn",
+    name: "🦄 ユニコーン",
+    description: "幻想的なユニコーンのアバター",
+    price: 300,
+    category: "avatar",
+    imageUrl: "/placeholder.svg?height=80&width=80&text=🦄",
+    rarity: "epic",
+  },
+
+  // 額縁
+  {
+    id: "frame_gold",
+    name: "✨ ゴールドフレーム",
+    description: "豪華な金色の額縁",
+    price: 200,
+    category: "frame",
+    imageUrl: "/placeholder.svg?height=80&width=80&text=✨",
+    rarity: "rare",
+  },
+  {
+    id: "frame_rainbow",
+    name: "🌈 レインボーフレーム",
+    description: "虹色に輝く特別な額縁",
+    price: 400,
+    category: "frame",
+    imageUrl: "/placeholder.svg?height=80&width=80&text=🌈",
+    rarity: "epic",
+  },
+  {
+    id: "frame_diamond",
+    name: "💎 ダイヤモンドフレーム",
+    description: "最高級のダイヤモンド額縁",
+    price: 800,
+    category: "frame",
+    imageUrl: "/placeholder.svg?height=80&width=80&text=💎",
+    rarity: "legendary",
+  },
+
+  // 背景
+  {
+    id: "bg_forest",
+    name: "🌲 森の背景",
+    description: "緑豊かな森の背景",
+    price: 150,
+    category: "background",
+    imageUrl: "/placeholder.svg?height=80&width=80&text=🌲",
+    rarity: "common",
+  },
+  {
+    id: "bg_ocean",
+    name: "🌊 海の背景",
+    description: "美しい海の背景",
+    price: 150,
+    category: "background",
+    imageUrl: "/placeholder.svg?height=80&width=80&text=🌊",
+    rarity: "common",
+  },
+  {
+    id: "bg_galaxy",
+    name: "🌌 銀河の背景",
+    description: "神秘的な銀河の背景",
+    price: 350,
+    category: "background",
+    imageUrl: "/placeholder.svg?height=80&width=80&text=🌌",
+    rarity: "epic",
+  },
+
+  // タグ
+  {
+    id: "tag_pro",
+    name: "⭐ プロ",
+    description: "プロフェッショナルタグ",
+    price: 250,
+    category: "tag",
+    imageUrl: "/placeholder.svg?height=80&width=80&text=⭐",
+    rarity: "rare",
+  },
+  {
+    id: "tag_legend",
+    name: "👑 レジェンド",
+    description: "伝説のタグ",
+    price: 500,
+    category: "tag",
+    imageUrl: "/placeholder.svg?height=80&width=80&text=👑",
+    rarity: "epic",
+  },
+  {
+    id: "tag_master",
+    name: "🏆 マスター",
+    description: "究極のマスタータグ",
+    price: 1000,
+    category: "tag",
+    imageUrl: "/placeholder.svg?height=80&width=80&text=🏆",
+    rarity: "legendary",
+  },
+]
