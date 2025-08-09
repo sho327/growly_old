@@ -141,15 +141,15 @@ export default function JapaneseModernProjectList() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "active":
-        return "bg-slate-100 text-slate-700 border-slate-200"
+        return "bg-emerald-100 text-emerald-800 border-emerald-200"
       case "completed":
-        return "bg-slate-100 text-slate-700 border-slate-200"
+        return "bg-blue-100 text-blue-800 border-blue-200"
       case "on-hold":
-        return "bg-stone-100 text-stone-700 border-stone-200"
+        return "bg-amber-100 text-amber-800 border-amber-200"
       case "planning":
-        return "bg-gray-100 text-gray-700 border-gray-200"
+        return "bg-slate-100 text-slate-800 border-slate-200"
       default:
-        return "bg-gray-100 text-gray-700 border-gray-200"
+        return "bg-slate-100 text-slate-800 border-slate-200"
     }
   }
 
@@ -171,13 +171,13 @@ export default function JapaneseModernProjectList() {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case "high":
-        return "text-slate-700 bg-slate-100"
+        return "text-red-600"
       case "medium":
-        return "text-stone-700 bg-stone-100"
+        return "text-amber-600"
       case "low":
-        return "text-gray-700 bg-gray-100"
+        return "text-emerald-600"
       default:
-        return "text-gray-700 bg-gray-100"
+        return "text-slate-600"
     }
   }
 
@@ -203,6 +203,68 @@ export default function JapaneseModernProjectList() {
     return matchesSearch && matchesStatus && matchesPriority
   })
 
+  const activeFiltersCount = [statusFilter, priorityFilter].filter((f) => f !== "all").length
+  const clearFilters = () => {
+    setStatusFilter("all")
+    setPriorityFilter("all")
+  }
+
+  const getStatusFilterBadgeClass = (status: string) => {
+    switch (status) {
+      case "active":
+        return "bg-emerald-100 text-emerald-800 border border-emerald-200"
+      case "completed":
+        return "bg-blue-100 text-blue-800 border border-blue-200"
+      case "on-hold":
+        return "bg-amber-100 text-amber-800 border border-amber-200"
+      case "planning":
+        return "bg-slate-100 text-slate-800 border border-slate-200"
+      default:
+        return ""
+    }
+  }
+
+  const getStatusSummaryBadgeClass = (status: string) => {
+    switch (status) {
+      case "active":
+        return "bg-emerald-100 text-emerald-800 border border-emerald-200"
+      case "completed":
+        return "bg-blue-100 text-blue-800 border border-blue-200"
+      case "on-hold":
+        return "bg-amber-100 text-amber-800 border border-amber-200"
+      case "planning":
+        return "bg-slate-100 text-slate-800 border border-slate-200"
+      default:
+        return ""
+    }
+  }
+
+  const getPriorityFilterBadgeClass = (priority: string) => {
+    switch (priority) {
+      case "high":
+        return "bg-red-100 text-red-800 border border-red-200"
+      case "medium":
+        return "bg-amber-100 text-amber-800 border border-amber-200"
+      case "low":
+        return "bg-emerald-100 text-emerald-800 border border-emerald-200"
+      default:
+        return ""
+    }
+  }
+
+  const getPrioritySummaryBadgeClass = (priority: string) => {
+    switch (priority) {
+      case "high":
+        return "bg-red-100 text-red-800 border border-red-200"
+      case "medium":
+        return "bg-amber-100 text-amber-800 border border-amber-200"
+      case "low":
+        return "bg-emerald-100 text-emerald-800 border border-emerald-200"
+      default:
+        return ""
+    }
+  }
+
   const handleCreateProject = () => {
     console.log("Creating project:", newProject)
     setIsCreateModalOpen(false)
@@ -214,13 +276,18 @@ export default function JapaneseModernProjectList() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">プロジェクト</h1>
-          <p className="text-slate-600">チームプロジェクトを管理・追跡</p>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-bold text-slate-900">プロジェクト</h1>
+            <div className="hidden sm:flex items-center gap-1 px-2 py-0.5 bg-emerald-100 rounded-full">
+              <span className="text-xs font-medium text-emerald-700">{filteredProjects.length}件</span>
+            </div>
+          </div>
+          <p className="text-slate-600 mt-1">チームプロジェクトを管理・追跡</p>
         </div>
 
         <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-slate-700 hover:bg-slate-800 text-white w-full sm:w-auto">
+            <Button className="bg-emerald-600 hover:bg-emerald-700 text-white w-full sm:w-auto">
               <Plus className="w-4 h-4 mr-2" />
               新規プロジェクト
             </Button>
@@ -238,7 +305,7 @@ export default function JapaneseModernProjectList() {
                   value={newProject.name}
                   onChange={(e) => setNewProject({ ...newProject, name: e.target.value })}
                   placeholder="プロジェクト名を入力"
-                  className="border-slate-200 focus:border-slate-400"
+                  className="border-slate-200 focus:border-emerald-500 focus:ring-emerald-500"
                 />
               </div>
               <div className="space-y-2">
@@ -248,7 +315,7 @@ export default function JapaneseModernProjectList() {
                   value={newProject.description}
                   onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
                   placeholder="プロジェクトの説明を入力"
-                  className="border-slate-200 focus:border-slate-400"
+                  className="border-slate-200 focus:border-emerald-500 focus:ring-emerald-500"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -258,7 +325,7 @@ export default function JapaneseModernProjectList() {
                     id="priority"
                     value={newProject.priority}
                     onChange={(e) => setNewProject({ ...newProject, priority: e.target.value as any })}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-md focus:border-slate-400 focus:outline-none"
+                    className="w-full px-3 py-2 border border-slate-200 rounded-md focus:border-emerald-500 focus:outline-none"
                   >
                     <option value="low">低</option>
                     <option value="medium">中</option>
@@ -272,7 +339,7 @@ export default function JapaneseModernProjectList() {
                     type="date"
                     value={newProject.dueDate}
                     onChange={(e) => setNewProject({ ...newProject, dueDate: e.target.value })}
-                    className="border-slate-200 focus:border-slate-400"
+                    className="border-slate-200 focus:border-emerald-500 focus:ring-emerald-500"
                   />
                 </div>
               </div>
@@ -290,7 +357,7 @@ export default function JapaneseModernProjectList() {
                 type="button"
                 onClick={handleCreateProject}
                 disabled={!newProject.name.trim()}
-                className="bg-slate-700 hover:bg-slate-800 text-white"
+                className="bg-emerald-600 hover:bg-emerald-700 text-white"
               >
                 作成
               </Button>
@@ -300,7 +367,7 @@ export default function JapaneseModernProjectList() {
       </div>
 
       {/* Search and Filters */}
-      <Card className="border border-slate-200 bg-slate-50/50">
+      <Card className="border border-slate-200 bg-white">
         <CardContent className="p-4 space-y-4">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
@@ -308,7 +375,7 @@ export default function JapaneseModernProjectList() {
               placeholder="プロジェクトを検索..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 border-slate-200 focus:border-slate-400 bg-white"
+              className="pl-10 border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 bg-white"
             />
           </div>
 
@@ -317,10 +384,17 @@ export default function JapaneseModernProjectList() {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
-                  className="w-full sm:w-auto justify-start border-slate-200 text-slate-600 hover:bg-slate-50 bg-white"
+                  className={`w-full sm:w-auto justify-start bg-white hover:bg-slate-50 text-slate-600 ${
+                    statusFilter !== "all" ? "border-emerald-300" : "border-slate-200"
+                  }`}
                 >
                   <Filter className="w-4 h-4 mr-2" />
-                  ステータス: {statusFilter === "all" ? "すべて" : getStatusText(statusFilter)}
+                  ステータス
+                  {statusFilter !== "all" && (
+                    <Badge className={`ml-2 ${getStatusFilterBadgeClass(statusFilter)}`}>
+                      {getStatusText(statusFilter)}
+                    </Badge>
+                  )}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-48">
@@ -336,10 +410,17 @@ export default function JapaneseModernProjectList() {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
-                  className="w-full sm:w-auto justify-start border-slate-200 text-slate-600 hover:bg-slate-50 bg-white"
+                  className={`w-full sm:w-auto justify-start bg-white hover:bg-slate-50 text-slate-600 ${
+                    priorityFilter !== "all" ? "border-amber-300" : "border-slate-200"
+                  }`}
                 >
                   <Target className="w-4 h-4 mr-2" />
-                  優先度: {priorityFilter === "all" ? "すべて" : getPriorityText(priorityFilter)}
+                  優先度
+                  {priorityFilter !== "all" && (
+                    <Badge className={`ml-2 ${getPriorityFilterBadgeClass(priorityFilter)}`}>
+                      {getPriorityText(priorityFilter)}
+                    </Badge>
+                  )}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-48">
@@ -349,9 +430,33 @@ export default function JapaneseModernProjectList() {
                 <DropdownMenuItem onClick={() => setPriorityFilter("low")}>低</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+
+            {activeFiltersCount > 0 && (
+              <Button
+                variant="outline"
+                onClick={clearFilters}
+                className="w-full sm:w-auto border-red-200 text-red-600 hover:bg-red-50 bg-white"
+              >
+                フィルターをクリア ({activeFiltersCount})
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>
+
+      {activeFiltersCount > 0 && (
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-sm text-slate-600">アクティブなフィルター:</span>
+          {statusFilter !== "all" && (
+            <Badge className={getStatusSummaryBadgeClass(statusFilter)}>ステータス: {getStatusText(statusFilter)}</Badge>
+          )}
+          {priorityFilter !== "all" && (
+            <Badge className={getPrioritySummaryBadgeClass(priorityFilter)}>
+              優先度: {getPriorityText(priorityFilter)}
+            </Badge>
+          )}
+        </div>
+      )}
 
       {/* Project Grid */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -363,8 +468,8 @@ export default function JapaneseModernProjectList() {
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
                       <div className="w-3 h-3 rounded-full bg-slate-400" />
-                      <CardTitle className="text-lg font-semibold text-gray-900 line-clamp-1">{project.name}</CardTitle>
-                      {project.starred && <Star className="w-4 h-4 text-slate-600 fill-current flex-shrink-0" />}
+                      <CardTitle className="text-lg font-semibold text-slate-900 line-clamp-1">{project.name}</CardTitle>
+                      {project.starred && <Star className="w-4 h-4 text-amber-500 fill-current flex-shrink-0" />}
                     </div>
                     <CardDescription className="text-slate-600 text-sm leading-relaxed line-clamp-2">
                       {project.description}
@@ -398,9 +503,15 @@ export default function JapaneseModernProjectList() {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-slate-600">進捗</span>
-                    <span className="font-medium text-gray-900">{project.progress}%</span>
+                    <span className="font-medium text-slate-900">{project.progress}%</span>
                   </div>
-                  <Progress value={project.progress} className="h-2" />
+                  <div className="relative">
+                    <Progress value={project.progress} className="h-2 bg-slate-200" />
+                    <div
+                      className={`absolute inset-0 h-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full transition-all duration-500`}
+                      style={{ width: `${String(project.progress)}%` }}
+                    ></div>
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-between text-sm text-slate-600">
@@ -445,16 +556,16 @@ export default function JapaneseModernProjectList() {
 
       {/* Empty State */}
       {filteredProjects.length === 0 && (
-        <Card className="border-2 border-dashed border-slate-200 bg-slate-50">
+        <Card className="border-2 border-dashed border-slate-200 bg-white">
           <CardContent className="text-center py-16">
             <div className="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center mx-auto mb-4">
               <FolderOpen className="w-8 h-8 text-slate-400" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">プロジェクトが見つかりません</h3>
+            <h3 className="text-xl font-semibold text-slate-900 mb-2">プロジェクトが見つかりません</h3>
             <p className="text-slate-600 mb-6 max-w-md mx-auto">
               検索条件を変更するか、新しいプロジェクトを作成してください。
             </p>
-            <Button onClick={() => setIsCreateModalOpen(true)} className="bg-slate-700 hover:bg-slate-800 text-white">
+            <Button onClick={() => setIsCreateModalOpen(true)} className="bg-emerald-600 hover:bg-emerald-700 text-white">
               <Plus className="w-4 h-4 mr-2" />
               最初のプロジェクトを作成
             </Button>

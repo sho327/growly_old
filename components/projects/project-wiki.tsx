@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { FileText, Plus, Search, Calendar, Pin, MessageSquare } from "lucide-react"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import Link from "next/link"
 
 interface WikiPost {
@@ -43,6 +44,7 @@ interface ProjectWikiProps {
 
 export default function ProjectWiki({ projectId, projectName }: ProjectWikiProps) {
   const [searchQuery, setSearchQuery] = useState("")
+  const [typeFilter, setTypeFilter] = useState<string>("all")
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [newPost, setNewPost] = useState({
     title: "",
@@ -118,15 +120,15 @@ export default function ProjectWiki({ projectId, projectName }: ProjectWikiProps
   const getTypeColor = (type: string) => {
     switch (type) {
       case "announcement":
-        return "bg-slate-100 text-slate-700 border-slate-200"
+        return "bg-emerald-100 text-emerald-800 border-emerald-200"
       case "documentation":
-        return "bg-stone-100 text-stone-700 border-stone-200"
+        return "bg-blue-100 text-blue-800 border-blue-200"
       case "meeting-notes":
-        return "bg-gray-100 text-gray-700 border-gray-200"
+        return "bg-amber-100 text-amber-800 border-amber-200"
       case "update":
-        return "bg-neutral-100 text-neutral-700 border-neutral-200"
+        return "bg-slate-100 text-slate-800 border-slate-200"
       default:
-        return "bg-gray-100 text-gray-700 border-gray-200"
+        return "bg-slate-100 text-slate-800 border-slate-200"
     }
   }
 
@@ -145,14 +147,49 @@ export default function ProjectWiki({ projectId, projectName }: ProjectWikiProps
     }
   }
 
-  const filteredPosts = wikiPosts.filter(
-    (post) =>
+  const filteredPosts = wikiPosts.filter((post) => {
+    const matchesText =
       post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      post.content.toLowerCase().includes(searchQuery.toLowerCase()),
-  )
+      post.content.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesType = typeFilter === "all" || post.type === typeFilter
+    return matchesText && matchesType
+  })
 
   const pinnedPosts = filteredPosts.filter((post) => post.pinned)
   const regularPosts = filteredPosts.filter((post) => !post.pinned)
+
+  const activeFiltersCount = [typeFilter].filter((f) => f !== "all").length
+  const clearFilters = () => setTypeFilter("all")
+
+  const getTypeFilterBadgeClass = (type: string) => {
+    switch (type) {
+      case "announcement":
+        return "bg-emerald-500 text-white"
+      case "documentation":
+        return "bg-blue-500 text-white"
+      case "meeting-notes":
+        return "bg-amber-500 text-white"
+      case "update":
+        return "bg-slate-600 text-white"
+      default:
+        return ""
+    }
+  }
+
+  const getTypeSummaryBadgeClass = (type: string) => {
+    switch (type) {
+      case "announcement":
+        return "bg-emerald-100 text-emerald-800 border border-emerald-200"
+      case "documentation":
+        return "bg-blue-100 text-blue-800 border border-blue-200"
+      case "meeting-notes":
+        return "bg-amber-100 text-amber-800 border border-amber-200"
+      case "update":
+        return "bg-slate-100 text-slate-800 border border-slate-200"
+      default:
+        return ""
+    }
+  }
 
   const handleCreatePost = () => {
     console.log("Creating wiki post:", newPost)
@@ -165,13 +202,15 @@ export default function ProjectWiki({ projectId, projectName }: ProjectWikiProps
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">{projectName} - Wiki・お知らせ</h2>
-          <p className="text-slate-600">プロジェクトの情報共有とドキュメント管理</p>
+          <div className="flex items-center gap-3">
+            <h2 className="text-2xl font-bold text-slate-900">{projectName} - Wiki・お知らせ</h2>
+          </div>
+          <p className="text-slate-600 mt-1">プロジェクトの情報共有とドキュメント管理</p>
         </div>
 
         <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-slate-700 hover:bg-slate-800 text-white">
+            <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">
               <Plus className="w-4 h-4 mr-2" />
               新規投稿
             </Button>
@@ -189,7 +228,7 @@ export default function ProjectWiki({ projectId, projectName }: ProjectWikiProps
                   value={newPost.title}
                   onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
                   placeholder="投稿のタイトルを入力"
-                  className="border-slate-200 focus:border-slate-400"
+                  className="border-slate-200 focus:border-emerald-500 focus:ring-emerald-500"
                 />
               </div>
               <div className="space-y-2">
@@ -199,7 +238,7 @@ export default function ProjectWiki({ projectId, projectName }: ProjectWikiProps
                   value={newPost.content}
                   onChange={(e) => setNewPost({ ...newPost, content: e.target.value })}
                   placeholder="投稿の内容を入力"
-                  className="border-slate-200 focus:border-slate-400 min-h-[120px]"
+                  className="border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 min-h-[120px]"
                 />
               </div>
               <div className="space-y-2">
@@ -208,7 +247,7 @@ export default function ProjectWiki({ projectId, projectName }: ProjectWikiProps
                   id="type"
                   value={newPost.type}
                   onChange={(e) => setNewPost({ ...newPost, type: e.target.value as any })}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-md focus:border-slate-400 focus:outline-none"
+                  className="w-full px-3 py-2 border border-slate-200 rounded-md focus:border-emerald-500 focus:outline-none"
                 >
                   <option value="announcement">お知らせ</option>
                   <option value="documentation">ドキュメント</option>
@@ -230,7 +269,7 @@ export default function ProjectWiki({ projectId, projectName }: ProjectWikiProps
                 type="button"
                 onClick={handleCreatePost}
                 disabled={!newPost.title.trim() || !newPost.content.trim()}
-                className="bg-slate-700 hover:bg-slate-800 text-white"
+                className="bg-emerald-600 hover:bg-emerald-700 text-white"
               >
                 投稿
               </Button>
@@ -240,36 +279,81 @@ export default function ProjectWiki({ projectId, projectName }: ProjectWikiProps
       </div>
 
       {/* Search */}
-      <Card className="border border-slate-200 bg-slate-50/50">
-        <CardContent className="p-4">
+      <Card className="border border-slate-200 bg-white">
+        <CardContent className="p-4 space-y-4">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
             <Input
               placeholder="投稿を検索..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 border-slate-200 focus:border-slate-400 bg-white"
+              className="pl-10 border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 bg-white"
             />
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-3">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={`w-full sm:w-auto justify-start bg-white hover:bg-slate-50 text-slate-600 ${
+                    typeFilter !== "all" ? "border-emerald-300" : "border-slate-200"
+                  }`}
+                >
+                  <FileText className="w-4 h-4 mr-2" />
+                  種類
+                  {typeFilter !== "all" && (
+                    <Badge className={`ml-2 ${getTypeSummaryBadgeClass(typeFilter)}`}>{getTypeText(typeFilter)}</Badge>
+                  )}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-48">
+                <DropdownMenuItem onClick={() => setTypeFilter("all")}>すべて</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTypeFilter("announcement")}>お知らせ</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTypeFilter("documentation")}>ドキュメント</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTypeFilter("meeting-notes")}>議事録</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setTypeFilter("update")}>アップデート</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {activeFiltersCount > 0 && (
+              <Button
+                variant="outline"
+                onClick={clearFilters}
+                className="w-full sm:w-auto border-red-200 text-red-600 hover:bg-red-50 bg-white"
+              >
+                フィルターをクリア ({activeFiltersCount})
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>
+
+      {activeFiltersCount > 0 && (
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-sm text-slate-600">アクティブなフィルター:</span>
+          {typeFilter !== "all" && (
+            <Badge className={getTypeSummaryBadgeClass(typeFilter)}>種類: {getTypeText(typeFilter)}</Badge>
+          )}
+        </div>
+      )}
 
       {/* Pinned Posts */}
       {pinnedPosts.length > 0 && (
         <div className="space-y-4">
           <div className="flex items-center gap-2">
             <Pin className="w-4 h-4 text-slate-600" />
-            <h3 className="text-lg font-semibold text-gray-900">ピン留め投稿</h3>
+            <h3 className="text-lg font-semibold text-slate-900">ピン留め投稿</h3>
           </div>
           <div className="space-y-4">
             {pinnedPosts.map((post) => (
               <Link key={post.id} href={`/projects/${projectId}/wiki/${post.id}`}>
-                <Card className="border border-slate-200 bg-slate-50/30 cursor-pointer hover:shadow-sm transition-shadow">
+                <Card className="border border-slate-200 bg-white cursor-pointer hover:shadow-sm transition-shadow">
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
-                          <CardTitle className="text-lg font-semibold text-gray-900">{post.title}</CardTitle>
+                          <CardTitle className="text-lg font-semibold text-slate-900">{post.title}</CardTitle>
                           <Badge className={getTypeColor(post.type)} variant="outline">
                             {getTypeText(post.type)}
                           </Badge>
@@ -311,7 +395,7 @@ export default function ProjectWiki({ projectId, projectName }: ProjectWikiProps
 
       {/* Regular Posts */}
       <div className="space-y-4">
-        {pinnedPosts.length > 0 && <h3 className="text-lg font-semibold text-gray-900">投稿一覧</h3>}
+        {pinnedPosts.length > 0 && <h3 className="text-lg font-semibold text-slate-900">投稿一覧</h3>}
         <div className="space-y-4">
           {regularPosts.map((post) => (
             <Link key={post.id} href={`/projects/${projectId}/wiki/${post.id}`}>
@@ -320,7 +404,7 @@ export default function ProjectWiki({ projectId, projectName }: ProjectWikiProps
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <CardTitle className="text-lg font-semibold text-gray-900">{post.title}</CardTitle>
+                        <CardTitle className="text-lg font-semibold text-slate-900">{post.title}</CardTitle>
                         <Badge className={getTypeColor(post.type)} variant="outline">
                           {getTypeText(post.type)}
                         </Badge>
@@ -361,16 +445,16 @@ export default function ProjectWiki({ projectId, projectName }: ProjectWikiProps
 
       {/* Empty State */}
       {filteredPosts.length === 0 && (
-        <Card className="border-2 border-dashed border-slate-200 bg-slate-50">
+        <Card className="border-2 border-dashed border-slate-200 bg-white">
           <CardContent className="text-center py-16">
             <div className="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center mx-auto mb-4">
               <FileText className="w-8 h-8 text-slate-400" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">投稿がありません</h3>
+            <h3 className="text-xl font-semibold text-slate-900 mb-2">投稿がありません</h3>
             <p className="text-slate-600 mb-6 max-w-md mx-auto">
               プロジェクトの情報共有を始めましょう。お知らせやドキュメントを投稿してください。
             </p>
-            <Button onClick={() => setIsCreateModalOpen(true)} className="bg-slate-700 hover:bg-slate-800 text-white">
+            <Button onClick={() => setIsCreateModalOpen(true)} className="bg-emerald-600 hover:bg-emerald-700 text-white">
               <Plus className="w-4 h-4 mr-2" />
               最初の投稿を作成
             </Button>

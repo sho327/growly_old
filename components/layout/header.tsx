@@ -83,7 +83,7 @@ export default function Header() {
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
+          {/* <Link href="/" className="flex items-center space-x-2">
             <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-green-400 to-blue-500 rounded-xl shadow-lg">
               <Leaf className="w-6 h-6 text-white" />
             </div>
@@ -92,6 +92,26 @@ export default function Header() {
                 Growly
               </h1>
               <p className="text-sm sm:text-xs text-slate-500 font-medium">タスク完了で育てる 🌿</p>
+            </div>
+          </Link> */}
+          {/* <Link href="/" className="flex items-center space-x-2">
+            <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-emerald-500 to-green-500 rounded-xl shadow-lg">
+              <Leaf className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-500 to-green-500 bg-clip-text text-transparent">
+                Growly
+              </h1>
+            </div>
+          </Link> */}
+          <Link href="/" className="flex items-center space-x-2">
+            <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-emerald-500 to-green-500 rounded-xl shadow-lg">
+              <Leaf className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold">
+                Growly
+              </h1>
             </div>
           </Link>
 

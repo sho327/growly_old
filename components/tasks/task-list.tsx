@@ -174,6 +174,12 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
     return matchesSearch && matchesStatus && matchesPriority
   })
 
+  const activeFiltersCount = [statusFilter, priorityFilter].filter((f) => f !== "all").length
+  const clearFilters = () => {
+    setStatusFilter("all")
+    setPriorityFilter("all")
+  }
+
   const handleTaskToggle = (taskId: string) => {
     setTasks((prev) =>
       prev.map((task) => {
@@ -223,7 +229,7 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
 
         <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-slate-700 hover:bg-slate-800 text-white w-full sm:w-auto">
+            <Button className="bg-emerald-600 hover:bg-emerald-700 text-white w-full sm:w-auto">
               <Plus className="w-4 h-4 mr-2" />
               新規タスク
             </Button>
@@ -303,7 +309,7 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
       </div>
 
       {/* Search and Filters */}
-      <Card className="border border-slate-200 bg-slate-50/50">
+      <Card className="border border-slate-200 bg-white">
         <CardContent className="p-4 space-y-4">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
@@ -311,7 +317,7 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
               placeholder="タスクを検索..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 border-slate-200 focus:border-slate-400 bg-white"
+              className="pl-10 border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 bg-white"
             />
           </div>
 
@@ -320,10 +326,17 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
-                  className="w-full sm:w-auto justify-start border-slate-200 text-slate-600 hover:bg-slate-50 bg-white"
+                  className={`w-full sm:w-auto justify-start bg-white hover:bg-slate-50 text-slate-600 ${
+                    statusFilter !== "all" ? "border-emerald-300" : "border-slate-200"
+                  }`}
                 >
                   <Filter className="w-4 h-4 mr-2" />
-                  ステータス: {statusFilter === "all" ? "すべて" : getStatusText(statusFilter)}
+                  ステータス
+                  {statusFilter !== "all" && (
+                    <Badge className="ml-2 bg-emerald-100 text-emerald-800 border border-emerald-200">
+                      {getStatusText(statusFilter)}
+                    </Badge>
+                  )}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-48">
@@ -338,10 +351,17 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
-                  className="w-full sm:w-auto justify-start border-slate-200 text-slate-600 hover:bg-slate-50 bg-white"
+                  className={`w-full sm:w-auto justify-start bg-white hover:bg-slate-50 text-slate-600 ${
+                    priorityFilter !== "all" ? "border-amber-300" : "border-slate-200"
+                  }`}
                 >
                   <Flag className="w-4 h-4 mr-2" />
-                  優先度: {priorityFilter === "all" ? "すべて" : getPriorityText(priorityFilter)}
+                  優先度
+                  {priorityFilter !== "all" && (
+                    <Badge className="ml-2 bg-amber-100 text-amber-800 border border-amber-200">
+                      {getPriorityText(priorityFilter)}
+                    </Badge>
+                  )}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-48">
@@ -351,9 +371,47 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
                 <DropdownMenuItem onClick={() => setPriorityFilter("low")}>低</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+
+            {activeFiltersCount > 0 && (
+              <Button
+                variant="outline"
+                onClick={clearFilters}
+                className="w-full sm:w-auto border-rose-200 text-rose-600 hover:bg-rose-50 bg-white"
+              >
+                フィルターをクリア ({activeFiltersCount})
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>
+
+      {activeFiltersCount > 0 && (
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-sm text-slate-600">アクティブなフィルター:</span>
+          {statusFilter !== "all" && (
+            <Badge className={
+              statusFilter === "todo"
+                ? "bg-slate-100 text-slate-800 border border-slate-200"
+                : statusFilter === "in-progress"
+                  ? "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                  : "bg-blue-100 text-blue-800 border border-blue-200"
+            }>
+              ステータス: {getStatusText(statusFilter)}
+            </Badge>
+          )}
+          {priorityFilter !== "all" && (
+            <Badge className={
+              priorityFilter === "high"
+                ? "bg-red-100 text-red-800 border border-red-200"
+                : priorityFilter === "medium"
+                  ? "bg-amber-100 text-amber-800 border border-amber-200"
+                  : "bg-emerald-100 text-emerald-800 border border-emerald-200"
+            }>
+              優先度: {getPriorityText(priorityFilter)}
+            </Badge>
+          )}
+        </div>
+      )}
 
       {/* Task Columns */}
       <div className="grid gap-6 lg:grid-cols-3">

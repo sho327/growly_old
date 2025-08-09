@@ -137,15 +137,15 @@ export default function WikiDetail({ projectId, postId, projectName }: WikiDetai
   const getTypeColor = (type: string) => {
     switch (type) {
       case "announcement":
-        return "bg-slate-100 text-slate-700 border-slate-200"
+        return "bg-emerald-100 text-emerald-800 border-emerald-200"
       case "documentation":
-        return "bg-stone-100 text-stone-700 border-stone-200"
+        return "bg-blue-100 text-blue-800 border-blue-200"
       case "meeting-notes":
-        return "bg-gray-100 text-gray-700 border-gray-200"
+        return "bg-amber-100 text-amber-800 border-amber-200"
       case "update":
-        return "bg-neutral-100 text-neutral-700 border-neutral-200"
+        return "bg-slate-100 text-slate-800 border-slate-200"
       default:
-        return "bg-gray-100 text-gray-700 border-gray-200"
+        return "bg-slate-100 text-slate-800 border-slate-200"
     }
   }
 
@@ -275,7 +275,7 @@ export default function WikiDetail({ projectId, postId, projectName }: WikiDetai
                   </div>
                 )}
               </div>
-              <CardTitle className="text-2xl font-bold text-gray-900 mb-3">{post.title}</CardTitle>
+              <CardTitle className="text-2xl font-bold text-slate-900 mb-3">{post.title}</CardTitle>
               <div className="flex items-center gap-4 text-sm text-slate-600">
                 <div className="flex items-center gap-2">
                   <Avatar className="w-6 h-6">

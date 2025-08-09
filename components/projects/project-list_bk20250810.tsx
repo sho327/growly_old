@@ -120,15 +120,15 @@ export default function ProjectList() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "active":
-        return "bg-emerald-100 text-emerald-800 border-emerald-200"
+        return "bg-green-100 text-green-800 border-green-200"
       case "completed":
         return "bg-blue-100 text-blue-800 border-blue-200"
       case "on-hold":
-        return "bg-amber-100 text-amber-800 border-amber-200"
+        return "bg-yellow-100 text-yellow-800 border-yellow-200"
       case "planning":
-        return "bg-slate-100 text-slate-800 border-slate-200"
+        return "bg-gray-100 text-gray-800 border-gray-200"
       default:
-        return "bg-slate-100 text-slate-800 border-slate-200"
+        return "bg-gray-100 text-gray-800 border-gray-200"
     }
   }
 
@@ -152,11 +152,11 @@ export default function ProjectList() {
       case "high":
         return "text-red-600"
       case "medium":
-        return "text-amber-600"
+        return "text-yellow-600"
       case "low":
-        return "text-emerald-600"
+        return "text-green-600"
       default:
-        return "text-slate-600"
+        return "text-gray-600"
     }
   }
 
@@ -188,10 +188,10 @@ export default function ProjectList() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">プロジェクト</h1>
-          <p className="text-slate-600">チームのプロジェクトを管理しましょう</p>
+          <h1 className="text-2xl font-bold text-gray-900">プロジェクト</h1>
+          <p className="text-gray-600">チームのプロジェクトを管理しましょう</p>
         </div>
-        <Button className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm">
+        <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm">
           <Plus className="w-4 h-4 mr-2" />
           新しいプロジェクト
         </Button>
@@ -201,19 +201,19 @@ export default function ProjectList() {
       <ModernCard variant="outlined" padding="md">
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <Input
               placeholder="プロジェクトを検索..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 border-slate-200 focus:border-emerald-500 focus:ring-emerald-500"
+              className="pl-10 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
             />
           </div>
 
           <div className="flex gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="border-slate-200 bg-transparent">
+                <Button variant="outline" className="border-gray-200 bg-transparent">
                   <Filter className="w-4 h-4 mr-2" />
                   ステータス
                 </Button>
@@ -231,7 +231,7 @@ export default function ProjectList() {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="border-slate-200 bg-transparent">
+                <Button variant="outline" className="border-gray-200 bg-transparent">
                   <Target className="w-4 h-4 mr-2" />
                   優先度
                 </Button>
@@ -262,7 +262,7 @@ export default function ProjectList() {
                       <ModernCardTitle className="text-base">{project.name}</ModernCardTitle>
                     </div>
                     <div className="flex items-center gap-2">
-                      {project.starred && <Star className="w-4 h-4 text-amber-500 fill-current" />}
+                      {project.starred && <Star className="w-4 h-4 text-yellow-500 fill-current" />}
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
@@ -297,19 +297,13 @@ export default function ProjectList() {
                     </div>
 
                     {/* Progress */}
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-slate-600">進捗</span>
-                          <span className="font-medium text-slate-900">{project.progress}%</span>
-                        </div>
-                        <div className="relative">
-                          <Progress value={project.progress} className="h-2 bg-slate-200" />
-                          <div
-                            className={`absolute inset-0 h-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full transition-all duration-500`}
-                            style={{ width: `${project.progress}%` }}
-                          ></div>
-                        </div>
-                        <div className="flex items-center justify-between text-xs text-slate-500">
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-600">進捗</span>
+                        <span className="font-medium text-gray-900">{project.progress}%</span>
+                      </div>
+                      <Progress value={project.progress} className="h-2" />
+                      <div className="flex items-center justify-between text-xs text-gray-500">
                         <span>
                           {project.completedTasks}/{project.totalTasks} タスク完了
                         </span>
@@ -318,15 +312,15 @@ export default function ProjectList() {
                     </div>
 
                     {/* Meta Info */}
-                    <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+                    <div className="flex items-center justify-between pt-2 border-t border-gray-100">
                       <div className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4 text-slate-400" />
-                        <span className="text-xs text-slate-600">
+                        <Calendar className="w-4 h-4 text-gray-400" />
+                        <span className="text-xs text-gray-600">
                           {new Date(project.dueDate).toLocaleDateString("ja-JP")}
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Users className="w-4 h-4 text-slate-400" />
+                        <Users className="w-4 h-4 text-gray-400" />
                         <div className="flex -space-x-1">
                           {project.members.slice(0, 3).map((member) => (
                             <Avatar key={member.id} className="w-6 h-6 border-2 border-white">
@@ -335,8 +329,8 @@ export default function ProjectList() {
                             </Avatar>
                           ))}
                           {project.members.length > 3 && (
-                            <div className="w-6 h-6 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center">
-                              <span className="text-xs text-slate-600">+{project.members.length - 3}</span>
+                            <div className="w-6 h-6 rounded-full bg-gray-100 border-2 border-white flex items-center justify-center">
+                              <span className="text-xs text-gray-600">+{project.members.length - 3}</span>
                             </div>
                           )}
                         </div>
@@ -354,10 +348,10 @@ export default function ProjectList() {
       {filteredProjects.length === 0 && (
         <ModernCard variant="ghost" padding="lg">
           <div className="text-center py-12">
-            <Folder className="w-12 h-12 text-slate-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-slate-900 mb-2">プロジェクトが見つかりません</h3>
-            <p className="text-slate-600 mb-6">検索条件を変更するか、新しいプロジェクトを作成してください。</p>
-            <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">
+            <Folder className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">プロジェクトが見つかりません</h3>
+            <p className="text-gray-600 mb-6">検索条件を変更するか、新しいプロジェクトを作成してください。</p>
+            <Button className="bg-blue-600 hover:bg-blue-700 text-white">
               <Plus className="w-4 h-4 mr-2" />
               新しいプロジェクト
             </Button>

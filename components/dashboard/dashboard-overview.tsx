@@ -440,7 +440,14 @@ export default function DashboardOverview() {
                     {mission.current}/{mission.target}
                   </span>
                 </div>
-                <Progress value={mission.progress} className="h-2" />
+                {/* <Progress value={mission.progress} className="h-2" /> */}
+                <div className="relative">
+                  <Progress value={mission.progress} className="h-2 bg-slate-200" />
+                  <div
+                    className={`absolute inset-0 h-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full transition-all duration-500`}
+                    style={{ width: `${String(mission.progress)}%` }}
+                  ></div>
+                </div>
               </div>
             ))}
           </CardContent>

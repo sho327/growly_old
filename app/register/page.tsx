@@ -31,19 +31,22 @@ export default function RegisterPage() {
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-green-50/30 flex items-center justify-center p-6">
       <div className="w-full max-w-md">
         {/* ロゴ */}
-        <div className="text-center mb-10">
-          <Link href={`${process.env.NEXT_PUBLIC_BASE_PATH}/`} className="inline-flex items-center gap-3 mb-8">
-            <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-sm">
+        <div className="text-center mb-7">
+          <Link href={`${process.env.NEXT_PUBLIC_BASE_PATH}/`} className="inline-flex items-center gap-3 mb-4">
+            <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-green-500 rounded-2xl flex items-center justify-center shadow-sm">
               <Leaf className="w-7 h-7 text-white" />
             </div>
-            <h1 className="text-2xl font-bold text-slate-800">Growly</h1>
+            {/* <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-500 to-green-500 bg-clip-text text-transparent"> */}
+            <h1 className="text-2xl font-bold">
+              Growly
+            </h1>
           </Link>
           <p className="text-slate-600">新しい成長の旅を始めましょう</p>
         </div>
 
         {/* 新規登録フォーム */}
         <Card className="bg-white/90 backdrop-blur-sm border-slate-200/60 shadow-lg">
-          <CardHeader className="text-center pb-6">
+          <CardHeader className="text-center">
             <CardTitle className="text-xl font-bold text-slate-900">アカウント作成</CardTitle>
           </CardHeader>
           <CardContent>
@@ -127,11 +130,11 @@ export default function RegisterPage() {
                   required
                 />
                 <p className="text-slate-600 leading-relaxed">
-                  <Link href={`${process.env.NEXT_PUBLIC_BASE_PATH}/terms`} className="text-emerald-600 hover:text-emerald-700 font-medium">
+                  <Link href={`${process.env.NEXT_PUBLIC_BASE_PATH}/terms`} className="text-green-600 hover:text-green-700 font-medium">
                     利用規約
                   </Link>
                   および
-                  <Link href={`${process.env.NEXT_PUBLIC_BASE_PATH}/privacy`} className="text-emerald-600 hover:text-emerald-700 font-medium">
+                  <Link href={`${process.env.NEXT_PUBLIC_BASE_PATH}/privacy`} className="text-green-600 hover:text-green-700 font-medium">
                     プライバシーポリシー
                   </Link>
                   に同意します
@@ -140,17 +143,17 @@ export default function RegisterPage() {
 
               <Button
                 type="submit"
-                className="w-full h-12 bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow-sm rounded-xl"
+                className="w-full h-12 bg-gradient-to-r from-emerald-500 to-green-500 text-white font-medium shadow-sm rounded-xl"
               >
                 アカウント作成
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </form>
 
-            <div className="mt-8 text-center">
+            <div className="mt-8 text-center text-sm">
               <p className="text-slate-600">
                 すでにアカウントをお持ちの方は{" "}
-                <Link href={`${process.env.NEXT_PUBLIC_BASE_PATH}/login`} className="text-emerald-600 hover:text-emerald-700 font-medium">
+                <Link href={`${process.env.NEXT_PUBLIC_BASE_PATH}/login`} className="text-green-600 hover:text-green-700 font-medium">
                   ログイン
                 </Link>
               </p>
@@ -160,8 +163,8 @@ export default function RegisterPage() {
 
         {/* 特典案内 */}
         <Card className="mt-6 bg-emerald-50 border-emerald-100">
-          <CardContent className="p-4">
-            <h3 className="font-semibold text-emerald-800 mb-3 flex items-center gap-2">
+          <CardContent className="px-4 py-0">
+            <h3 className="font-semibold text-emerald-800 mb-2 flex items-center gap-2">
               <Gift className="w-4 h-4" />
               新規登録特典
             </h3>

@@ -12,7 +12,6 @@ import Link from "next/link"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
@@ -33,13 +32,13 @@ export default function LoginPage() {
               Growly
             </h1>
           </Link>
-          <p className="text-slate-600">おかえりなさい！草の成長を続けましょう</p>
+          <p className="text-slate-600">登録済みのメールアドレスにリセット用の<br/>リンクをお送りします</p>
         </div>
 
         {/* ログインフォーム */}
         <Card className="bg-white/90 backdrop-blur-sm border-slate-200/60 shadow-lg">
           <CardHeader className="text-center">
-            <CardTitle className="text-xl font-bold text-slate-900">ログイン</CardTitle>
+            <CardTitle className="text-xl font-bold text-slate-900">パスワードリセット</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleLogin} className="space-y-6">
@@ -61,72 +60,42 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              <div className="space-y-3">
-                <Label htmlFor="password" className="text-slate-700 font-medium text-sm">
-                  パスワード
-                </Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
-                  <Input
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="パスワードを入力"
-                    className="pl-10 h-12 bg-white border-slate-200 focus:border-emerald-400 focus:ring-emerald-400/20 rounded-xl"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between text-sm">
-                <label className="flex items-center gap-2 text-slate-600">
-                  <input
-                    type="checkbox"
-                    className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500/20"
-                  />
-                  ログイン状態を保持
-                </label>
-                <Link href={`${process.env.NEXT_PUBLIC_BASE_PATH}/forgot-password`} className="text-green-600 hover:text-green-700 font-medium">
-                  パスワードを忘れた方
-                </Link>
-              </div>
-
               <Button
                 type="submit"
                 className="w-full h-12 bg-gradient-to-r from-emerald-500 to-green-500 text-white font-medium shadow-sm rounded-xl"
               >
-                ログイン
+                リセットリンクを送信
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </form>
 
-            <div className="mt-8 text-center text-sm">
-              <p className="text-slate-600">
-                アカウントをお持ちでない方は{" "}
-                <Link href={`${process.env.NEXT_PUBLIC_BASE_PATH}/register`} className="text-green-600 hover:text-green-700 font-medium">
-                  新規登録
-                </Link>
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+            {/* Footer */}
+            <div className="text-center space-y-4 mt-4">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-200"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-4 bg-white text-gray-500">または</span>
+                </div>
+              </div>
 
-        {/* デモアカウント */}
-        <Card className="mt-6 bg-slate-50 border-slate-200/60">
-          <CardContent className="p-4 text-center">
-            <p className="text-sm text-slate-600 mb-3">デモアカウントでお試し</p>
-            <Button
-              variant="outline"
-              size="sm"
-              className="border-slate-200 text-slate-700 hover:bg-white font-medium bg-transparent"
-              onClick={() => {
-                setEmail("demo@growly.app")
-                setPassword("demo123")
-              }}
-            >
-              デモアカウント情報を入力
-            </Button>
+              <div className="flex justify-center space-x-4 text-sm">
+                <button
+                  // onClick={() => setCurrentPage('login')}
+                  className="text-green-600 hover:text-green-700 font-medium transition-colors"
+                >
+                  ログインに戻る
+                </button>
+                <span className="text-gray-300">•</span>
+                <button
+                  // onClick={() => setCurrentPage('register')}
+                  className="text-green-600 hover:text-green-700 font-medium transition-colors"
+                >
+                  新規登録
+                </button>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>
