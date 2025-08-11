@@ -1,10 +1,8 @@
 "use client"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   TrendingUp,
   Target,
@@ -23,50 +21,16 @@ import {
   SproutIcon as Seedling,
 } from "lucide-react"
 import { GrassHistory } from "./grass-history"
+import { StatCard } from "@/components/common"
+import { UserProfileCard } from "./user-profile-card"
+import { TaskListCard } from "./task-list-card"
+import { AchievementListCard } from "./achievement-list-card"
 
-interface User {
-  id: string
-  name: string
-  level: number
-  totalPoints: number
-  title: string
-  coins: number
-  backgroundTheme: string
-  nameTag: string
-  lastLogin: Date
-  loginStreak: number
-}
 
-interface Project {
-  id: string
-  name: string
-  description: string
-  members: string[]
-  totalPoints: number
-  isPrivate: boolean
-}
-
-interface Task {
-  id: string
-  title: string
-  difficulty: number
-  completed: boolean
-  completedAt?: Date
-  assignee: string
-  projectId: string
-  rating?: number
-}
-
-interface ModernGameDashboardProps {
-  user: User
-  projects: Project[]
-  tasks: Task[]
-  onProjectSelect: (projectId: string) => void
-}
 
 export default function DashboardOverview() {
-  const userTasks: Task[] = []
-  const thisMonthTasks = []
+  const userTasks: any[] = []
+  const thisMonthTasks: any[] = []
   // const userTasks = tasks.filter((t) => t.assignee === user.id && t.completed)
   // const thisMonthTasks = userTasks.filter((t) => {
   //   const now = new Date()
@@ -225,249 +189,90 @@ export default function DashboardOverview() {
           </div>
         </CardContent>
       </Card> */}
-      <Card className="col-span-2 bg-white border-slate-200 shadow-sm">
-        <CardContent className="px-5 py-4">
-          <div className="flex items-center gap-4 mb-3">
-            <div className="relative">
-              <Avatar className="h-9 w-9 sm:h-11 sm:w-11 ring-2 ring-white/50 ring-offset-2">
-                <AvatarImage src={"" ?? "/placeholder.svg"} />
-                <AvatarFallback className="bg-gradient-to-br from-green-400 to-emerald-600 text-white font-bold">
-                  田
-                </AvatarFallback>
-              </Avatar>
-              <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">
-                5
-              </div>
-            </div>
-            <div>
-              <div className="flex items-center gap-3 mt-2">
-                <h2 className="text-md sm:text-xl font-bold text-slate-900">田中太郎</h2>
-                <Badge className="bg-amber-100 text-amber-800 border-amber-200">
-                  <Trophy className="w-3 h-3 mr-1" />
-                  草の達人
-                </Badge>
-                <span className="text-xs sm:text-sm text-slate-600 font-bold">450 XP</span>
-              </div>
-            </div>
-          </div>
-          <div className="space-y-2">
-            <div className="flex justify-between text-xs sm:text-sm text-slate-600 font-medium">
-              <span className='mt-2 mb-1'>次のレベルまで</span>
-              <span>40 XP</span>
-            </div>
-            <div className="relative">
-              <Progress value={40} className="h-2 bg-slate-200" />
-              <div
-                className={`absolute inset-0 h-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full transition-all duration-500`}
-                style={{ width: `40%` }}
-              ></div>
-            </div>
-          </div>
-          <p className="text-xs sm:text-sm text-slate-600 mt-1 flex items-center gap-1">
-            <Zap className="w-3 h-3 sm:w-4 sm:h-4 text-orange-500" />
-            ログイン連続 8 日
-          </p>
-        </CardContent>
-      </Card>
+      <UserProfileCard 
+        user={{
+          name: "田中太郎",
+          level: 5,
+          title: "草の達人",
+          xp: 450,
+          nextLevelXp: 490,
+          loginStreak: 8,
+          totalPoints: 1450
+        }}
+      />
 
       {/* 統計カード */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-          <CardContent className="p-4 sm:px-6 sm:py-2">
-            <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <div className="w-9 h-9 sm:w-11 sm:h-11 bg-emerald-100 rounded-xl flex items-center justify-center">
-                <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600" />
-              </div>
-              <div className="text-xs sm:text-sm text-slate-500 font-medium text-right">総草ポイント</div>
-            </div>
-            <div className="text-xl sm:text-2xl font-bold text-slate-900 mb-1">1,450</div>
-            <div className="text-xs sm:text-sm text-emerald-600 font-medium">先週から <span className="text-red-500">+120pt</span></div>
-          </CardContent>
-        </Card> */}
-        <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow bg-emerald-50">
-          <CardContent className="p-4 sm:px-6 sm:py-2">
-            <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <div className="w-9 h-9 sm:w-11 sm:h-11 bg-emerald-100 rounded-xl flex items-center justify-center">
-                <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600" />
-              </div>
-              <div className="text-xs sm:text-sm font-medium text-right text-emerald-600">総草ポイント</div>
-            </div>
-            <div className="text-xl sm:text-2xl font-bold mb-1 text-emerald-800">1,450</div>
-            <div className="text-xs sm:text-sm text-emerald-600 font-medium">先週から <span className="text-red-500">+120pt</span></div>
-          </CardContent>
-        </Card>
-
-        {/* <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-          <CardContent className="p-4 sm:px-6 sm:py-2">
-            <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <div className="w-9 h-9 sm:w-11 sm:h-11 bg-amber-100 rounded-xl flex items-center justify-center">
-                <Trophy className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600" />
-              </div>
-              <div className="text-xs sm:text-sm text-slate-500 font-medium text-right">現在のレベル</div>
-            </div>
-            <div className="text-xl sm:text-2xl font-bold text-slate-900 mb-1">5</div>
-            <div className="text-xs sm:text-sm text-amber-600 font-medium">次まで 50pt</div>
-          </CardContent>
-        </Card> */}
-        <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow bg-amber-50">
-          <CardContent className="p-4 sm:px-6 sm:py-2">
-            <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <div className="w-9 h-9 sm:w-11 sm:h-11 bg-amber-100 rounded-xl flex items-center justify-center">
-                <Trophy className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600" />
-              </div>
-              <div className="text-xs sm:text-sm text-amber-600 font-medium text-right">現在のレベル</div>
-            </div>
-            <div className="text-xl sm:text-2xl font-bold text-amber-800 mb-1">5</div>
-            <div className="text-xs sm:text-sm text-amber-600 font-medium">次まで 50pt</div>
-          </CardContent>
-        </Card>
-
-        {/* <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-          <CardContent className="p-4 sm:px-6 sm:py-2">
-            <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <div className="w-9 h-9 sm:w-11 sm:h-11 bg-blue-100 rounded-xl flex items-center justify-center">
-                <Users className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
-              </div>
-              <div className="text-xs sm:text-sm text-slate-500 font-medium text-right">参加プロジェクト</div>
-            </div>
-            <div className="text-xl sm:text-2xl font-bold text-slate-900 mb-1">3</div>
-            <div className="text-xs sm:text-sm text-blue-600 font-medium">アクティブ</div>
-          </CardContent>
-        </Card> */}
-        <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow bg-blue-50">
-          <CardContent className="p-4 sm:px-6 sm:py-2">
-            <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <div className="w-9 h-9 sm:w-11 sm:h-11 bg-blue-100 rounded-xl flex items-center justify-center">
-                <Users className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
-              </div>
-              <div className="text-xs sm:text-sm text-blue-600 font-medium text-right">参加プロジェクト</div>
-            </div>
-            <div className="text-xl sm:text-2xl font-bold text-blue-800 mb-1">3</div>
-            <div className="text-xs sm:text-sm text-blue-600 font-medium">アクティブ</div>
-          </CardContent>
-        </Card>
-
-        {/* <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-          <CardContent className="p-4 sm:px-6 sm:py-2">
-            <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <div className="w-9 h-9 sm:w-11 sm:h-11 bg-purple-100 rounded-xl flex items-center justify-center">
-                <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
-              </div>
-              <div className="text-xs sm:text-sm text-slate-500 font-medium text-right">完了タスク</div>
-            </div>
-            <div className="text-xl sm:text-2xl font-bold text-slate-900 mb-1">52</div>
-            <div className="text-xs sm:text-sm text-purple-600 font-medium">総完了数</div>
-          </CardContent>
-        </Card> */}
-        <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow bg-purple-50">
-          <CardContent className="p-4 sm:px-6 sm:py-2">
-            <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <div className="w-9 h-9 sm:w-11 sm:h-11 bg-purple-100 rounded-xl flex items-center justify-center">
-                <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
-              </div>
-              <div className="text-xs sm:text-sm text-purple-600 font-medium text-right">完了タスク</div>
-            </div>
-            <div className="text-xl sm:text-2xl font-bold text-purple-800 mb-1">52</div>
-            <div className="text-xs sm:text-sm text-purple-600 font-medium">総完了数</div>
-          </CardContent>
-        </Card>
+        <StatCard
+          icon={<Sparkles className="w-5 h-5 sm:w-6 sm:h-6" />}
+          title="総草ポイント"
+          value="1,450"
+          subtitle="先週から"
+          color="emerald"
+          change="+120pt"
+        />
+        <StatCard
+          icon={<Trophy className="w-5 h-5 sm:w-6 sm:h-6" />}
+          title="現在のレベル"
+          value="5"
+          subtitle="次まで 50pt"
+          color="amber"
+        />
+        <StatCard
+          icon={<Users className="w-5 h-5 sm:w-6 sm:h-6" />}
+          title="参加プロジェクト"
+          value="3"
+          subtitle="アクティブ"
+          color="blue"
+        />
+        <StatCard
+          icon={<TrendingUp className="w-5 h-5 sm:w-6 sm:h-6" />}
+          title="完了タスク"
+          value="52"
+          subtitle="総完了数"
+          color="purple"
+        />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        {/* Recent Tasks */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-green-600" />
-                  今日のタスク
-                </CardTitle>
-                <CardDescription>今日のタスクの進捗状況</CardDescription>
-              </div>
-              <Button variant="outline" size="sm">
-                すべて見る
-                <ArrowRight className="w-4 h-4 ml-1" />
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {recentTasks.map((task) => (
-              <div key={task.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <div className="flex items-center gap-3">
-                  <div className={`w-2 h-2 rounded-full ${task.completed ? "bg-green-500" : "bg-gray-300"}`} />
-                  <div>
-                    <p className={`text-sm font-medium ${task.completed ? "line-through text-gray-500" : ""}`}>
-                      {task.title}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline" className="text-xs">
-                    {task.points}pt
-                  </Badge>
-                  {task.completed && <CheckCircle className="w-4 h-4 text-green-500" />}
-                  {!task.completed && <Clock className="w-4 h-4 text-gray-400" />}
-                </div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-
-        {/* Recent Achievements */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-blue-600" />
-                  最近の成果
-                </CardTitle>
-                <CardDescription>最近獲得した実績とマイルストーン</CardDescription>
-              </div>
-              <Button variant="outline" size="sm">
-                すべて見る
-                <ArrowRight className="w-4 h-4 ml-1" />
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
-                <div className="p-2 bg-green-100 rounded-full">
-                  <Flame className="w-4 h-4 text-green-600" />
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium text-sm">7日連続ログイン達成！</p>
-                  <p className="text-xs text-muted-foreground">2時間前</p>
-                </div>
-                <Badge className="bg-green-100 text-green-800">+50pt</Badge>
-              </div>
-
-              <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
-                <div className="p-2 bg-blue-100 rounded-full">
-                  <Target className="w-4 h-4 text-blue-600" />
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium text-sm">週次ミッション「タスクマスター」完了</p>
-                  <p className="text-xs text-muted-foreground">1日前</p>
-                </div>
-                <Badge className="bg-blue-100 text-blue-800">+100pt</Badge>
-              </div>
-
-              <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-lg">
-                <div className="p-2 bg-purple-100 rounded-full">
-                  <Star className="w-4 h-4 text-purple-600" />
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium text-sm">レベル5に到達！</p>
-                  <p className="text-xs text-muted-foreground">3日前</p>
-                </div>
-                <Badge className="bg-purple-100 text-purple-800">レベルアップ</Badge>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <TaskListCard
+          title="今日のタスク"
+          description="今日のタスクの進捗状況"
+          tasks={recentTasks}
+        />
+        <AchievementListCard
+          title="最近の成果"
+          description="最近獲得した実績とマイルストーン"
+          achievements={[
+            {
+              id: 1,
+              title: "7日連続ログイン達成！",
+              description: "2時間前",
+              icon: <Flame className="w-4 h-4" />,
+              timeAgo: "2時間前",
+              points: 50,
+              color: "green"
+            },
+            {
+              id: 2,
+              title: "週次ミッション「タスクマスター」完了",
+              description: "1日前",
+              icon: <Target className="w-4 h-4" />,
+              timeAgo: "1日前",
+              points: 100,
+              color: "blue"
+            },
+            {
+              id: 3,
+              title: "レベル5に到達！",
+              description: "3日前",
+              icon: <Star className="w-4 h-4" />,
+              timeAgo: "3日前",
+              points: 0,
+              color: "purple"
+            }
+          ]}
+        />
         {/* Weekly Missions */}
         {/* <Card>
           <CardHeader>

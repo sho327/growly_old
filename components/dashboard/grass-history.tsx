@@ -69,8 +69,8 @@ export function GrassHistory({ tasks }: GrassHistoryProps) {
 
   // 週の配列を生成（日曜日始まり）
   const generateWeeks = () => {
-    const weeks = []
-    let currentWeek = []
+    const weeks: (Date | null)[][] = []
+    let currentWeek: (Date | null)[] = []
 
     dates.forEach((date, index) => {
       if (index === 0) {

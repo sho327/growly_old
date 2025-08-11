@@ -3,28 +3,14 @@
 import type React from "react"
 
 import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Sprout, Users, Flame, Star, Crown, Heart, Trophy, Award, Shield, Gem } from "lucide-react"
+import { Sprout, Users, Flame, Star, Crown, Heart, Award, Shield, Gem } from "lucide-react"
+import { AchievementCard } from "./achievement-card"
+import { Achievement } from "@/components/common/types"
+import { AchievementBadgesProps } from "./types"
 
-interface Achievement {
-  id: string
-  name: string
-  description: string
-  icon: React.ReactNode
-  rarity: "common" | "rare" | "epic" | "legendary"
-  category: "growth" | "social" | "consistency" | "achievement"
-  unlocked: boolean
-  unlockedAt?: string
-  progress?: {
-    current: number
-    total: number
-  }
-}
-
-export default function AchievementBadges() {
-  const [achievements] = useState<Achievement[]>([
+export default function AchievementBadges({ achievements: propAchievements, showHeader = true, showTabs = true }: AchievementBadgesProps) {
+  const [achievements] = useState<Achievement[]>(propAchievements || [
     // Growth Category
     {
       id: "sprout",
@@ -124,36 +110,6 @@ export default function AchievementBadges() {
     },
   ])
 
-  const getRarityColor = (rarity: string) => {
-    switch (rarity) {
-      case "common":
-        return "bg-gray-100 text-gray-800 border-gray-300"
-      case "rare":
-        return "bg-blue-100 text-blue-800 border-blue-300"
-      case "epic":
-        return "bg-purple-100 text-purple-800 border-purple-300"
-      case "legendary":
-        return "bg-yellow-100 text-yellow-800 border-yellow-300"
-      default:
-        return "bg-gray-100 text-gray-800 border-gray-300"
-    }
-  }
-
-  const getRarityName = (rarity: string) => {
-    switch (rarity) {
-      case "common":
-        return "コモン"
-      case "rare":
-        return "レア"
-      case "epic":
-        return "エピック"
-      case "legendary":
-        return "レジェンダリー"
-      default:
-        return "コモン"
-    }
-  }
-
   const getCategoryName = (category: string) => {
     switch (category) {
       case "growth":
@@ -173,67 +129,22 @@ export default function AchievementBadges() {
     return achievements.filter((achievement) => achievement.category === category)
   }
 
-  const AchievementCard = ({ achievement }: { achievement: Achievement }) => (
-    <Card className={`transition-all hover:shadow-md ${achievement.unlocked ? "bg-white" : "bg-gray-50 opacity-75"}`}>
-      <CardHeader className="pb-3">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-3">
-            <div
-              className={`p-3 rounded-lg ${
-                achievement.unlocked ? "bg-blue-50 text-blue-600" : "bg-gray-100 text-gray-400"
-              }`}
-            >
-              {achievement.icon}
-            </div>
-            <div>
-              <CardTitle className={`text-lg ${achievement.unlocked ? "text-gray-900" : "text-gray-500"}`}>
-                {achievement.name}
-              </CardTitle>
-              <CardDescription className="text-sm">{achievement.description}</CardDescription>
-            </div>
-          </div>
-          <Badge className={getRarityColor(achievement.rarity)}>{getRarityName(achievement.rarity)}</Badge>
-        </div>
-      </CardHeader>
-
-      <CardContent>
-        <div className="flex items-center justify-between">
-          <div className="text-sm text-muted-foreground">
-            {achievement.unlocked ? (
-              <span>獲得日: {achievement.unlockedAt}</span>
-            ) : achievement.progress ? (
-              <span>
-                進捗: {achievement.progress.current} / {achievement.progress.total}
-              </span>
-            ) : (
-              <span>未獲得</span>
-            )}
-          </div>
-
-          {achievement.unlocked && (
-            <Badge className="bg-green-100 text-green-800">
-              <Trophy className="w-3 h-3 mr-1" />
-              獲得済み
-            </Badge>
-          )}
-        </div>
-      </CardContent>
-    </Card>
-  )
-
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-3">
-        <Award className="w-6 h-6 text-purple-600" />
-        <div>
-          <h2 className="text-2xl font-bold">実績バッジ</h2>
-          <p className="text-muted-foreground">
-            獲得済み: {achievements.filter((a) => a.unlocked).length} / {achievements.length}
-          </p>
+      {showHeader && (
+        <div className="flex items-center gap-3">
+          <Award className="w-6 h-6 text-purple-600" />
+          <div>
+            <h2 className="text-2xl font-bold">実績バッジ</h2>
+            <p className="text-muted-foreground">
+              獲得済み: {achievements.filter((a) => a.unlocked).length} / {achievements.length}
+            </p>
+          </div>
         </div>
-      </div>
+      )}
 
-      <Tabs defaultValue="all" className="w-full">
+      {showTabs ? (
+        <Tabs defaultValue="all" className="w-full">
         <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="all">すべて</TabsTrigger>
           <TabsTrigger value="growth">成長</TabsTrigger>
@@ -281,7 +192,14 @@ export default function AchievementBadges() {
             ))}
           </div>
         </TabsContent>
-      </Tabs>
+        </Tabs>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2">
+          {achievements.map((achievement) => (
+            <AchievementCard key={achievement.id} achievement={achievement} />
+          ))}
+        </div>
+      )}
     </div>
   )
 }

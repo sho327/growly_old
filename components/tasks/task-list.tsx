@@ -208,10 +208,8 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
       />
 
       <ActiveFiltersDisplay
-        filters={[
-          { id: "status", label: "ステータス", value: statusFilter },
-          { id: "priority", label: "優先度", value: priorityFilter }
-        ]}
+        typeFilter={statusFilter !== "all" ? statusFilter : priorityFilter !== "all" ? priorityFilter : "all"}
+        activeFiltersCount={activeFiltersCount}
       />
 
       {/* Task Columns */}
