@@ -34,20 +34,14 @@ export function AchievementListCard({ title, description, achievements, showView
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-blue-600" />
-              {title}
-            </CardTitle>
-            <CardDescription>{description}</CardDescription>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+            <TrendingUp className="w-5 h-5 text-blue-600" />
           </div>
-          {showViewAll && (
-            <Button variant="outline" size="sm">
-              すべて見る
-              <ArrowRight className="w-4 h-4 ml-1" />
-            </Button>
-          )}
+          <div>
+            <CardTitle className="text-lg font-bold text-slate-900">{title}</CardTitle>
+            <p className="text-sm text-slate-600">{description}</p>
+          </div>
         </div>
       </CardHeader>
       <CardContent>

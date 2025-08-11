@@ -25,6 +25,9 @@ import { StatCard } from "@/components/common"
 import { UserProfileCard } from "./user-profile-card"
 import { TaskListCard } from "./task-list-card"
 import { AchievementListCard } from "./achievement-list-card"
+import { DashboardHeader } from "./dashboard-header"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Progress } from "../ui/progress"
 
 
 
@@ -101,7 +104,10 @@ export default function DashboardOverview() {
   const todayProgress = (stats.tasksToday / stats.tasksTotal) * 100
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+      {/* Dashboard Header */}
+      <DashboardHeader />
+
       {/* Welcome Section */}
       {/* <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-xl p-6 border border-blue-100">
         <div className="flex items-center justify-between">
@@ -234,7 +240,7 @@ export default function DashboardOverview() {
         />
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-3">
         <TaskListCard
           title="今日のタスク"
           description="今日のタスクの進捗状況"
@@ -274,20 +280,16 @@ export default function DashboardOverview() {
           ]}
         />
         {/* Weekly Missions */}
-        {/* <Card>
+        <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="flex items-center gap-2">
-                  <Calendar className="w-5 h-5 text-blue-600" />
-                  週次ミッション
-                </CardTitle>
-                <CardDescription>今週のチャレンジ進捗</CardDescription>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
+                <Calendar className="w-5 h-5 text-purple-600" />
               </div>
-              <Button variant="outline" size="sm">
-                詳細を見る
-                <ArrowRight className="w-4 h-4 ml-1" />
-              </Button>
+              <div>
+                <CardTitle className="text-lg font-bold text-slate-900">週次ミッション</CardTitle>
+                <p className="text-sm text-slate-600">今週のチャレンジ進捗</p>
+              </div>
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -309,7 +311,7 @@ export default function DashboardOverview() {
               </div>
             ))}
           </CardContent>
-        </Card> */}
+        </Card>
         {/* <Card className="border-emerald-200 bg-gradient-to-br from-emerald-50 to-green-50">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-emerald-800">
