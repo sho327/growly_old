@@ -1,37 +1,13 @@
 "use client"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Progress } from "@/components/ui/progress"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import {
-  Search,
-  Plus,
-  Filter,
-  Calendar,
-  Users,
-  Star,
-  MoreHorizontal,
-  FolderOpen,
-  Target,
-  CheckCircle,
-} from "lucide-react"
-import Link from "next/link"
+import { Filter, Target, FolderOpen, Plus } from "lucide-react"
+import { SearchFilters } from "@/components/common/search-filters"
+import { ActiveFiltersDisplay } from "@/components/common/active-filters-display"
+import { EmptyState } from "@/components/common/empty-state"
+import { ProjectListHeader } from "./project-list-header"
+import { CreateProjectModal } from "./create-project-modal"
+import { ProjectListCard } from "./project-list-card"
 
 interface Project {
   id: string
@@ -61,7 +37,7 @@ export default function JapaneseModernProjectList() {
   const [newProject, setNewProject] = useState({
     name: "",
     description: "",
-    priority: "medium" as const,
+    priority: "medium" as "high" | "medium" | "low",
     dueDate: "",
   })
 
@@ -138,61 +114,7 @@ export default function JapaneseModernProjectList() {
     },
   ])
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "active":
-        return "bg-emerald-100 text-emerald-800 border-emerald-200"
-      case "completed":
-        return "bg-blue-100 text-blue-800 border-blue-200"
-      case "on-hold":
-        return "bg-amber-100 text-amber-800 border-amber-200"
-      case "planning":
-        return "bg-slate-100 text-slate-800 border-slate-200"
-      default:
-        return "bg-slate-100 text-slate-800 border-slate-200"
-    }
-  }
 
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case "active":
-        return "進行中"
-      case "completed":
-        return "完了"
-      case "on-hold":
-        return "保留"
-      case "planning":
-        return "計画中"
-      default:
-        return "不明"
-    }
-  }
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case "high":
-        return "text-red-600"
-      case "medium":
-        return "text-amber-600"
-      case "low":
-        return "text-emerald-600"
-      default:
-        return "text-slate-600"
-    }
-  }
-
-  const getPriorityText = (priority: string) => {
-    switch (priority) {
-      case "high":
-        return "高"
-      case "medium":
-        return "中"
-      case "low":
-        return "低"
-      default:
-        return "不明"
-    }
-  }
 
   const filteredProjects = projects.filter((project) => {
     const matchesSearch =
@@ -209,61 +131,7 @@ export default function JapaneseModernProjectList() {
     setPriorityFilter("all")
   }
 
-  const getStatusFilterBadgeClass = (status: string) => {
-    switch (status) {
-      case "active":
-        return "bg-emerald-100 text-emerald-800 border border-emerald-200"
-      case "completed":
-        return "bg-blue-100 text-blue-800 border border-blue-200"
-      case "on-hold":
-        return "bg-amber-100 text-amber-800 border border-amber-200"
-      case "planning":
-        return "bg-slate-100 text-slate-800 border border-slate-200"
-      default:
-        return ""
-    }
-  }
 
-  const getStatusSummaryBadgeClass = (status: string) => {
-    switch (status) {
-      case "active":
-        return "bg-emerald-100 text-emerald-800 border border-emerald-200"
-      case "completed":
-        return "bg-blue-100 text-blue-800 border border-blue-200"
-      case "on-hold":
-        return "bg-amber-100 text-amber-800 border border-amber-200"
-      case "planning":
-        return "bg-slate-100 text-slate-800 border border-slate-200"
-      default:
-        return ""
-    }
-  }
-
-  const getPriorityFilterBadgeClass = (priority: string) => {
-    switch (priority) {
-      case "high":
-        return "bg-red-100 text-red-800 border border-red-200"
-      case "medium":
-        return "bg-amber-100 text-amber-800 border border-amber-200"
-      case "low":
-        return "bg-emerald-100 text-emerald-800 border border-emerald-200"
-      default:
-        return ""
-    }
-  }
-
-  const getPrioritySummaryBadgeClass = (priority: string) => {
-    switch (priority) {
-      case "high":
-        return "bg-red-100 text-red-800 border border-red-200"
-      case "medium":
-        return "bg-amber-100 text-amber-800 border border-amber-200"
-      case "low":
-        return "bg-emerald-100 text-emerald-800 border border-emerald-200"
-      default:
-        return ""
-    }
-  }
 
   const handleCreateProject = () => {
     console.log("Creating project:", newProject)
@@ -274,304 +142,99 @@ export default function JapaneseModernProjectList() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-slate-900">プロジェクト</h1>
-            <div className="hidden sm:flex items-center gap-1 px-2 py-0.5 bg-emerald-100 rounded-full">
-              <span className="text-xs font-medium text-emerald-700">{filteredProjects.length}件</span>
-            </div>
-          </div>
-          <p className="text-slate-600 mt-1">チームプロジェクトを管理・追跡</p>
-        </div>
-
-        <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-emerald-600 hover:bg-emerald-700 text-white w-full sm:w-auto">
-              <Plus className="w-4 h-4 mr-2" />
-              新規プロジェクト
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[500px]">
-            <DialogHeader>
-              <DialogTitle>新しいプロジェクトを作成</DialogTitle>
-              <DialogDescription>プロジェクトの基本情報を入力してください。</DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">プロジェクト名</Label>
-                <Input
-                  id="name"
-                  value={newProject.name}
-                  onChange={(e) => setNewProject({ ...newProject, name: e.target.value })}
-                  placeholder="プロジェクト名を入力"
-                  className="border-slate-200 focus:border-emerald-500 focus:ring-emerald-500"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="description">説明</Label>
-                <Textarea
-                  id="description"
-                  value={newProject.description}
-                  onChange={(e) => setNewProject({ ...newProject, description: e.target.value })}
-                  placeholder="プロジェクトの説明を入力"
-                  className="border-slate-200 focus:border-emerald-500 focus:ring-emerald-500"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="priority">優先度</Label>
-                  <select
-                    id="priority"
-                    value={newProject.priority}
-                    onChange={(e) => setNewProject({ ...newProject, priority: e.target.value as any })}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-md focus:border-emerald-500 focus:outline-none"
-                  >
-                    <option value="low">低</option>
-                    <option value="medium">中</option>
-                    <option value="high">高</option>
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="dueDate">期限</Label>
-                  <Input
-                    id="dueDate"
-                    type="date"
-                    value={newProject.dueDate}
-                    onChange={(e) => setNewProject({ ...newProject, dueDate: e.target.value })}
-                    className="border-slate-200 focus:border-emerald-500 focus:ring-emerald-500"
-                  />
-                </div>
-              </div>
-            </div>
-            <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setIsCreateModalOpen(false)}
-                className="border-slate-200 text-slate-600 hover:bg-slate-50"
-              >
-                キャンセル
-              </Button>
-              <Button
-                type="button"
-                onClick={handleCreateProject}
-                disabled={!newProject.name.trim()}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white"
-              >
-                作成
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </div>
+      <ProjectListHeader
+        projectCount={filteredProjects.length}
+        onCreateProject={() => setIsCreateModalOpen(true)}
+      />
 
       {/* Search and Filters */}
-      <Card className="border border-slate-200 bg-white">
-        <CardContent className="p-4 space-y-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
-            <Input
-              placeholder="プロジェクトを検索..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 bg-white"
-            />
-          </div>
+      <SearchFilters
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        filters={[
+          {
+            id: "status",
+            label: "ステータス",
+            icon: Filter,
+            value: statusFilter,
+            options: [
+              { value: "all", label: "すべて" },
+              { value: "active", label: "進行中" },
+              { value: "planning", label: "計画中" },
+              { value: "on-hold", label: "保留" },
+              { value: "completed", label: "完了" }
+            ],
+            onValueChange: setStatusFilter,
+            getBadgeClass: (value) => {
+              switch (value) {
+                case "active": return "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                case "completed": return "bg-blue-100 text-blue-800 border border-blue-200"
+                case "on-hold": return "bg-amber-100 text-amber-800 border border-amber-200"
+                case "planning": return "bg-slate-100 text-slate-800 border border-slate-200"
+                default: return ""
+              }
+            }
+          },
+          {
+            id: "priority",
+            label: "優先度",
+            icon: Target,
+            value: priorityFilter,
+            options: [
+              { value: "all", label: "すべて" },
+              { value: "high", label: "高" },
+              { value: "medium", label: "中" },
+              { value: "low", label: "低" }
+            ],
+            onValueChange: setPriorityFilter,
+            getBadgeClass: (value) => {
+              switch (value) {
+                case "high": return "bg-red-100 text-red-800 border border-red-200"
+                case "medium": return "bg-amber-100 text-amber-800 border border-amber-200"
+                case "low": return "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                default: return ""
+              }
+            }
+          }
+        ]}
+        onClearFilters={clearFilters}
+        activeFiltersCount={activeFiltersCount}
+        searchPlaceholder="プロジェクトを検索..."
+      />
 
-          <div className="flex flex-col sm:flex-row gap-3">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={`w-full sm:w-auto justify-start bg-white hover:bg-slate-50 text-slate-600 ${
-                    statusFilter !== "all" ? "border-emerald-300" : "border-slate-200"
-                  }`}
-                >
-                  <Filter className="w-4 h-4 mr-2" />
-                  ステータス
-                  {statusFilter !== "all" && (
-                    <Badge className={`ml-2 ${getStatusFilterBadgeClass(statusFilter)}`}>
-                      {getStatusText(statusFilter)}
-                    </Badge>
-                  )}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-48">
-                <DropdownMenuItem onClick={() => setStatusFilter("all")}>すべて</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setStatusFilter("active")}>進行中</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setStatusFilter("planning")}>計画中</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setStatusFilter("on-hold")}>保留</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setStatusFilter("completed")}>完了</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={`w-full sm:w-auto justify-start bg-white hover:bg-slate-50 text-slate-600 ${
-                    priorityFilter !== "all" ? "border-amber-300" : "border-slate-200"
-                  }`}
-                >
-                  <Target className="w-4 h-4 mr-2" />
-                  優先度
-                  {priorityFilter !== "all" && (
-                    <Badge className={`ml-2 ${getPriorityFilterBadgeClass(priorityFilter)}`}>
-                      {getPriorityText(priorityFilter)}
-                    </Badge>
-                  )}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-48">
-                <DropdownMenuItem onClick={() => setPriorityFilter("all")}>すべて</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setPriorityFilter("high")}>高</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setPriorityFilter("medium")}>中</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setPriorityFilter("low")}>低</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {activeFiltersCount > 0 && (
-              <Button
-                variant="outline"
-                onClick={clearFilters}
-                className="w-full sm:w-auto border-red-200 text-red-600 hover:bg-red-50 bg-white"
-              >
-                フィルターをクリア ({activeFiltersCount})
-              </Button>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-
-      {activeFiltersCount > 0 && (
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-sm text-slate-600">アクティブなフィルター:</span>
-          {statusFilter !== "all" && (
-            <Badge className={getStatusSummaryBadgeClass(statusFilter)}>ステータス: {getStatusText(statusFilter)}</Badge>
-          )}
-          {priorityFilter !== "all" && (
-            <Badge className={getPrioritySummaryBadgeClass(priorityFilter)}>
-              優先度: {getPriorityText(priorityFilter)}
-            </Badge>
-          )}
-        </div>
-      )}
+      <ActiveFiltersDisplay
+        filters={[
+          { id: "status", label: "ステータス", value: statusFilter },
+          { id: "priority", label: "優先度", value: priorityFilter }
+        ]}
+      />
 
       {/* Project Grid */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {filteredProjects.map((project) => (
-          <Link key={project.id} href={`/projects/${project.id}`}>
-            <Card className="border border-slate-200 hover:shadow-md transition-all duration-200 cursor-pointer h-full">
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="w-3 h-3 rounded-full bg-slate-400" />
-                      <CardTitle className="text-lg font-semibold text-slate-900 line-clamp-1">{project.name}</CardTitle>
-                      {project.starred && <Star className="w-4 h-4 text-amber-500 fill-current flex-shrink-0" />}
-                    </div>
-                    <CardDescription className="text-slate-600 text-sm leading-relaxed line-clamp-2">
-                      {project.description}
-                    </CardDescription>
-                  </div>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild onClick={(e) => e.preventDefault()}>
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0 flex-shrink-0">
-                        <MoreHorizontal className="w-4 h-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>編集</DropdownMenuItem>
-                      <DropdownMenuItem>複製</DropdownMenuItem>
-                      <DropdownMenuItem>アーカイブ</DropdownMenuItem>
-                      <DropdownMenuItem className="text-red-600">削除</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex flex-wrap gap-2">
-                  <Badge className={getStatusColor(project.status)} variant="outline">
-                    {getStatusText(project.status)}
-                  </Badge>
-                  <div className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(project.priority)}`}>
-                    優先度: {getPriorityText(project.priority)}
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-slate-600">進捗</span>
-                    <span className="font-medium text-slate-900">{project.progress}%</span>
-                  </div>
-                  <div className="relative">
-                    <Progress value={project.progress} className="h-2 bg-slate-200" />
-                    <div
-                      className={`absolute inset-0 h-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full transition-all duration-500`}
-                      style={{ width: `${String(project.progress)}%` }}
-                    ></div>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between text-sm text-slate-600">
-                  <div className="flex items-center gap-1">
-                    <CheckCircle className="w-4 h-4" />
-                    <span>
-                      {project.completedTasks}/{project.totalTasks} タスク
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
-                    <span>{new Date(project.dueDate).toLocaleDateString("ja-JP")}</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Users className="w-4 h-4 text-slate-600" />
-                    <span className="text-sm text-slate-600">{project.members.length}人</span>
-                  </div>
-                  <div className="flex -space-x-2">
-                    {project.members.slice(0, 3).map((member) => (
-                      <Avatar key={member.id} className="w-6 h-6 border-2 border-white">
-                        <AvatarImage src={member.avatar || "/placeholder.svg"} alt={member.name} />
-                        <AvatarFallback className="text-xs font-medium bg-slate-100">
-                          {member.name.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
-                    ))}
-                    {project.members.length > 3 && (
-                      <div className="w-6 h-6 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center">
-                        <span className="text-xs font-medium text-slate-600">+{project.members.length - 3}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
+          <ProjectListCard key={project.id} project={project} />
         ))}
       </div>
 
       {/* Empty State */}
       {filteredProjects.length === 0 && (
-        <Card className="border-2 border-dashed border-slate-200 bg-white">
-          <CardContent className="text-center py-16">
-            <div className="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center mx-auto mb-4">
-              <FolderOpen className="w-8 h-8 text-slate-400" />
-            </div>
-            <h3 className="text-xl font-semibold text-slate-900 mb-2">プロジェクトが見つかりません</h3>
-            <p className="text-slate-600 mb-6 max-w-md mx-auto">
-              検索条件を変更するか、新しいプロジェクトを作成してください。
-            </p>
-            <Button onClick={() => setIsCreateModalOpen(true)} className="bg-emerald-600 hover:bg-emerald-700 text-white">
-              <Plus className="w-4 h-4 mr-2" />
-              最初のプロジェクトを作成
-            </Button>
-          </CardContent>
-        </Card>
+        <EmptyState
+          icon={FolderOpen}
+          title="プロジェクトが見つかりません"
+          description="検索条件を変更するか、新しいプロジェクトを作成してください。"
+          actionLabel="最初のプロジェクトを作成"
+          onAction={() => setIsCreateModalOpen(true)}
+        />
       )}
+
+      {/* Create Project Modal */}
+      <CreateProjectModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        newProject={newProject}
+        onNewProjectChange={setNewProject}
+        onCreate={handleCreateProject}
+      />
     </div>
   )
 }

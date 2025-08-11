@@ -112,10 +112,12 @@ export default function UserSettings() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
-        <Settings className="w-6 h-6 text-blue-600" />
+        <div className="p-2 bg-blue-100 rounded-xl">
+          <Settings className="w-5 h-5 text-blue-600" />
+        </div>
         <div>
-          <h2 className="text-2xl font-bold">ユーザー設定</h2>
-          <p className="text-muted-foreground">プロフィールと設定をカスタマイズしましょう</p>
+          <h2 className="text-2xl font-bold text-slate-900">ユーザー設定</h2>
+          <p className="text-slate-600">プロフィールと設定をカスタマイズしましょう</p>
         </div>
       </div>
 

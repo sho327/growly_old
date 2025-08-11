@@ -414,8 +414,62 @@ export default function DashboardOverview() {
           </CardContent>
         </Card>
 
-        {/* Weekly Missions */}
+        {/* Recent Achievements */}
         <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="w-5 h-5 text-blue-600" />
+                  最近の成果
+                </CardTitle>
+                <CardDescription>最近獲得した実績とマイルストーン</CardDescription>
+              </div>
+              <Button variant="outline" size="sm">
+                すべて見る
+                <ArrowRight className="w-4 h-4 ml-1" />
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
+                <div className="p-2 bg-green-100 rounded-full">
+                  <Flame className="w-4 h-4 text-green-600" />
+                </div>
+                <div className="flex-1">
+                  <p className="font-medium text-sm">7日連続ログイン達成！</p>
+                  <p className="text-xs text-muted-foreground">2時間前</p>
+                </div>
+                <Badge className="bg-green-100 text-green-800">+50pt</Badge>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
+                <div className="p-2 bg-blue-100 rounded-full">
+                  <Target className="w-4 h-4 text-blue-600" />
+                </div>
+                <div className="flex-1">
+                  <p className="font-medium text-sm">週次ミッション「タスクマスター」完了</p>
+                  <p className="text-xs text-muted-foreground">1日前</p>
+                </div>
+                <Badge className="bg-blue-100 text-blue-800">+100pt</Badge>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-lg">
+                <div className="p-2 bg-purple-100 rounded-full">
+                  <Star className="w-4 h-4 text-purple-600" />
+                </div>
+                <div className="flex-1">
+                  <p className="font-medium text-sm">レベル5に到達！</p>
+                  <p className="text-xs text-muted-foreground">3日前</p>
+                </div>
+                <Badge className="bg-purple-100 text-purple-800">レベルアップ</Badge>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        {/* Weekly Missions */}
+        {/* <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
@@ -440,7 +494,6 @@ export default function DashboardOverview() {
                     {mission.current}/{mission.target}
                   </span>
                 </div>
-                {/* <Progress value={mission.progress} className="h-2" /> */}
                 <div className="relative">
                   <Progress value={mission.progress} className="h-2 bg-slate-200" />
                   <div
@@ -451,7 +504,7 @@ export default function DashboardOverview() {
               </div>
             ))}
           </CardContent>
-        </Card>
+        </Card> */}
         {/* <Card className="border-emerald-200 bg-gradient-to-br from-emerald-50 to-green-50">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-emerald-800">

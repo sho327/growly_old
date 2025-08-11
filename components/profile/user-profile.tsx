@@ -151,7 +151,7 @@ export default function UserProfile({ userId, isOwnProfile = false }: UserProfil
                   </Button>
                 ) : (
                   <>
-                    <Button size="sm">フォロー</Button>
+                    <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white">フォロー</Button>
                     <Button variant="outline" size="sm">
                       <Share className="w-4 h-4 mr-2" />
                       シェア
@@ -167,7 +167,7 @@ export default function UserProfile({ userId, isOwnProfile = false }: UserProfil
                 <div className="flex items-center gap-3 mb-2">
                   <h1 className="text-2xl font-bold">{profile.displayName}</h1>
                   {profile.isPremium && (
-                    <Badge className="bg-yellow-100 text-yellow-800">
+                  <Badge className="bg-amber-100 text-amber-800">
                       <Crown className="w-3 h-3 mr-1" />
                       Premium
                     </Badge>
@@ -251,16 +251,16 @@ export default function UserProfile({ userId, isOwnProfile = false }: UserProfil
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 gap-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">{profile.stats.totalPoints.toLocaleString()}</div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-blue-800">{profile.stats.totalPoints.toLocaleString()}</div>
                 <p className="text-xs text-muted-foreground">総ポイント</p>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">{profile.stats.tasksCompleted}</div>
+                  <div className="text-2xl font-bold text-emerald-700">{profile.stats.tasksCompleted}</div>
                 <p className="text-xs text-muted-foreground">完了タスク</p>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-orange-600">{profile.stats.currentStreak}</div>
+                  <div className="text-2xl font-bold text-amber-700">{profile.stats.currentStreak}</div>
                 <p className="text-xs text-muted-foreground">連続ログイン</p>
               </div>
               <div className="text-center">

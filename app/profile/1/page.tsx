@@ -1,4 +1,5 @@
 import UserProfile from "@/components/profile/user-profile"
+import MainLayout from "@/components/layout/main-layout"
 
 interface ProfilePageProps {
   params: {
@@ -8,8 +9,8 @@ interface ProfilePageProps {
 
 export default function ProfilePage({ params }: ProfilePageProps) {
   return (
-    <div className="container mx-auto py-8 px-4">
+    <MainLayout>
       <UserProfile userId={params.userId} />
-    </div>
+    </MainLayout>
   )
 }

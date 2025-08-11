@@ -1,9 +1,10 @@
 import GamificationDashboard from "@/components/gamification/gamification-dashboard"
+import MainLayout from "@/components/layout/main-layout"
 
 export default function GamificationPage() {
   return (
-    <div className="container mx-auto py-8 px-4">
+    <MainLayout>
       <GamificationDashboard />
-    </div>
+    </MainLayout>
   )
 }

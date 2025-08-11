@@ -1,9 +1,10 @@
 import Shop from "@/components/shop/shop"
+import MainLayout from "@/components/layout/main-layout"
 
 export default function ShopPage() {
   return (
-    <div className="container mx-auto py-8 px-4">
+    <MainLayout>
       <Shop />
-    </div>
+    </MainLayout>
   )
 }

@@ -28,10 +28,10 @@ export default function GamificationDashboard() {
     <div className="space-y-6">
       {/* User Stats Overview */}
       <div className="grid gap-4 md:grid-cols-4">
-        <Card className="border-l-4 border-yellow-600">
+        <Card className="border-l-4 border-amber-600">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">現在のレベル</CardTitle>
-            <Star className="h-4 w-4 text-yellow-600" />
+            <Star className="h-4 w-4 text-amber-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">レベル {userStats.level}</div>
@@ -56,10 +56,10 @@ export default function GamificationDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="border-l-4 border-orange-600">
+        <Card className="border-l-4 border-amber-600">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">連続ログイン</CardTitle>
-            <Flame className="h-4 w-4 text-orange-600" />
+            <Flame className="h-4 w-4 text-amber-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{userStats.currentStreak}日</div>
@@ -87,22 +87,22 @@ export default function GamificationDashboard() {
       <Card className="bg-blue-50 rounded-lg">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-green-600" />
+            <TrendingUp className="w-5 h-5 text-emerald-600" />
             最近の成果
           </CardTitle>
           <CardDescription>最近獲得した実績とマイルストーン</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
-              <div className="p-2 bg-green-100 rounded-full">
-                <Flame className="w-4 h-4 text-green-600" />
+            <div className="flex items-center gap-3 p-3 bg-emerald-50 rounded-lg">
+              <div className="p-2 bg-emerald-100 rounded-full">
+                <Flame className="w-4 h-4 text-emerald-600" />
               </div>
               <div className="flex-1">
                 <p className="font-medium text-sm">7日連続ログイン達成！</p>
                 <p className="text-xs text-muted-foreground">2時間前</p>
               </div>
-              <Badge className="bg-green-100 text-green-800">+50pt</Badge>
+              <Badge className="bg-emerald-100 text-emerald-800">+50pt</Badge>
             </div>
 
             <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">

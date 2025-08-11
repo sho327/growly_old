@@ -1,9 +1,10 @@
 import UserSettings from "@/components/settings/user-settings"
+import MainLayout from "@/components/layout/main-layout"
 
 export default function SettingsPage() {
   return (
-    <div className="container mx-auto py-8 px-4">
+    <MainLayout>
       <UserSettings />
-    </div>
+    </MainLayout>
   )
 }

@@ -92,7 +92,7 @@ export default function PremiumPlans() {
       {/* Header */}
       <div className="text-center space-y-4">
         <div className="flex items-center justify-center gap-3">
-          <Crown className="w-8 h-8 text-yellow-600" />
+          <Crown className="w-8 h-8 text-amber-600" />
           <h2 className="text-3xl font-bold">プレミアムプラン</h2>
         </div>
         <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -100,11 +100,11 @@ export default function PremiumPlans() {
         </p>
 
         {/* Billing Toggle */}
-        <div className="flex items-center justify-center gap-4 p-1 bg-gray-100 rounded-lg w-fit mx-auto">
+          <div className="flex items-center justify-center gap-4 p-1 bg-slate-100 rounded-lg w-fit mx-auto">
           <span className={`px-3 py-2 text-sm ${!isYearly ? "font-medium" : "text-muted-foreground"}`}>月額</span>
           <Switch checked={isYearly} onCheckedChange={setIsYearly} />
           <span className={`px-3 py-2 text-sm ${isYearly ? "font-medium" : "text-muted-foreground"}`}>年額</span>
-          {isYearly && <Badge className="bg-green-100 text-green-800 ml-2">2ヶ月分お得！</Badge>}
+          {isYearly && <Badge className="bg-emerald-100 text-emerald-800 ml-2">2ヶ月分お得！</Badge>}
         </div>
       </div>
 
@@ -139,7 +139,7 @@ export default function PremiumPlans() {
               <div className="pt-4">
                 <div className="text-4xl font-bold">{getPrice(plan)}</div>
                 {isYearly && getSavings(plan) && (
-                  <p className="text-sm text-green-600 mt-1">年間¥{getSavings(plan)?.toLocaleString()}お得</p>
+                  <p className="text-sm text-emerald-600 mt-1">年間¥{getSavings(plan)?.toLocaleString()}お得</p>
                 )}
               </div>
             </CardHeader>
@@ -149,8 +149,8 @@ export default function PremiumPlans() {
                 {plan.features.map((feature, index) => (
                   <div key={index} className="flex items-center gap-3">
                     {feature.included ? (
-                      <div className={`p-1 rounded-full ${feature.premium ? "bg-purple-100" : "bg-green-100"}`}>
-                        <Check className={`w-3 h-3 ${feature.premium ? "text-purple-600" : "text-green-600"}`} />
+                      <div className={`p-1 rounded-full ${feature.premium ? "bg-purple-100" : "bg-emerald-100"}`}>
+                        <Check className={`w-3 h-3 ${feature.premium ? "text-purple-600" : "text-emerald-600"}`} />
                       </div>
                     ) : (
                       <div className="p-1 rounded-full bg-gray-100">
@@ -185,7 +185,7 @@ export default function PremiumPlans() {
       </div>
 
       {/* Premium Features Showcase */}
-      <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
+            <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
         <CardHeader className="text-center">
           <CardTitle className="flex items-center justify-center gap-2 text-2xl">
             <Star className="w-6 h-6 text-purple-600" />
