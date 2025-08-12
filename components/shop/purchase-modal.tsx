@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Coins } from "lucide-react"
+import { PointsDisplay } from "@/components/common/points-display"
 
 interface ShopItem {
   id: string
@@ -56,9 +56,8 @@ export function PurchaseModal({ item, isOpen, onClose, onConfirm }: PurchaseModa
             <div className="text-center space-y-2">
               <h3 className="text-lg font-semibold text-gray-900">{item.name}</h3>
               <p className="text-slate-600 text-sm">{item.description}</p>
-              <div className="flex items-center justify-center gap-2 pt-2">
-                <Coins className="w-5 h-5 text-yellow-600" />
-                <span className="text-xl font-bold text-yellow-800">{item.price} コイン</span>
+              <div className="flex items-center justify-center pt-2">
+                <PointsDisplay points={item.price} size="lg" />
               </div>
             </div>
           </div>

@@ -38,6 +38,10 @@ import {
   Target,
   Leaf,
 } from "lucide-react"
+import { NotificationDropdown } from "./notification-dropdown"
+import { Notification } from "./types"
+import { UserAvatar } from "@/components/common/user-avatar"
+import { PointsDisplay } from "@/components/common/points-display"
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -49,6 +53,76 @@ export default function Header() {
     level: 5,
     points: 1250,
     isPremium: true,
+  }
+
+  // Mock notifications data
+  const [notifications, setNotifications] = useState<Notification[]>([
+    {
+      id: "1",
+      type: "achievement",
+      title: "新しい実績を獲得しました！",
+      description: "「連続ログイン7日」の実績を獲得しました。おめでとうございます！",
+      timestamp: "2024-01-25T10:30:00Z",
+      isRead: false,
+    },
+    {
+      id: "2",
+      type: "announcement",
+      title: "システムメンテナンスのお知らせ",
+      description: "1月26日（金）の深夜2:00-4:00にシステムメンテナンスを実施いたします。",
+      timestamp: "2024-01-25T09:15:00Z",
+      isRead: false,
+    },
+    {
+      id: "3",
+      type: "task",
+      title: "タスクが完了しました",
+      description: "「デザインガイドライン作成」タスクが完了しました。",
+      timestamp: "2024-01-25T08:45:00Z",
+      isRead: true,
+    },
+    {
+      id: "4",
+      type: "project",
+      title: "新しいプロジェクトに招待されました",
+      description: "「Webサイトリニューアル」プロジェクトに招待されました。",
+      timestamp: "2024-01-25T07:30:00Z",
+      isRead: false,
+    },
+    {
+      id: "5",
+      type: "achievement",
+      title: "レベルアップしました！",
+      description: "レベル5からレベル6にアップしました。新しい機能が解放されました。",
+      timestamp: "2024-01-24T16:20:00Z",
+      isRead: true,
+    },
+    {
+      id: "6",
+      type: "announcement",
+      title: "新機能リリースのお知らせ",
+      description: "プロジェクト管理機能に新しい機能が追加されました。詳細はこちらをご確認ください。",
+      timestamp: "2024-01-24T14:00:00Z",
+      isRead: true,
+    },
+  ])
+
+  const unreadCount = notifications.filter(n => !n.isRead).length
+
+  const handleMarkAsRead = (id: string) => {
+    setNotifications(prev => 
+      prev.map(notification => 
+        notification.id === id 
+          ? { ...notification, isRead: true }
+          : notification
+      )
+    )
+  }
+
+  const handleMarkAllAsRead = () => {
+    setNotifications(prev => 
+      prev.map(notification => ({ ...notification, isRead: true }))
+    )
   }
 
   const navigationItems = [
@@ -157,35 +231,30 @@ export default function Header() {
           {/* User Info & Actions */}
           <div className="flex items-center space-x-4">
             {/* Points Display */}
-            <div className="hidden sm:flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-yellow-100 to-orange-100 rounded-full border-2 border-yellow-200">
-              <Coins className="w-4 h-4 text-yellow-600" />
-              <span className="text-sm font-bold text-yellow-800">{user.points.toLocaleString()}</span>
-            </div>
+            <PointsDisplay points={user.points} />
 
             {/* Notifications */}
-            <Button variant="ghost" size="sm" className="relative hover:bg-teal-50">
-              <Bell className="w-5 h-5 text-gray-600" />
-              <span className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-red-500 to-pink-500 rounded-full animate-pulse"></span>
-            </Button>
+            <NotificationDropdown
+              notifications={notifications}
+              unreadCount={unreadCount}
+              onMarkAsRead={handleMarkAsRead}
+              onMarkAllAsRead={handleMarkAllAsRead}
+            />
 
             {/* User Menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-10 w-10 rounded-full hover:bg-blue-50">
-                  <Avatar className="h-9 w-9 border-2 border-green-200">
-                    <AvatarImage src={user.avatar || "/placeholder.svg"} alt={user.name} />
-                    <AvatarFallback className="bg-gradient-to-br from-blue-400 to-purple-500 text-white font-bold">
-                      U
-                    </AvatarFallback>
-                  </Avatar>
-                  {user.isPremium && (
-                    <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg">
-                      <Crown className="w-3 h-3 text-white" />
-                    </div>
-                  )}
+                  <UserAvatar
+                    name={user.name}
+                    avatar={user.avatar}
+                    level={user.level}
+                    isPremium={user.isPremium}
+                    size="md"
+                  />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-64" align="end" forceMount>
+              <DropdownMenuContent className="w-64" align="end">
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-2 p-2">
                     <p className="text-sm font-medium leading-none">{user.name}</p>

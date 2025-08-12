@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Coins } from "lucide-react"
+import { PointsDisplay } from "@/components/common/points-display"
 
 interface ShopItem {
   id: string
@@ -98,10 +98,7 @@ export function ShopItemCard({ item, onPurchase, variant = "regular" }: ShopItem
           </CardDescription>
         </div>
         <div className="flex items-center justify-between pt-2">
-          <div className="flex items-center gap-1">
-            <Coins className="w-4 h-4 text-yellow-600" />
-            <span className="font-bold text-yellow-800">{item.price}</span>
-          </div>
+          <PointsDisplay points={item.price} size="sm" />
           {item.owned ? (
             <Badge className="bg-slate-100 text-slate-700 border-slate-200" variant="outline">
               所有済み
