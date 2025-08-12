@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import {
   Dialog,
   DialogContent,
@@ -38,6 +39,9 @@ import {
   ArrowLeft,
   Mail,
   Calendar,
+  FolderOpen,
+  ChevronUp,
+  ChevronDown,
 } from "lucide-react"
 import Link from "next/link"
 
@@ -70,6 +74,8 @@ export function OrganizationDetail({ id }: OrganizationDetailProps) {
   const [inviteEmail, setInviteEmail] = useState("")
   const [editName, setEditName] = useState("")
   const [editDescription, setEditDescription] = useState("")
+  const [sortField, setSortField] = useState<string>("name")
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc")
 
   // Mock data
   const organization: Organization = {
@@ -142,6 +148,34 @@ export function OrganizationDetail({ id }: OrganizationDetailProps) {
     }
   }
 
+  const handleSort = (field: string) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc")
+    } else {
+      setSortField(field)
+      setSortDirection("asc")
+    }
+  }
+
+  const sortedMembers = [...members].sort((a, b) => {
+    let aValue: any = a[sortField as keyof Member]
+    let bValue: any = b[sortField as keyof Member]
+    
+    if (sortField === "joinedAt") {
+      aValue = new Date(aValue).getTime()
+      bValue = new Date(bValue).getTime()
+    } else if (typeof aValue === "string") {
+      aValue = aValue.toLowerCase()
+      bValue = bValue.toLowerCase()
+    }
+    
+    if (sortDirection === "asc") {
+      return aValue > bValue ? 1 : -1
+    } else {
+      return aValue < bValue ? 1 : -1
+    }
+  })
+
   const handleInviteMember = () => {
     console.log("Inviting member:", inviteEmail)
     setIsInviteOpen(false)
@@ -201,7 +235,7 @@ export function OrganizationDetail({ id }: OrganizationDetailProps) {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                 <Button 
                   onClick={() => setIsInviteOpen(true)}
                   className="bg-emerald-600 hover:bg-emerald-700 text-white"
@@ -228,12 +262,70 @@ export function OrganizationDetail({ id }: OrganizationDetailProps) {
         </Card>
       </div>
 
+      {/* Stats Cards */}
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        <Card className="border border-slate-200">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-slate-600">メンバー数</p>
+                <p className="text-2xl font-bold text-slate-900">{organization.memberCount}</p>
+              </div>
+              <div className="p-2 bg-purple-100 rounded-lg">
+                <Users className="w-5 h-5 text-purple-600" />
+              </div>
+            </div>
+            <p className="text-sm text-slate-600 mt-2">今月 +1人</p>
+          </CardContent>
+        </Card>
+
+        <Card className="border border-slate-200">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-slate-600">アクティブプロジェクト</p>
+                <p className="text-2xl font-bold text-slate-900">5</p>
+              </div>
+              <div className="p-2 bg-emerald-100 rounded-lg">
+                <FolderOpen className="w-5 h-5 text-emerald-600" />
+              </div>
+            </div>
+            <p className="text-sm text-slate-600 mt-2">今月 +1件</p>
+          </CardContent>
+        </Card>
+
+        <Card className="border border-slate-200">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-slate-600">選択中プラン</p>
+                <p className="text-2xl font-bold text-slate-900">
+                  {organization.plan === "premium" ? "Premium" : "Free"}
+                </p>
+              </div>
+              <div className="p-2 bg-yellow-100 rounded-lg">
+                <Crown className="w-5 h-5 text-yellow-600" />
+              </div>
+            </div>
+            <p className="text-sm text-slate-600 mt-2">
+              {organization.plan === "premium" ? "無制限機能" : "機能制限あり"}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
       {/* Tabs */}
-      <Tabs defaultValue="members" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="members">メンバー</TabsTrigger>
-          <TabsTrigger value="permissions">権限設定</TabsTrigger>
-          <TabsTrigger value="settings">組織設定</TabsTrigger>
+      <Tabs defaultValue="members" className="w-full">
+        <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 bg-slate-100">
+          <TabsTrigger value="members" className="data-[state=active]:bg-white data-[state=active]:text-slate-900 text-sm">
+            メンバー
+          </TabsTrigger>
+          <TabsTrigger value="permissions" className="data-[state=active]:bg-white data-[state=active]:text-slate-900 text-sm">
+            権限設定
+          </TabsTrigger>
+          <TabsTrigger value="settings" className="data-[state=active]:bg-white data-[state=active]:text-slate-900 text-sm">
+            組織設定
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="members" className="space-y-4">
@@ -254,48 +346,101 @@ export function OrganizationDetail({ id }: OrganizationDetailProps) {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                {members.map((member) => (
-                  <div key={member.id} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <Avatar className="h-10 w-10">
-                        <AvatarImage src={member.avatar} />
-                        <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="font-medium">{member.name}</p>
-                        <p className="text-sm text-gray-500">{member.email}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
+              <div className="overflow-x-auto">
+                <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead 
+                      className="cursor-pointer hover:bg-gray-50"
+                      onClick={() => handleSort("name")}
+                    >
                       <div className="flex items-center gap-1">
-                        {getRoleIcon(member.role)}
-                        <span className="text-sm text-gray-600">{getRoleLabel(member.role)}</span>
+                        メンバー
+                        {sortField === "name" && (
+                          sortDirection === "asc" ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />
+                        )}
                       </div>
-                      {organization.role === "owner" && member.role !== "owner" && (
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                              <MoreHorizontal className="w-4 h-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem>
-                              <Edit className="mr-2 h-4 w-4" />
-                              権限を変更
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem className="text-red-600">
-                              <Trash2 className="mr-2 h-4 w-4" />
-                              メンバーを削除
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
+                    </TableHead>
+                    <TableHead 
+                      className="cursor-pointer hover:bg-gray-50"
+                      onClick={() => handleSort("role")}
+                    >
+                      <div className="flex items-center gap-1">
+                        役割
+                        {sortField === "role" && (
+                          sortDirection === "asc" ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />
+                        )}
+                      </div>
+                    </TableHead>
+                    <TableHead 
+                      className="cursor-pointer hover:bg-gray-50"
+                      onClick={() => handleSort("joinedAt")}
+                    >
+                      <div className="flex items-center gap-1">
+                        参加日
+                        {sortField === "joinedAt" && (
+                          sortDirection === "asc" ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />
+                        )}
+                      </div>
+                    </TableHead>
+                    <TableHead>最終アクティブ</TableHead>
+                    <TableHead className="w-[50px]"></TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {sortedMembers.map((member) => (
+                    <TableRow key={member.id}>
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                          <Avatar className="h-8 w-8">
+                            <AvatarImage src={member.avatar || "/placeholder.svg"} alt={member.name} />
+                            <AvatarFallback>{member.name[0]}</AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <p className="font-medium">{member.name}</p>
+                            <p className="text-sm text-gray-500">{member.email}</p>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-1">
+                          {getRoleIcon(member.role)}
+                          <span className="text-sm">{getRoleLabel(member.role)}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>{new Date(member.joinedAt).toLocaleDateString("ja-JP")}</TableCell>
+                      <TableCell>2時間前</TableCell>
+                      <TableCell>
+                        {organization.role === "owner" && member.role !== "owner" && (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="sm">
+                                <MoreHorizontal className="w-4 h-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem>
+                                <Edit className="w-4 h-4 mr-2" />
+                                役割を変更
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                <Mail className="w-4 h-4 mr-2" />
+                                メッセージ送信
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem className="text-red-600">
+                                <Trash2 className="w-4 h-4 mr-2" />
+                                メンバー削除
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+                </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -308,12 +453,13 @@ export function OrganizationDetail({ id }: OrganizationDetailProps) {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="grid grid-cols-4 gap-4 text-sm font-medium border-b pb-2">
-                  <div>権限</div>
-                  <div className="text-center">オーナー</div>
-                  <div className="text-center">管理者</div>
-                  <div className="text-center">メンバー</div>
-                </div>
+                <div className="overflow-x-auto">
+                  <div className="grid grid-cols-4 gap-4 text-sm font-medium border-b pb-2 min-w-[600px]">
+                    <div>権限</div>
+                    <div className="text-center">オーナー</div>
+                    <div className="text-center">管理者</div>
+                    <div className="text-center">メンバー</div>
+                  </div>
                 {[
                   { name: "プロジェクト作成", owner: true, admin: true, member: false },
                   { name: "メンバー招待", owner: true, admin: true, member: false },
@@ -347,6 +493,7 @@ export function OrganizationDetail({ id }: OrganizationDetailProps) {
                     </div>
                   </div>
                 ))}
+                  </div>
               </div>
             </CardContent>
           </Card>
@@ -361,7 +508,7 @@ export function OrganizationDetail({ id }: OrganizationDetailProps) {
             <CardContent className="space-y-4">
               {organization.role === "owner" ? (
                 <>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="text-sm font-medium">組織名</label>
                       <p className="text-gray-600">{organization.name}</p>
@@ -371,7 +518,7 @@ export function OrganizationDetail({ id }: OrganizationDetailProps) {
                       <p className="text-gray-600">{organization.description}</p>
                     </div>
                   </div>
-                  <div className="flex gap-2 pt-4">
+                  <div className="flex flex-col sm:flex-row gap-2 pt-4">
                     <Button 
                       variant="outline"
                       onClick={() => {

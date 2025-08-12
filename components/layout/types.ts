@@ -5,8 +5,14 @@ export interface Notification {
   description: string
   timestamp: string
   isRead: boolean
-  icon?: string
-  actionUrl?: string
+}
+
+export interface User {
+  name: string
+  avatar: string
+  level: number
+  points: number
+  isPremium: boolean
 }
 
 export interface NotificationBadgeProps {
