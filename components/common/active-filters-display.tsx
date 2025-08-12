@@ -81,11 +81,11 @@ const getTypeText = (type: string) => {
       return "進行中"
     // タスクの優先度
     case "high":
-      return "優先度: 高"
+      return "高"
     case "medium":
-      return "優先度: 中"
+      return "中"
     case "low":
-      return "優先度: 低"
+      return "低"
     // 既読状態
     case "unread":
       return "未読のみ"
@@ -101,19 +101,36 @@ export function ActiveFiltersDisplay({ typeFilter, activeFiltersCount, statusFil
     return null
   }
 
+  const renderFilterBadges = (filterString: string | undefined, label: string) => {
+    if (!filterString || filterString === "all" || filterString === "") return null
+    
+    const filters = filterString.split(", ").filter(f => f.trim() !== "")
+    if (filters.length === 0) return null
+
+    // 単一選択の場合は既存の色を使用
+    if (filters.length === 1) {
+      const filter = filters[0]
+      return (
+        <Badge className={getTypeSummaryBadgeClass(filter)}>
+          {label}: {getTypeText(filter)}
+        </Badge>
+      )
+    }
+
+    // 複数選択の場合は固定色を使用
+    const badgeClass = label === "ステータス" ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"
+    return (
+      <Badge className={badgeClass}>
+        {label}: {filters.map(filter => getTypeText(filter)).join(", ")}
+      </Badge>
+    )
+  }
+
   return (
     <div className="flex items-center gap-2 flex-wrap">
       <span className="text-sm text-slate-600">アクティブなフィルター:</span>
-      {statusFilter && statusFilter !== "all" && (
-        <Badge className={getTypeSummaryBadgeClass(statusFilter)}>
-          ステータス: {getTypeText(statusFilter)}
-        </Badge>
-      )}
-      {priorityFilter && priorityFilter !== "all" && (
-        <Badge className={getTypeSummaryBadgeClass(priorityFilter)}>
-          {getTypeText(priorityFilter)}
-        </Badge>
-      )}
+      {renderFilterBadges(statusFilter, "ステータス")}
+      {renderFilterBadges(priorityFilter, "優先度")}
       {readStatusFilter && readStatusFilter !== "all" && (
         <Badge className={getTypeSummaryBadgeClass(readStatusFilter)}>
           既読状態: {getTypeText(readStatusFilter)}

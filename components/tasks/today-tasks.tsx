@@ -2,10 +2,6 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Plus, Circle, Clock, CheckCircle, Flag, Calendar, MoreHorizontal } from "lucide-react"
-import { MultiSelectFilters } from "@/components/common/multi-select-filters"
-import { ActiveFiltersDisplay } from "@/components/common/active-filters-display"
-import { EmptyState } from "@/components/common/empty-state"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -16,22 +12,33 @@ import {
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu"
+import { 
+  Plus, 
+  Circle, 
+  Clock, 
+  CheckCircle, 
+  Flag, 
+  Calendar, 
+  MoreHorizontal,
+  Search,
+  Filter
+} from "lucide-react"
+import { SearchFilters } from "@/components/common/search-filters"
+import { ActiveFiltersDisplay } from "@/components/common/active-filters-display"
+import { EmptyState } from "@/components/common/empty-state"
 import { CreateTaskModal } from "./create-task-modal"
 import { TaskDetailModal } from "./task-detail-modal"
-import { EditTaskModal } from "./edit-task-modal"
-import { Task, TaskListProps } from "./types"
+import { Task } from "./types"
 import { format } from "date-fns"
 import { ja } from "date-fns/locale"
 
-export default function TaskList({ projectId, projectName }: TaskListProps) {
+export function TodayTasks() {
   const [searchQuery, setSearchQuery] = useState("")
-  const [statusFilters, setStatusFilters] = useState<string[]>([])
-  const [priorityFilters, setPriorityFilters] = useState<string[]>([])
+  const [statusFilter, setStatusFilter] = useState("all")
+  const [priorityFilter, setPriorityFilter] = useState("all")
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false)
-  const [editingTask, setEditingTask] = useState<Task | null>(null)
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [newTask, setNewTask] = useState({
     title: "",
     description: "",
@@ -39,12 +46,13 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
     dueDate: "",
   })
 
+  // 本日のタスクのモックデータ
   const [tasks, setTasks] = useState<Task[]>([
     {
       id: "1",
-      title: "ワイヤーフレーム作成",
-      description: "メインページとサブページのワイヤーフレームを作成する",
-      status: "completed",
+      title: "デザインシステムの構築",
+      description: "カラーパレット、タイポグラフィ、コンポーネントライブラリの作成",
+      status: "in-progress",
       priority: "high",
       assignee: {
         id: "1",
@@ -52,87 +60,105 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
         avatar: "/placeholder.svg?height=32&width=32&text=佐",
       },
       project: {
-        id: projectId,
-        name: projectName,
+        id: "1",
+        name: "Webサイトリニューアル",
         color: "#3b82f6"
       },
       dueDate: "2024-02-15",
       createdAt: "2024-01-10T09:00:00Z",
-      completedAt: "2024-02-10T15:30:00Z",
+      completedAt: null,
     },
     {
       id: "2",
-      title: "デザインシステム構築",
-      description: "カラーパレット、タイポグラフィ、コンポーネントライブラリの作成",
-      status: "in-progress",
-      priority: "high",
+      title: "フロントエンド実装",
+      description: "React.jsを使用したフロントエンドの実装",
+      status: "todo",
+      priority: "medium",
       assignee: {
         id: "2",
         name: "田中太郎",
         avatar: "/placeholder.svg?height=32&width=32&text=田",
       },
       project: {
-        id: projectId,
-        name: projectName,
+        id: "1",
+        name: "Webサイトリニューアル",
         color: "#3b82f6"
       },
-      dueDate: "2024-02-28",
+      dueDate: "2024-02-20",
       createdAt: "2024-01-15T10:00:00Z",
       completedAt: null,
     },
     {
       id: "3",
-      title: "フロントエンド実装",
-      description: "React.jsを使用したフロントエンドの実装",
-      status: "todo",
-      priority: "medium",
-      assignee: {
-        id: "3",
-        name: "鈴木一郎",
-        avatar: "/placeholder.svg?height=32&width=32&text=鈴",
-      },
-      project: {
-        id: projectId,
-        name: projectName,
-        color: "#3b82f6"
-      },
-      dueDate: "2024-03-10",
-      createdAt: "2024-01-20T11:00:00Z",
-      completedAt: null,
-    },
-    {
-      id: "4",
       title: "SEO対策実装",
       description: "メタタグ、構造化データ、サイトマップの実装",
       status: "todo",
       priority: "low",
       assignee: null,
       project: {
-        id: projectId,
-        name: projectName,
+        id: "2",
+        name: "マーケティング施策",
+        color: "#10b981"
+      },
+      dueDate: "2024-02-25",
+      createdAt: "2024-01-20T11:00:00Z",
+      completedAt: null,
+    },
+    {
+      id: "4",
+      title: "ワイヤーフレーム作成",
+      description: "メインページとサブページのワイヤーフレームを作成する",
+      status: "completed",
+      priority: "high",
+      assignee: {
+        id: "3",
+        name: "鈴木一郎",
+        avatar: "/placeholder.svg?height=32&width=32&text=鈴",
+      },
+      project: {
+        id: "1",
+        name: "Webサイトリニューアル",
         color: "#3b82f6"
       },
-      dueDate: "2024-03-15",
+      dueDate: "2024-02-10",
       createdAt: "2024-01-25T14:00:00Z",
+      completedAt: "2024-02-10T15:30:00Z",
+    },
+    {
+      id: "5",
+      title: "データベース設計",
+      description: "ユーザー管理、プロジェクト管理のテーブル設計",
+      status: "in-progress",
+      priority: "high",
+      assignee: {
+        id: "1",
+        name: "佐藤花子",
+        avatar: "/placeholder.svg?height=32&width=32&text=佐",
+      },
+      project: {
+        id: "3",
+        name: "管理システム開発",
+        color: "#f59e0b"
+      },
+      dueDate: "2024-02-18",
+      createdAt: "2024-01-30T09:00:00Z",
       completedAt: null,
     },
   ])
-
-
 
   const filteredTasks = tasks.filter((task) => {
     const matchesSearch =
       task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       task.description.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesStatus = statusFilters.length === 0 || statusFilters.includes(task.status)
-    const matchesPriority = priorityFilters.length === 0 || priorityFilters.includes(task.priority)
+    const matchesStatus = statusFilter === "all" || task.status === statusFilter
+    const matchesPriority = priorityFilter === "all" || task.priority === priorityFilter
     return matchesSearch && matchesStatus && matchesPriority
   })
 
-  const activeFiltersCount = statusFilters.length + priorityFilters.length
+  const activeFiltersCount = [statusFilter, priorityFilter].filter((f) => f !== "all").length
   const clearFilters = () => {
-    setStatusFilters([])
-    setPriorityFilters([])
+    setStatusFilter("all")
+    setPriorityFilter("all")
   }
 
   const handleTaskToggle = (taskId: string) => {
@@ -160,8 +186,8 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
       priority: newTask.priority,
       assignee: null,
       project: {
-        id: projectId,
-        name: projectName,
+        id: "1",
+        name: "Webサイトリニューアル",
         color: "#3b82f6"
       },
       dueDate: newTask.dueDate || null,
@@ -192,24 +218,6 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
         return task
       }),
     )
-  }
-
-  const handleEditTask = (task: Task) => {
-    setEditingTask(task)
-    setIsEditModalOpen(true)
-  }
-
-  const handleUpdateTask = (updatedTask: Task) => {
-    setTasks((prev) =>
-      prev.map((task) => {
-        if (task.id === updatedTask.id) {
-          return updatedTask
-        }
-        return task
-      }),
-    )
-    setIsEditModalOpen(false)
-    setEditingTask(null)
   }
 
   const getStatusColor = (status: string) => {
@@ -278,13 +286,13 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">タスク一覧</h2>
-          <p className="text-slate-600">プロジェクトのタスクを管理・追跡</p>
+          <h2 className="text-2xl font-bold text-gray-900">本日のタスク</h2>
+          <p className="text-slate-600">{format(new Date(), "yyyy年M月d日", { locale: ja })}のタスク一覧</p>
         </div>
 
         <Button 
           onClick={() => setIsCreateModalOpen(true)}
-                      className="bg-emerald-600 hover:bg-emerald-700 text-white w-full sm:w-auto"
+          className="bg-emerald-600 hover:bg-emerald-700 text-white w-full sm:w-auto"
         >
           <Plus className="w-4 h-4 mr-2" />
           新規タスク
@@ -292,7 +300,7 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
       </div>
 
       {/* Search and Filters */}
-      <MultiSelectFilters
+      <SearchFilters
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         filters={[
@@ -300,25 +308,43 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
             id: "status",
             label: "ステータス",
             icon: Flag,
-            values: statusFilters,
+            value: statusFilter,
             options: [
+              { value: "all", label: "すべて" },
               { value: "todo", label: "未着手" },
               { value: "in-progress", label: "進行中" },
               { value: "completed", label: "完了" }
             ],
-            onValuesChange: setStatusFilters
+            onValueChange: setStatusFilter,
+            getBadgeClass: (value) => {
+              switch (value) {
+                case "todo": return "bg-slate-100 text-slate-800 border border-slate-200"
+                case "in-progress": return "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                case "completed": return "bg-blue-100 text-blue-800 border border-blue-200"
+                default: return ""
+              }
+            }
           },
           {
             id: "priority",
             label: "優先度",
             icon: Flag,
-            values: priorityFilters,
+            value: priorityFilter,
             options: [
+              { value: "all", label: "すべて" },
               { value: "high", label: "高" },
               { value: "medium", label: "中" },
               { value: "low", label: "低" }
             ],
-            onValuesChange: setPriorityFilters
+            onValueChange: setPriorityFilter,
+            getBadgeClass: (value) => {
+              switch (value) {
+                case "high": return "bg-red-100 text-red-800 border border-red-200"
+                case "medium": return "bg-amber-100 text-amber-800 border border-amber-200"
+                case "low": return "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                default: return ""
+              }
+            }
           }
         ]}
         onClearFilters={clearFilters}
@@ -329,8 +355,8 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
       <ActiveFiltersDisplay
         typeFilter="all"
         activeFiltersCount={activeFiltersCount}
-        statusFilter={statusFilters.join(", ")}
-        priorityFilter={priorityFilters.join(", ")}
+        statusFilter={statusFilter}
+        priorityFilter={priorityFilter}
       />
 
       {/* Task List */}
@@ -371,16 +397,20 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={(e) => {
-                              e.stopPropagation()
-                              handleEditTask(task)
-                            }}>
-                              編集
-                            </DropdownMenuItem>
+                            <DropdownMenuItem>編集</DropdownMenuItem>
                             <DropdownMenuItem>複製</DropdownMenuItem>
                             <DropdownMenuItem className="text-red-600">削除</DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
+                      </div>
+                      
+                      {/* プロジェクト名 */}
+                      <div className="flex items-center gap-2">
+                        <div 
+                          className="w-2 h-2 rounded-full" 
+                          style={{ backgroundColor: task.project.color }}
+                        />
+                        <span className="text-xs text-slate-600">{task.project.name}</span>
                       </div>
                       
                       {task.description && (
@@ -428,10 +458,10 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
         </div>
       ) : (
         <EmptyState
-          icon={CheckCircle}
+          icon={Circle}
           title="タスクが見つかりません"
-          description="検索条件を変更するか、新しいタスクを作成してください。"
-          actionLabel="最初のタスクを作成"
+          description="検索条件を変更するか、新しいタスクを作成してください"
+          actionLabel="新規タスク"
           onAction={() => setIsCreateModalOpen(true)}
           variant="task"
         />
@@ -455,17 +485,6 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
           setSelectedTask(null)
         }}
         onStatusChange={handleStatusChange}
-      />
-
-      {/* Edit Task Modal */}
-      <EditTaskModal
-        task={editingTask}
-        isOpen={isEditModalOpen}
-        onClose={() => {
-          setIsEditModalOpen(false)
-          setEditingTask(null)
-        }}
-        onUpdate={handleUpdateTask}
       />
     </div>
   )

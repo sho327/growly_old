@@ -9,6 +9,11 @@ export interface Task {
     name: string
     avatar: string
   } | null
+  project: {
+    id: string
+    name: string
+    color: string
+  }
   dueDate: string | null
   createdAt: string
   completedAt: string | null
