@@ -20,6 +20,8 @@ import {
   Crown,
   LogOut,
   FolderOpen,
+  Leaf,
+  Coins,
 } from "lucide-react"
 import Link from "next/link"
 import { NotificationDropdown } from "@/components/layout/notification-dropdown"
@@ -51,6 +53,14 @@ export function Header({
   return (
     <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 sm:px-5 bg-white sticky top-0 z-40">
       <SidebarTrigger className="-ml-1" />
+      {/* <div className="flex items-center gap-3 ml-2">
+        <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-emerald-500 to-green-500 rounded-xl shadow-sm">
+          <Leaf className="w-6 h-6 text-white" />
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold">Growly</h1>
+        </div>
+      </div> */}
       
       {/* User Info & Actions */}
       <div className="flex items-center space-x-4 ml-auto">
@@ -109,6 +119,12 @@ export function Header({
               <Link href="/gamification" className="cursor-pointer">
                 <Trophy className="mr-2 h-4 w-4" />
                 <span>実績・ミッション</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/points" className="cursor-pointer">
+                <Coins className="mr-2 h-4 w-4" />
+                <span>ポイント履歴</span>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>

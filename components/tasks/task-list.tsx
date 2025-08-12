@@ -141,7 +141,7 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">{projectName} - タスク一覧</h2>
+          <h2 className="text-2xl font-bold text-gray-900">タスク一覧</h2>
           <p className="text-slate-600">プロジェクトのタスクを管理・追跡</p>
         </div>
 
