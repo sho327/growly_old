@@ -1,12 +1,16 @@
 "use client"
 
 import { Badge } from "@/components/ui/badge"
+import { format } from "date-fns"
 
 interface ActiveFiltersDisplayProps {
   typeFilter: string
   activeFiltersCount: number
   statusFilter?: string
   priorityFilter?: string
+  readStatusFilter?: string
+  startDate?: Date
+  endDate?: Date
 }
 
 // Helper function
@@ -41,6 +45,11 @@ const getTypeSummaryBadgeClass = (type: string) => {
       return "bg-amber-100 text-amber-800"
     case "low":
       return "bg-emerald-100 text-emerald-800"
+    // 既読状態
+    case "unread":
+      return "bg-emerald-100 text-emerald-800 border-emerald-200"
+    case "read":
+      return "bg-emerald-100 text-emerald-800 border-emerald-200"
     default:
       return "bg-slate-100 text-slate-800"
   }
@@ -77,12 +86,17 @@ const getTypeText = (type: string) => {
       return "優先度: 中"
     case "low":
       return "優先度: 低"
+    // 既読状態
+    case "unread":
+      return "未読のみ"
+    case "read":
+      return "既読のみ"
     default:
       return type
   }
 }
 
-export function ActiveFiltersDisplay({ typeFilter, activeFiltersCount, statusFilter, priorityFilter }: ActiveFiltersDisplayProps) {
+export function ActiveFiltersDisplay({ typeFilter, activeFiltersCount, statusFilter, priorityFilter, readStatusFilter, startDate, endDate }: ActiveFiltersDisplayProps) {
   if (activeFiltersCount === 0) {
     return null
   }
@@ -100,7 +114,17 @@ export function ActiveFiltersDisplay({ typeFilter, activeFiltersCount, statusFil
           {getTypeText(priorityFilter)}
         </Badge>
       )}
-      {!statusFilter && !priorityFilter && typeFilter !== "all" && (
+      {readStatusFilter && readStatusFilter !== "all" && (
+        <Badge className={getTypeSummaryBadgeClass(readStatusFilter)}>
+          既読状態: {getTypeText(readStatusFilter)}
+        </Badge>
+      )}
+      {(startDate || endDate) && (
+        <Badge className="bg-blue-100 text-blue-800">
+          期間: {startDate ? format(startDate, "M/d") : "開始"} - {endDate ? format(endDate, "M/d") : "終了"}
+        </Badge>
+      )}
+      {!statusFilter && !priorityFilter && !readStatusFilter && !startDate && !endDate && typeFilter !== "all" && (
         <Badge className={getTypeSummaryBadgeClass(typeFilter)}>
           種類: {getTypeText(typeFilter)}
         </Badge>

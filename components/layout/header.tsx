@@ -22,6 +22,7 @@ import {
   FolderOpen,
   Leaf,
   Coins,
+  Bell,
 } from "lucide-react"
 import Link from "next/link"
 import { NotificationDropdown } from "@/components/layout/notification-dropdown"
@@ -125,6 +126,12 @@ export function Header({
               <Link href="/points" className="cursor-pointer">
                 <Coins className="mr-2 h-4 w-4" />
                 <span>ポイント履歴</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/notifications" className="cursor-pointer">
+                <Bell className="mr-2 h-4 w-4" />
+                <span>お知らせ履歴</span>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>

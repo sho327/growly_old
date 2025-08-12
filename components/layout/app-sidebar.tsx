@@ -126,7 +126,7 @@ const sidebarItems = [
   },
   {
     title: "お知らせ",
-    href: "/achievements",
+    href: "/notifications",
     icon: Bell,
     badge: "3",
     premium: false,
