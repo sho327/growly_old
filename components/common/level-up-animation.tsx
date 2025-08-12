@@ -69,7 +69,7 @@ export function LevelUpAnimation({ isVisible, newLevel, onComplete }: LevelUpAni
 
         {/* メインカード */}
         <Card
-          className={`w-96 transform transition-all duration-1000 ${
+          className={`w-96 transform transition-all duration-1000 bg-white border-slate-200 shadow-lg ${
             animationPhase >= 1 ? "scale-100 opacity-100" : "scale-50 opacity-0"
           }`}
         >
@@ -116,7 +116,7 @@ export function LevelUpAnimation({ isVisible, newLevel, onComplete }: LevelUpAni
             <div className="space-y-3">
               <p className="text-lg text-muted-foreground">新しいタイトルを獲得しました！</p>
               <Badge
-                className={`text-lg px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white transform transition-all duration-500 ${
+                className={`text-lg px-4 py-2 bg-gradient-to-r from-emerald-500 to-green-600 text-white border-0 transform transition-all duration-500 ${
                   animationPhase >= 3 ? "scale-110" : "scale-100"
                 }`}
               >
