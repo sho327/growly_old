@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -44,16 +43,19 @@ interface Organization {
 }
 
 export function OrganizationManagement() {
-  const searchParams = useSearchParams()
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [newOrgName, setNewOrgName] = useState("")
   const [newOrgDescription, setNewOrgDescription] = useState("")
 
   useEffect(() => {
-    if (searchParams.get("action") === "create") {
-      setIsCreateOpen(true)
+    // クライアントサイドでのみuseSearchParamsを使用
+    if (typeof window !== 'undefined') {
+      const searchParams = new URLSearchParams(window.location.search)
+      if (searchParams.get("action") === "create") {
+        setIsCreateOpen(true)
+      }
     }
-  }, [searchParams])
+  }, [])
 
   // Mock data
   const user = { isPremium: false }
