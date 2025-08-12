@@ -24,7 +24,7 @@ export function ProjectListHeader({ projectCount, onCreateProject }: ProjectList
 
       <Button 
         onClick={onCreateProject}
-        className="bg-emerald-600 hover:bg-emerald-700 text-white w-full sm:w-auto"
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white w-full sm:w-auto"
       >
         <Plus className="w-4 h-4 mr-2" />
         新規プロジェクト

@@ -94,7 +94,7 @@ export function CreateTaskModal({ isOpen, onClose, newTask, onNewTaskChange, onC
             type="button"
             onClick={onCreate}
             disabled={!newTask.title.trim()}
-            className="bg-slate-700 hover:bg-slate-800 text-white"
+            className="bg-emerald-600 hover:bg-emerald-700 text-white"
           >
             作成
           </Button>
