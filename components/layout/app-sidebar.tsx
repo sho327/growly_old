@@ -214,8 +214,8 @@ export function AppSidebar() {
   }
 
   return (
-    <Sidebar className="border-r border-gray-200 bg-gray-50">
-      <SidebarHeader className="border-b border-gray-200">
+    <Sidebar className="border-r border-gray-200">
+      <SidebarHeader className="border-b border-gray-200 bg-white">
         <div className="flex items-center gap-3 p-4">
           <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-emerald-500 to-green-500 rounded-xl shadow-lg">
             <Leaf className="w-6 h-6 text-white" />
@@ -228,41 +228,43 @@ export function AppSidebar() {
           </div>
         </div>
 
-        {/* Organization Switcher */}
         <div className="px-2 pb-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="w-full justify-between bg-transparent">
+              <Button
+                variant="outline"
+                className="w-full justify-between border-gray-200 hover:bg-gray-50 rounded-xl"
+              >
                 <div className="flex items-center gap-2">
-                  <Building2 className="w-4 h-4" />
-                  <span className="truncate">{currentOrg.name}</span>
+                  <Building2 className="w-4 h-4 text-gray-600" />
+                  <span className="truncate text-gray-700">{currentOrg.name}</span>
                 </div>
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="w-4 h-4 text-gray-400" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="start">
-              <DropdownMenuLabel>組織を選択</DropdownMenuLabel>
+            <DropdownMenuContent className="w-56 rounded-xl border-gray-200" align="start">
+              <DropdownMenuLabel className="text-gray-700">組織を選択</DropdownMenuLabel>
               <DropdownMenuSeparator />
               {organizations.map((org) => (
                 <DropdownMenuItem
                   key={org.id}
                   onClick={() => handleOrgSelect(org)}
-                  className="flex items-center justify-between cursor-pointer"
+                  className="flex items-center justify-between cursor-pointer rounded-lg"
                 >
                   <div className="flex items-center gap-2">
-                    <Building2 className="w-4 h-4" />
+                    <Building2 className="w-4 h-4 text-gray-500" />
                     <div>
-                      <p className="font-medium">{org.name}</p>
+                      <p className="font-medium text-gray-900">{org.name}</p>
                       <p className="text-xs text-gray-500">{org.role}</p>
                     </div>
                   </div>
-                  {currentOrg.id === org.id && <Check className="w-4 h-4" />}
+                  {currentOrg.id === org.id && <Check className="w-4 h-4 text-emerald-600" />}
                 </DropdownMenuItem>
               ))}
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild disabled={!canCreateMoreOrgs}>
-                <Link href="/organizations?action=create" className="flex items-center gap-2">
-                  <Plus className="w-4 h-4" />
+                <Link href="/organizations?action=create" className="flex items-center gap-2 rounded-lg">
+                  <Plus className="w-4 h-4 text-emerald-600" />
                   <span>新しい組織を作成</span>
                   {!user.isPremium && organizations.length >= 1 && <Crown className="w-3 h-3 text-amber-500 ml-auto" />}
                 </Link>
@@ -273,11 +275,11 @@ export function AppSidebar() {
       </SidebarHeader>
 
       {/* ナビゲーション */}
-      <SidebarContent>
+      <SidebarContent className="bg-white">
         <SidebarGroup>
           <SidebarGroupLabel className="text-gray-700 font-semibold">メニュー</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="flex-1 py-1 space-y-2">
+            <SidebarMenu className="flex-1 space-y-1">
               {sidebarItems.map((item) => (
                 <SidebarItem
                   key={item.href}
@@ -294,7 +296,7 @@ export function AppSidebar() {
       </SidebarContent>
 
       {/* 下部アイテム */}
-      <SidebarFooter className="px-2 py-1 pb-3 border-t space-y-1">
+      <SidebarFooter className="px-2 pb-3 border-t space-y-1 bg-white">
         <SidebarMenu>
           {bottomItems.map((item) => (
             <SidebarItem

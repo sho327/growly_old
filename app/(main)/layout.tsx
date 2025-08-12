@@ -1,11 +1,15 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/layout/app-sidebar"
 import { Header } from "@/components/layout/header"
 import { Notification, User } from "@/components/layout/types"
+import { LoginBonusModal } from "@/components/common/login-bonus-modal"
+import { LevelUpAnimation } from "@/components/common/level-up-animation"
+import { User as UserType } from "@/components/common/types"
+import { useLoginBonusStore } from "@/lib/stores/login-bonus-store"
 
 export default function MainLayout({
   children,
@@ -19,6 +23,21 @@ export default function MainLayout({
     level: 5,
     points: 1250,
     isPremium: true,
+  }
+
+  // Extended user data for login bonus
+  const extendedUser: UserType = {
+    id: "1",
+    name: "Growly User",
+    level: 5,
+    totalPoints: 1250,
+    title: "草の芽",
+    coins: 500,
+    backgroundTheme: "default",
+    nameTag: "🌱",
+    lastLogin: new Date(),
+    loginStreak: 7,
+    totalLogins: 25,
   }
 
   // Mock notifications data
@@ -75,6 +94,20 @@ export default function MainLayout({
 
   const unreadCount = notifications.filter(n => !n.isRead).length
 
+  // Zustand store for login bonus
+  const {
+    hasShownLoginBonus,
+    showLevelUp,
+    newLevel,
+    setHasShownLoginBonus,
+    setShowLevelUp,
+    setNewLevel,
+    resetLevelUp,
+  } = useLoginBonusStore()
+
+  // Local state for login bonus modal
+  const [showLoginBonus, setShowLoginBonus] = useState(false)
+
   const handleMarkAsRead = (id: string) => {
     setNotifications(prev =>
       prev.map(notification =>
@@ -91,6 +124,39 @@ export default function MainLayout({
     )
   }
 
+  // Show login bonus on first visit
+  useEffect(() => {
+    if (!hasShownLoginBonus) {
+      setShowLoginBonus(true)
+      setHasShownLoginBonus(true)
+    }
+  }, [hasShownLoginBonus, setHasShownLoginBonus])
+
+  const handleClaimBonus = (bonusPoints: number) => {
+    // Update user points
+    user.points += bonusPoints
+    
+    // Check if level up should occur
+    const currentLevel = extendedUser.level
+    const newTotalPoints = extendedUser.totalPoints + bonusPoints
+    const shouldLevelUp = newTotalPoints >= currentLevel * 200 // Simple level up logic
+    
+    if (shouldLevelUp) {
+      setNewLevel(currentLevel + 1)
+      setTimeout(() => {
+        setShowLevelUp(true)
+      }, 2500) // Show level up after login bonus closes
+    }
+  }
+
+  const handleLevelUpComplete = () => {
+    setShowLevelUp(false)
+    resetLevelUp()
+    // Update user level
+    extendedUser.level = newLevel
+    extendedUser.totalPoints += 50 // Bonus points from level up
+  }
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -102,10 +168,25 @@ export default function MainLayout({
           onMarkAsRead={handleMarkAsRead}
           onMarkAllAsRead={handleMarkAllAsRead}
         />
-        <main className="flex-1 pt-0 pb-4 px-3 sm:px-4 min-w-0 bg-white">
+        <main className="pt-4 pb-4 px-3 sm:px-4 min-w-0 bg-gray-50">
           <div className="mx-auto w-full sm:max-w-8xl lg:max-w-8xl">{children}</div>
         </main>
       </SidebarInset>
+
+      {/* Login Bonus Modal */}
+      <LoginBonusModal
+        user={extendedUser}
+        isOpen={showLoginBonus}
+        onClose={() => setShowLoginBonus(false)}
+        onClaimBonus={handleClaimBonus}
+      />
+
+      {/* Level Up Animation */}
+      <LevelUpAnimation
+        isVisible={showLevelUp}
+        newLevel={newLevel}
+        onComplete={handleLevelUpComplete}
+      />
     </SidebarProvider>
   )
 }

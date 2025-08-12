@@ -9,6 +9,7 @@ export interface User {
   nameTag: string
   lastLogin: Date
   loginStreak: number
+  totalLogins: number
 }
 
 export interface Project {
