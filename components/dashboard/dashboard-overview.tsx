@@ -29,7 +29,6 @@ import { AchievementListCard } from "./achievement-list-card"
 import { DashboardHeader } from "./dashboard-header"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Progress } from "../ui/progress"
-import { LoginBonusModal } from "@/components/common/login-bonus-modal"
 import { LevelUpAnimation } from "@/components/common/level-up-animation"
 import { User } from "@/components/common/types"
 import { useLoginBonusStore } from "@/lib/stores/login-bonus-store"
@@ -37,19 +36,14 @@ import { useLoginBonusStore } from "@/lib/stores/login-bonus-store"
 
 
 export default function DashboardOverview() {
-  // Zustand store for login bonus
+  // Zustand store for level up
   const {
-    hasShownDashboardLoginBonus,
     showLevelUp,
     newLevel,
-    setHasShownDashboardLoginBonus,
     setShowLevelUp,
     setNewLevel,
     resetLevelUp,
   } = useLoginBonusStore()
-
-  // Local state for login bonus modal
-  const [showLoginBonus, setShowLoginBonus] = useState(false)
 
   // Mock user data for login bonus
   const user: User = {
@@ -133,28 +127,6 @@ export default function DashboardOverview() {
     { id: 2, title: "300ポイント獲得", progress: 50, target: 300, current: 150 },
     { id: 3, title: "7日連続ログイン", progress: 85, target: 7, current: 6 },
   ]
-
-  // Show login bonus on first visit
-  useEffect(() => {
-    if (!hasShownDashboardLoginBonus) {
-      setShowLoginBonus(true)
-      setHasShownDashboardLoginBonus(true)
-    }
-  }, [hasShownDashboardLoginBonus, setHasShownDashboardLoginBonus])
-
-  const handleClaimBonus = (bonusPoints: number) => {
-    // Check if level up should occur
-    const currentLevel = user.level
-    const newTotalPoints = user.totalPoints + bonusPoints
-    const shouldLevelUp = newTotalPoints >= currentLevel * 200 // Simple level up logic
-    
-    if (shouldLevelUp) {
-      setNewLevel(currentLevel + 1)
-      setTimeout(() => {
-        setShowLevelUp(true)
-      }, 2500) // Show level up after login bonus closes
-    }
-  }
 
   const handleLevelUpComplete = () => {
     setShowLevelUp(false)
@@ -528,14 +500,6 @@ export default function DashboardOverview() {
           </CardContent>
         </Card>
       {/* </div> */}
-
-      {/* Login Bonus Modal */}
-      <LoginBonusModal
-        user={user}
-        isOpen={showLoginBonus}
-        onClose={() => setShowLoginBonus(false)}
-        onClaimBonus={handleClaimBonus}
-      />
 
       {/* Level Up Animation */}
       <LevelUpAnimation

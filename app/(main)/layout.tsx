@@ -135,17 +135,19 @@ export default function MainLayout({
   const handleClaimBonus = (bonusPoints: number) => {
     // Update user points
     user.points += bonusPoints
+    extendedUser.totalPoints += bonusPoints
     
     // Check if level up should occur
     const currentLevel = extendedUser.level
-    const newTotalPoints = extendedUser.totalPoints + bonusPoints
+    const newTotalPoints = extendedUser.totalPoints
     const shouldLevelUp = newTotalPoints >= currentLevel * 200 // Simple level up logic
     
     if (shouldLevelUp) {
       setNewLevel(currentLevel + 1)
+      // レベルアップアニメーションを少し遅れて表示
       setTimeout(() => {
         setShowLevelUp(true)
-      }, 2500) // Show level up after login bonus closes
+      }, 500) // Show level up after login bonus closes
     }
   }
 

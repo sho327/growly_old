@@ -40,10 +40,12 @@ export function LoginBonusModal({ user, isOpen, onClose, onClaimBonus }: LoginBo
   const handleClaimBonus = () => {
     setClaimed(true)
     onClaimBonus(bonusPoints)
+    // 即座にモーダルを閉じる
+    onClose()
+    // 状態をリセット
     setTimeout(() => {
-      onClose()
       setClaimed(false)
-    }, 2000)
+    }, 100)
   }
 
   const getStreakIcon = (streak: number) => {
