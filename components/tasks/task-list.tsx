@@ -331,6 +331,8 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
         activeFiltersCount={activeFiltersCount}
         statusFilter={statusFilters.join(", ")}
         priorityFilter={priorityFilters.join(", ")}
+        isStatusMultiSelect={true}
+        isPriorityMultiSelect={true}
       />
 
       {/* Task List */}
