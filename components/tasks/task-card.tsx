@@ -16,13 +16,13 @@ interface TaskCardProps {
 const getStatusColor = (status: string) => {
   switch (status) {
     case "todo":
-      return "bg-slate-100 text-slate-700 border-slate-200"
+      return "bg-slate-100 text-slate-800 border-slate-200"
     case "in-progress":
-      return "bg-stone-100 text-stone-700 border-stone-200"
+      return "bg-emerald-100 text-emerald-800 border-emerald-200"
     case "completed":
-      return "bg-gray-100 text-gray-700 border-gray-200"
+      return "bg-blue-100 text-blue-800 border-blue-200"
     default:
-      return "bg-gray-100 text-gray-700 border-gray-200"
+      return "bg-slate-100 text-slate-800 border-slate-200"
   }
 }
 
@@ -42,13 +42,13 @@ const getStatusText = (status: string) => {
 const getPriorityColor = (priority: string) => {
   switch (priority) {
     case "high":
-      return "text-slate-700 bg-slate-100"
+      return "text-red-600 bg-red-100"
     case "medium":
-      return "text-stone-700 bg-stone-100"
+      return "text-amber-600 bg-amber-100"
     case "low":
-      return "text-gray-700 bg-gray-100"
+      return "text-emerald-600 bg-emerald-100"
     default:
-      return "text-gray-700 bg-gray-100"
+      return "text-slate-600 bg-slate-100"
   }
 }
 
@@ -68,9 +68,9 @@ const getPriorityText = (priority: string) => {
 const getCardBackground = (variant: string) => {
   switch (variant) {
     case "in-progress":
-      return "bg-stone-50/30"
+      return "bg-emerald-50/30"
     case "completed":
-      return "bg-gray-50/50"
+      return "bg-blue-50/30"
     default:
       return ""
   }
@@ -86,7 +86,7 @@ export function TaskCard({ task, onToggle, variant = "todo" }: TaskCardProps) {
           <Checkbox 
             checked={isCompleted} 
             onCheckedChange={() => onToggle(task.id)} 
-            className="mt-1" 
+            className="mt-1 data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600" 
           />
           <div className="flex-1 space-y-2">
             <div className="flex items-start justify-between">

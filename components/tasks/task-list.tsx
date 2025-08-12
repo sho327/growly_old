@@ -208,8 +208,10 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
       />
 
       <ActiveFiltersDisplay
-        typeFilter={statusFilter !== "all" ? statusFilter : priorityFilter !== "all" ? priorityFilter : "all"}
+        typeFilter="all"
         activeFiltersCount={activeFiltersCount}
+        statusFilter={statusFilter}
+        priorityFilter={priorityFilter}
       />
 
       {/* Task Columns */}
@@ -245,6 +247,7 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
           description="検索条件を変更するか、新しいタスクを作成してください。"
           actionLabel="最初のタスクを作成"
           onAction={() => setIsCreateModalOpen(true)}
+          variant="task"
         />
       )}
 

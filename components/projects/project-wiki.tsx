@@ -1,11 +1,12 @@
 "use client"
 
 import { useState } from "react"
+import { FileText } from "lucide-react"
 import { ActiveFiltersDisplay } from "@/components/common/active-filters-display"
+import { EmptyState } from "@/components/common/empty-state"
 import { WikiHeader } from "./wiki-header"
 import { WikiSearchFilters } from "./wiki-search-filters"
 import { WikiPostList } from "./wiki-post-list"
-import { WikiEmptyState } from "./wiki-empty-state"
 import { WikiPost } from "./types"
 
 interface ProjectWikiProps {
@@ -155,7 +156,14 @@ export default function ProjectWiki({ projectId, projectName }: ProjectWikiProps
 
       {/* Empty State */}
       {filteredPosts.length === 0 && (
-        <WikiEmptyState onCreatePost={() => setIsCreateModalOpen(true)} />
+        <EmptyState
+          icon={FileText}
+          title="投稿がありません"
+          description="プロジェクトの情報共有を始めましょう。お知らせやドキュメントを投稿してください。"
+          actionLabel="最初の投稿を作成"
+          onAction={() => setIsCreateModalOpen(true)}
+          variant="wiki"
+        />
       )}
     </div>
   )

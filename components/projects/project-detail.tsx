@@ -81,6 +81,21 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
     }
   }
 
+  const getStatusDotColor = (status: string) => {
+    switch (status) {
+      case "active":
+        return "bg-emerald-500"
+      case "completed":
+        return "bg-blue-500"
+      case "on-hold":
+        return "bg-amber-500"
+      case "planning":
+        return "bg-slate-500"
+      default:
+        return "bg-slate-400"
+    }
+  }
+
   const getStatusText = (status: string) => {
     switch (status) {
       case "active":
@@ -144,7 +159,7 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
             <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-3 h-3 rounded-full bg-slate-400" />
+                  <div className={`w-3 h-3 rounded-full ${getStatusDotColor(project.status)}`} />
                   <CardTitle className="text-2xl font-bold text-slate-900">{project.name}</CardTitle>
                   {project.starred && (
                     <div className="p-1 bg-slate-100 rounded-full">
@@ -223,8 +238,8 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
                   <p className="text-sm font-medium text-slate-600">進捗</p>
                   <p className="text-2xl font-bold text-slate-900">{project.progress}%</p>
                 </div>
-                <div className="p-2 bg-slate-100 rounded-lg">
-                  <Target className="w-5 h-5 text-slate-600" />
+                <div className="p-2 bg-emerald-100 rounded-lg">
+                  <Target className="w-5 h-5 text-emerald-600" />
                 </div>
               </div>
               <div className="mt-4 relative">
@@ -246,8 +261,8 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
                     {project.completedTasks}/{project.totalTasks}
                   </p>
                 </div>
-                <div className="p-2 bg-slate-100 rounded-lg">
-                  <CheckCircle className="w-5 h-5 text-slate-600" />
+                <div className="p-2 bg-blue-100 rounded-lg">
+                  <CheckCircle className="w-5 h-5 text-blue-600" />
                 </div>
               </div>
               <p className="text-sm text-slate-600 mt-2">{project.totalTasks - project.completedTasks} 残り</p>
@@ -261,8 +276,8 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
                   <p className="text-sm font-medium text-slate-600">メンバー</p>
                   <p className="text-2xl font-bold text-slate-900">{project.members.length}</p>
                 </div>
-                <div className="p-2 bg-slate-100 rounded-lg">
-                  <Users className="w-5 h-5 text-slate-600" />
+                <div className="p-2 bg-purple-100 rounded-lg">
+                  <Users className="w-5 h-5 text-purple-600" />
                 </div>
               </div>
               <div className="flex -space-x-2 mt-2">

@@ -48,6 +48,21 @@ const getStatusColor = (status: string) => {
   }
 }
 
+const getStatusDotColor = (status: string) => {
+  switch (status) {
+    case "active":
+      return "bg-emerald-500"
+    case "completed":
+      return "bg-blue-500"
+    case "on-hold":
+      return "bg-amber-500"
+    case "planning":
+      return "bg-slate-500"
+    default:
+      return "bg-slate-400"
+  }
+}
+
 const getStatusText = (status: string) => {
   switch (status) {
     case "active":
@@ -97,7 +112,7 @@ export function ProjectListCard({ project }: ProjectListCardProps) {
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
-                <div className="w-3 h-3 rounded-full bg-slate-400" />
+                <div className={`w-3 h-3 rounded-full ${getStatusDotColor(project.status)}`} />
                 <CardTitle className="text-lg font-semibold text-slate-900 line-clamp-1">{project.name}</CardTitle>
                 {project.starred && <Star className="w-4 h-4 text-amber-500 fill-current flex-shrink-0" />}
               </div>

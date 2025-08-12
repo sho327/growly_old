@@ -203,8 +203,10 @@ export default function JapaneseModernProjectList() {
       />
 
       <ActiveFiltersDisplay
-        typeFilter={statusFilter !== "all" ? statusFilter : priorityFilter !== "all" ? priorityFilter : "all"}
+        typeFilter="all"
         activeFiltersCount={activeFiltersCount}
+        statusFilter={statusFilter}
+        priorityFilter={priorityFilter}
       />
 
       {/* Project Grid */}
@@ -222,6 +224,7 @@ export default function JapaneseModernProjectList() {
           description="検索条件を変更するか、新しいプロジェクトを作成してください。"
           actionLabel="最初のプロジェクトを作成"
           onAction={() => setIsCreateModalOpen(true)}
+          variant="project"
         />
       )}
 
