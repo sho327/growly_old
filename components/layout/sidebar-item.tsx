@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { LucideIcon } from "lucide-react"
+import { useSidebar } from "@/components/ui/sidebar"
 
 interface SidebarItemProps {
   title: string
@@ -17,10 +18,19 @@ interface SidebarItemProps {
 export function SidebarItem({ title, href, icon: Icon, badge, premium }: SidebarItemProps) {
   const pathname = usePathname()
   const isActive = pathname === href
+  const { isMobile, setOpenMobile } = useSidebar()
+
+  const handleClick = () => {
+    // スマホの場合のみサイドバーを閉じる
+    if (isMobile) {
+      setOpenMobile(false)
+    }
+  }
 
   return (
     <Link
       href={href}
+      onClick={handleClick}
       className={cn(
         "flex items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium transition-colors h-10",
         premium

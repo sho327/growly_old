@@ -316,17 +316,19 @@ export function OrganizationDetail({ id }: OrganizationDetailProps) {
 
       {/* Tabs */}
       <Tabs defaultValue="members" className="w-full">
-        <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 bg-slate-100">
-          <TabsTrigger value="members" className="data-[state=active]:bg-white data-[state=active]:text-slate-900 text-sm">
-            メンバー
-          </TabsTrigger>
-          <TabsTrigger value="permissions" className="data-[state=active]:bg-white data-[state=active]:text-slate-900 text-sm">
-            権限設定
-          </TabsTrigger>
-          <TabsTrigger value="settings" className="data-[state=active]:bg-white data-[state=active]:text-slate-900 text-sm">
-            組織設定
-          </TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto">
+          <TabsList className="flex w-max min-w-full bg-slate-100 p-1 rounded-lg">
+            <TabsTrigger value="members" className="data-[state=active]:bg-white data-[state=active]:text-slate-900 text-sm whitespace-nowrap flex-shrink-0">
+              メンバー
+            </TabsTrigger>
+            <TabsTrigger value="permissions" className="data-[state=active]:bg-white data-[state=active]:text-slate-900 text-sm whitespace-nowrap flex-shrink-0">
+              権限設定
+            </TabsTrigger>
+            <TabsTrigger value="settings" className="data-[state=active]:bg-white data-[state=active]:text-slate-900 text-sm whitespace-nowrap flex-shrink-0">
+              組織設定
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="members" className="space-y-4">
           <Card>

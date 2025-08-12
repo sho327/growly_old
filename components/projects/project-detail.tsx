@@ -388,20 +388,22 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 bg-slate-100">
-          <TabsTrigger value="tasks" className="data-[state=active]:bg-white data-[state=active]:text-slate-900 text-sm">
-            <CheckCircle className="w-4 h-4 mr-2" />
-            タスク一覧
-          </TabsTrigger>
-          <TabsTrigger value="wiki" className="data-[state=active]:bg-white data-[state=active]:text-slate-900 text-sm">
-            <FileText className="w-4 h-4 mr-2" />
-            Wiki・お知らせ
-          </TabsTrigger>
-          <TabsTrigger value="members" className="data-[state=active]:bg-white data-[state=active]:text-slate-900 text-sm">
-            <Users className="w-4 h-4 mr-2" />
-            メンバー
-          </TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto">
+          <TabsList className="flex w-max min-w-full bg-slate-100 p-1 rounded-lg">
+            <TabsTrigger value="tasks" className="data-[state=active]:bg-white data-[state=active]:text-slate-900 text-sm whitespace-nowrap flex-shrink-0">
+              <CheckCircle className="w-4 h-4 mr-2" />
+              タスク一覧
+            </TabsTrigger>
+            <TabsTrigger value="wiki" className="data-[state=active]:bg-white data-[state=active]:text-slate-900 text-sm whitespace-nowrap flex-shrink-0">
+              <FileText className="w-4 h-4 mr-2" />
+              Wiki・お知らせ
+            </TabsTrigger>
+            <TabsTrigger value="members" className="data-[state=active]:bg-white data-[state=active]:text-slate-900 text-sm whitespace-nowrap flex-shrink-0">
+              <Users className="w-4 h-4 mr-2" />
+              メンバー
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="tasks" className="mt-6">
           <TaskList projectId={project.id} projectName={project.name} />

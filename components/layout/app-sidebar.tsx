@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
+import { useSidebar } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -208,9 +209,15 @@ export function AppSidebar() {
 
   const canCreateMoreOrgs = user.isPremium || organizations.length < 1
 
+  const { isMobile, setOpenMobile } = useSidebar()
+
   const handleOrgSelect = (org: (typeof organizations)[0]) => {
     setCurrentOrg(org)
     router.push(`/organizations/${org.id}`)
+    // スマホの場合のみサイドバーを閉じる
+    if (isMobile) {
+      setOpenMobile(false)
+    }
   }
 
   return (
@@ -263,7 +270,16 @@ export function AppSidebar() {
               ))}
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild disabled={!canCreateMoreOrgs}>
-                <Link href="/organizations?action=create" className="flex items-center gap-2 rounded-lg">
+                <Link 
+                  href="/organizations?action=create" 
+                  className="flex items-center gap-2 rounded-lg"
+                  onClick={() => {
+                    // スマホの場合のみサイドバーを閉じる
+                    if (isMobile) {
+                      setOpenMobile(false)
+                    }
+                  }}
+                >
                   <Plus className="w-4 h-4 text-emerald-600" />
                   <span>新しい組織を作成</span>
                   {!user.isPremium && organizations.length >= 1 && <Crown className="w-3 h-3 text-amber-500 ml-auto" />}
