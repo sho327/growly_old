@@ -1,3 +1,14 @@
+export interface Comment {
+  id: string
+  content: string
+  createdAt: string
+  author: {
+    id: string
+    name: string
+    avatar: string
+  }
+}
+
 export interface Task {
   id: string
   title: string
@@ -17,6 +28,18 @@ export interface Task {
   dueDate: string | null
   createdAt: string
   completedAt: string | null
+  evaluation?: {
+    points: number
+    rating: number
+    comment: string
+    evaluatedAt: string
+    evaluatedBy: {
+      id: string
+      name: string
+      avatar: string
+    }
+  } | null
+  comments?: Comment[]
 }
 
 export interface TaskListProps {

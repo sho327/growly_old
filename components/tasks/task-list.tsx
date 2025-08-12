@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Plus, Circle, Clock, CheckCircle, Flag, Calendar, MoreHorizontal } from "lucide-react"
+import { Plus, Circle, Clock, CheckCircle, Flag, Calendar, MoreHorizontal, MessageSquare, Send } from "lucide-react"
 import { MultiSelectFilters } from "@/components/common/multi-select-filters"
 import { ActiveFiltersDisplay } from "@/components/common/active-filters-display"
 import { EmptyState } from "@/components/common/empty-state"
@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Textarea } from "@/components/ui/textarea"
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -19,9 +20,13 @@ import {
 import { CreateTaskModal } from "./create-task-modal"
 import { TaskDetailModal } from "./task-detail-modal"
 import { EditTaskModal } from "./edit-task-modal"
-import { Task, TaskListProps } from "./types"
+import { EvaluationDialog } from "./evaluation-dialog"
+import { CommentDialog } from "./comment-dialog"
+import { EvaluationButton } from "./evaluation-button"
+import { CommentButton } from "./comment-button"
+import { Task, TaskListProps, Comment } from "./types"
 import { format } from "date-fns"
-import { ja } from "date-fns/locale"
+import { ja } from "date-fns/locale/ja"
 
 export default function TaskList({ projectId, projectName }: TaskListProps) {
   const [searchQuery, setSearchQuery] = useState("")
@@ -32,6 +37,12 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false)
   const [editingTask, setEditingTask] = useState<Task | null>(null)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [evaluatingTask, setEvaluatingTask] = useState<Task | null>(null)
+  const [isEvaluationModalOpen, setIsEvaluationModalOpen] = useState(false)
+  const [commentingTask, setCommentingTask] = useState<Task | null>(null)
+  const [isCommentModalOpen, setIsCommentModalOpen] = useState(false)
+  const [expandedComments, setExpandedComments] = useState<Set<string>>(new Set())
+  const [newCommentTexts, setNewCommentTexts] = useState<Record<string, string>>({})
   const [newTask, setNewTask] = useState({
     title: "",
     description: "",
@@ -59,6 +70,39 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
       dueDate: "2024-02-15",
       createdAt: "2024-01-10T09:00:00Z",
       completedAt: "2024-02-10T15:30:00Z",
+      evaluation: {
+        points: 85,
+        rating: 4,
+        comment: "デザインの品質が高く、要件を満たしている。改善点も含めて良い提案だった。",
+        evaluatedAt: "2024-02-10T16:00:00Z",
+        evaluatedBy: {
+          id: "2",
+          name: "田中太郎",
+          avatar: "/placeholder.svg?height=32&width=32&text=田",
+        },
+      },
+      comments: [
+        {
+          id: "1",
+          content: "ワイヤーフレームの完成度が高いですね。ユーザビリティの観点からも良い設計だと思います。",
+          createdAt: "2024-02-10T14:30:00Z",
+          author: {
+            id: "2",
+            name: "田中太郎",
+            avatar: "/placeholder.svg?height=32&width=32&text=田",
+          },
+        },
+        {
+          id: "2",
+          content: "レスポンシブ対応も考慮されているのが良いです。",
+          createdAt: "2024-02-10T15:00:00Z",
+          author: {
+            id: "3",
+            name: "鈴木一郎",
+            avatar: "/placeholder.svg?height=32&width=32&text=鈴",
+          },
+        },
+      ],
     },
     {
       id: "2",
@@ -79,6 +123,7 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
       dueDate: "2024-02-28",
       createdAt: "2024-01-15T10:00:00Z",
       completedAt: null,
+      evaluation: null,
     },
     {
       id: "3",
@@ -99,6 +144,7 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
       dueDate: "2024-03-10",
       createdAt: "2024-01-20T11:00:00Z",
       completedAt: null,
+      evaluation: null,
     },
     {
       id: "4",
@@ -115,6 +161,7 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
       dueDate: "2024-03-15",
       createdAt: "2024-01-25T14:00:00Z",
       completedAt: null,
+      evaluation: null,
     },
   ])
 
@@ -210,6 +257,143 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
     )
     setIsEditModalOpen(false)
     setEditingTask(null)
+  }
+
+  const handleEvaluateTask = (task: Task) => {
+    setEvaluatingTask(task)
+    setIsEvaluationModalOpen(true)
+  }
+
+  const handleEvaluationSubmit = (evaluation: {
+    points: number
+    rating: number
+    comment: string
+  }) => {
+    if (!evaluatingTask) return
+
+    const updatedTask: Task = {
+      ...evaluatingTask,
+      evaluation: {
+        ...evaluation,
+        evaluatedAt: new Date().toISOString(),
+        evaluatedBy: {
+          id: "current-user",
+          name: "現在のユーザー",
+          avatar: "/placeholder.svg?height=32&width=32&text=現",
+        },
+      },
+    }
+
+    setTasks((prev) =>
+      prev.map((task) => {
+        if (task.id === updatedTask.id) {
+          return updatedTask
+        }
+        return task
+      }),
+    )
+    setIsEvaluationModalOpen(false)
+    setEvaluatingTask(null)
+  }
+
+  const handleCommentTask = (task: Task) => {
+    setCommentingTask(task)
+    setIsCommentModalOpen(true)
+  }
+
+  const toggleCommentExpansion = (taskId: string) => {
+    setExpandedComments(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(taskId)) {
+        newSet.delete(taskId)
+      } else {
+        newSet.add(taskId)
+      }
+      return newSet
+    })
+  }
+
+  const handleCommentTextChange = (taskId: string, text: string) => {
+    setNewCommentTexts(prev => ({
+      ...prev,
+      [taskId]: text
+    }))
+  }
+
+  const handleSubmitInlineComment = (taskId: string) => {
+    const commentText = newCommentTexts[taskId]
+    if (!commentText?.trim()) return
+
+    const task = tasks.find(t => t.id === taskId)
+    if (!task) return
+
+    const newComment: Comment = {
+      id: Date.now().toString(),
+      content: commentText,
+      createdAt: new Date().toISOString(),
+      author: {
+        id: "current-user",
+        name: "現在のユーザー",
+        avatar: "/placeholder.svg?height=32&width=32&text=現",
+      },
+    }
+
+    const updatedTask: Task = {
+      ...task,
+      comments: [...(task.comments || []), newComment],
+    }
+
+    setTasks((prev) =>
+      prev.map((task) => {
+        if (task.id === updatedTask.id) {
+          return updatedTask
+        }
+        return task
+      }),
+    )
+
+    // コメントテキストをクリア
+    setNewCommentTexts(prev => {
+      const newTexts = { ...prev }
+      delete newTexts[taskId]
+      return newTexts
+    })
+
+    // 展開状態を閉じる
+    setExpandedComments(prev => {
+      const newSet = new Set(prev)
+      newSet.delete(taskId)
+      return newSet
+    })
+  }
+
+  const handleAddComment = (content: string) => {
+    if (!commentingTask) return
+
+    const newComment: Comment = {
+      id: Date.now().toString(),
+      content,
+      createdAt: new Date().toISOString(),
+      author: {
+        id: "current-user",
+        name: "現在のユーザー",
+        avatar: "/placeholder.svg?height=32&width=32&text=現",
+      },
+    }
+
+    const updatedTask: Task = {
+      ...commentingTask,
+      comments: [...(commentingTask.comments || []), newComment],
+    }
+
+    setTasks((prev) =>
+      prev.map((task) => {
+        if (task.id === updatedTask.id) {
+          return updatedTask
+        }
+        return task
+      }),
+    )
   }
 
   const getStatusColor = (status: string) => {
@@ -411,6 +595,104 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
                           </div>
                         )}
                       </div>
+
+                      {/* 評価・コメントセクション */}
+                      {isCompleted && (
+                        <div className="mt-2 flex items-center gap-2">
+                          {task.evaluation ? (
+                            <EvaluationButton
+                              isEvaluated={true}
+                              points={task.evaluation.points}
+                              rating={task.evaluation.rating}
+                              onClick={(e) => {
+                                e?.stopPropagation()
+                                handleEvaluateTask(task)
+                              }}
+                            />
+                          ) : (
+                            <EvaluationButton
+                              isEvaluated={false}
+                              onClick={(e) => {
+                                e?.stopPropagation()
+                                handleEvaluateTask(task)
+                              }}
+                            />
+                          )}
+                          <CommentButton
+                            commentCount={task.comments?.length || 0}
+                            onClick={(e) => {
+                              e?.stopPropagation()
+                              toggleCommentExpansion(task.id)
+                            }}
+                          />
+                        </div>
+                      )}
+
+                      {/* コメント展開セクション */}
+                      {isCompleted && expandedComments.has(task.id) && (
+                        <div className="mt-4">
+                          <Card className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm">
+                            <div className="px-6 pb-3">
+                              <h4 className="font-semibold text-sm">コメント</h4>
+                            </div>
+                            <div className="px-6 space-y-4">
+                              {task.comments && task.comments.length > 0 ? (
+                                <div className="space-y-3">
+                                  {task.comments.map((comment) => (
+                                    <div key={comment.id} className="flex gap-3 p-3 bg-gray-50 rounded-lg">
+                                      <Avatar className="w-8 h-8">
+                                        <AvatarImage src={comment.author.avatar} alt={comment.author.name} />
+                                        <AvatarFallback className="text-xs">
+                                          {comment.author.name.charAt(0)}
+                                        </AvatarFallback>
+                                      </Avatar>
+                                      <div className="flex-1">
+                                        <div className="flex items-center gap-2 mb-1">
+                                          <span className="font-medium text-sm">{comment.author.name}</span>
+                                          <span className="text-xs text-muted-foreground">
+                                            {format(new Date(comment.createdAt), "M/d H:mm", { locale: ja })}
+                                          </span>
+                                        </div>
+                                        <p className="text-sm text-gray-700">{comment.content}</p>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              ) : (
+                                <p className="text-sm text-muted-foreground text-center py-4">
+                                  まだコメントがありません
+                                </p>
+                              )}
+                              
+                              <div className="space-y-3 border-t pt-4">
+                                <Textarea
+                                  placeholder="コメントを入力..."
+                                  value={newCommentTexts[task.id] || ""}
+                                  onChange={(e) => handleCommentTextChange(task.id, e.target.value)}
+                                  maxLength={500}
+                                  className="min-h-[80px]"
+                                />
+                                <div className="flex justify-between items-center">
+                                  <span className="text-xs text-muted-foreground">
+                                    {(newCommentTexts[task.id] || "").length}/500文字
+                                  </span>
+                                  <Button
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      handleSubmitInlineComment(task.id)
+                                    }}
+                                    disabled={!newCommentTexts[task.id]?.trim()}
+                                    size="sm"
+                                  >
+                                    <Send className="h-4 w-4 mr-2" />
+                                    送信
+                                  </Button>
+                                </div>
+                              </div>
+                            </div>
+                          </Card>
+                        </div>
+                      )}
                       
                       {task.assignee && (
                         <div className="flex items-center gap-2">
@@ -457,6 +739,8 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
           setSelectedTask(null)
         }}
         onStatusChange={handleStatusChange}
+        onEdit={handleEditTask}
+        onAddComment={handleAddComment}
       />
 
       {/* Edit Task Modal */}
@@ -468,6 +752,41 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
           setEditingTask(null)
         }}
         onUpdate={handleUpdateTask}
+      />
+
+      {/* Evaluation Dialog */}
+      <EvaluationDialog
+        isOpen={isEvaluationModalOpen}
+        onClose={() => {
+          setIsEvaluationModalOpen(false)
+          setEvaluatingTask(null)
+        }}
+        task={evaluatingTask || {
+          id: "",
+          title: "",
+          status: "completed",
+          completedAt: null,
+          evaluation: null,
+        }}
+        onEvaluate={handleEvaluationSubmit}
+      />
+
+      {/* Comment Dialog */}
+      <CommentDialog
+        isOpen={isCommentModalOpen}
+        onClose={() => {
+          setIsCommentModalOpen(false)
+          setCommentingTask(null)
+        }}
+        task={commentingTask || {
+          id: "",
+          title: "",
+          status: "completed",
+          completedAt: null,
+          evaluation: null,
+        }}
+        comments={commentingTask?.comments || []}
+        onAddComment={handleAddComment}
       />
     </div>
   )

@@ -246,7 +246,7 @@ export function PointsHistory() {
                 <p className="text-sm font-medium text-emerald-700">総獲得ポイント</p>
                 <p className="text-2xl font-bold text-emerald-900">{totalPoints.toLocaleString()}</p>
               </div>
-              <div className="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center">
                 <Coins className="w-5 h-5 text-emerald-600" />
               </div>
             </div>
@@ -260,7 +260,7 @@ export function PointsHistory() {
                 <p className="text-sm font-medium text-blue-700">今月の獲得</p>
                 <p className="text-2xl font-bold text-blue-900">{thisMonthPoints.toLocaleString()}</p>
               </div>
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center">
                 <Calendar className="w-5 h-5 text-blue-600" />
               </div>
             </div>
@@ -274,7 +274,7 @@ export function PointsHistory() {
                 <p className="text-sm font-medium text-purple-700">獲得回数</p>
                 <p className="text-2xl font-bold text-purple-900">{pointsHistory.length}</p>
               </div>
-              <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center">
                 <Trophy className="w-5 h-5 text-purple-600" />
               </div>
             </div>

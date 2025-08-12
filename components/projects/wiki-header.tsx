@@ -34,7 +34,7 @@ export function WikiHeader({
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div>
         <div className="flex items-center gap-3">
-          <h2 className="text-2xl font-bold text-slate-900">{projectName} - Wiki・お知らせ</h2>
+          <h2 className="text-2xl font-bold text-slate-900">Wiki・お知らせ</h2>
         </div>
         <p className="text-slate-600 mt-1">プロジェクトの情報共有とドキュメント管理</p>
       </div>

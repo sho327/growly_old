@@ -5,20 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Progress } from "@/components/ui/progress"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,22 +20,19 @@ import {
   Users,
   Target,
   Star,
-  MoreHorizontal,
   Settings,
   Share2,
   Archive,
   Trash2,
   CheckCircle,
   FileText,
-  UserPlus,
-  Edit,
-  Mail,
-  ChevronUp,
-  ChevronDown,
+  MoreHorizontal,
 } from "lucide-react"
 import Link from "next/link"
 import TaskList from "@/components/tasks/task-list"
 import ProjectWiki from "@/components/projects/project-wiki"
+import { MembersHeader } from "./members-header"
+import { MembersTable } from "./members-table"
 
 interface ProjectDetailProps {
   projectId: string
@@ -58,8 +43,7 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
   const [isInviteOpen, setIsInviteOpen] = useState(false)
   const [inviteEmail, setInviteEmail] = useState("")
   const [inviteRole, setInviteRole] = useState("member")
-  const [sortField, setSortField] = useState<string>("name")
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc")
+
 
   // Mock project data - in real app, this would come from API
   const project = {
@@ -82,7 +66,7 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
         role: "管理者",
         joinedAt: "2024-01-10",
         lastActive: "2時間前",
-        status: "active",
+        status: "active" as const,
       },
       { 
         id: "2", 
@@ -92,7 +76,7 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
         role: "リーダー",
         joinedAt: "2024-01-12",
         lastActive: "1時間前",
-        status: "active",
+        status: "active" as const,
       },
       { 
         id: "3", 
@@ -102,7 +86,7 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
         role: "サブリーダー",
         joinedAt: "2024-01-15",
         lastActive: "30分前",
-        status: "active",
+        status: "active" as const,
       },
       { 
         id: "4", 
@@ -112,7 +96,7 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
         role: "メンバー",
         joinedAt: "2024-01-18",
         lastActive: "5分前",
-        status: "active",
+        status: "active" as const,
       },
       { 
         id: "5", 
@@ -122,7 +106,7 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
         role: "招待中",
         joinedAt: null,
         lastActive: null,
-        status: "invited",
+        status: "invited" as const,
       },
     ],
     color: "blue",
@@ -174,33 +158,7 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
     }
   }
 
-  const handleSort = (field: string) => {
-    if (sortField === field) {
-      setSortDirection(sortDirection === "asc" ? "desc" : "asc")
-    } else {
-      setSortField(field)
-      setSortDirection("asc")
-    }
-  }
 
-  const sortedMembers = [...project.members].sort((a, b) => {
-    let aValue: any = a[sortField as keyof typeof a]
-    let bValue: any = b[sortField as keyof typeof b]
-    
-    if (sortField === "joinedAt") {
-      aValue = new Date(aValue).getTime()
-      bValue = new Date(bValue).getTime()
-    } else if (typeof aValue === "string") {
-      aValue = aValue.toLowerCase()
-      bValue = bValue.toLowerCase()
-    }
-    
-    if (sortDirection === "asc") {
-      return aValue > bValue ? 1 : -1
-    } else {
-      return aValue < bValue ? 1 : -1
-    }
-  })
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -410,201 +368,32 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
         </TabsContent>
 
         <TabsContent value="members" className="mt-6">
-          <Card>
-            <CardHeader>
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                  <CardTitle>メンバー一覧</CardTitle>
-                  <CardDescription>プロジェクトのメンバーと役割を管理します</CardDescription>
-                </div>
-                <Dialog open={isInviteOpen} onOpenChange={setIsInviteOpen}>
-                  <DialogTrigger asChild>
-                    <Button className="bg-emerald-600 hover:bg-emerald-700 text-white w-full sm:w-auto">
-                      <UserPlus className="w-4 h-4 mr-2" />
-                      メンバー招待
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>メンバーを招待</DialogTitle>
-                      <DialogDescription>
-                        新しいメンバーをプロジェクトに招待します。招待メールが送信されます。
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-4">
-                      <div>
-                        <Label htmlFor="email">メールアドレス</Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          placeholder="member@example.com"
-                          value={inviteEmail}
-                          onChange={(e) => setInviteEmail(e.target.value)}
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="role">役割</Label>
-                        <select
-                          id="role"
-                          className="w-full p-2 border border-gray-300 rounded-md"
-                          value={inviteRole}
-                          onChange={(e) => setInviteRole(e.target.value)}
-                        >
-                          <option value="member">メンバー</option>
-                          <option value="subleader">サブリーダー</option>
-                          <option value="leader">リーダー</option>
-                          <option value="admin">管理者</option>
-                        </select>
-                      </div>
-                    </div>
-                    <DialogFooter>
-                      <Button variant="outline" onClick={() => setIsInviteOpen(false)}>
-                        キャンセル
-                      </Button>
-                      <Button 
-                        className="bg-emerald-600 hover:bg-emerald-700 text-white"
-                        onClick={() => {
-                          console.log("Invite member:", { email: inviteEmail, role: inviteRole })
-                          setInviteEmail("")
-                          setInviteRole("member")
-                          setIsInviteOpen(false)
-                        }}
-                      >
-                        招待を送信
-                      </Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="overflow-x-auto">
-                <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead 
-                      className="cursor-pointer hover:bg-gray-50"
-                      onClick={() => handleSort("name")}
-                    >
-                      <div className="flex items-center gap-1">
-                        メンバー
-                        {sortField === "name" && (
-                          sortDirection === "asc" ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />
-                        )}
-                      </div>
-                    </TableHead>
-                    <TableHead 
-                      className="cursor-pointer hover:bg-gray-50"
-                      onClick={() => handleSort("role")}
-                    >
-                      <div className="flex items-center gap-1">
-                        役割
-                        {sortField === "role" && (
-                          sortDirection === "asc" ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />
-                        )}
-                      </div>
-                    </TableHead>
-                    <TableHead 
-                      className="cursor-pointer hover:bg-gray-50"
-                      onClick={() => handleSort("joinedAt")}
-                    >
-                      <div className="flex items-center gap-1">
-                        参加日
-                        {sortField === "joinedAt" && (
-                          sortDirection === "asc" ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />
-                        )}
-                      </div>
-                    </TableHead>
-                    <TableHead>最終アクティブ</TableHead>
-                    <TableHead className="w-[50px]"></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {sortedMembers.map((member) => (
-                    <TableRow 
-                      key={member.id}
-                      className={member.status === "invited" ? "bg-gray-50 text-gray-500" : ""}
-                    >
-                      <TableCell>
-                        <div className="flex items-center gap-3">
-                          <Avatar className="h-8 w-8">
-                            <AvatarImage src={member.avatar || "/placeholder.svg"} alt={member.name} />
-                            <AvatarFallback>{member.name[0]}</AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <p className={`font-medium ${member.status === "invited" ? "text-gray-500" : ""}`}>
-                              {member.name}
-                            </p>
-                            <p className={`text-sm ${member.status === "invited" ? "text-gray-400" : "text-gray-500"}`}>
-                              {member.email}
-                            </p>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge 
-                          variant="outline" 
-                          className={
-                            member.role === "管理者" 
-                              ? "bg-red-50 text-red-700 border-red-200"
-                              : member.role === "リーダー"
-                              ? "bg-orange-50 text-orange-700 border-orange-200"
-                              : member.role === "サブリーダー"
-                              ? "bg-yellow-50 text-yellow-700 border-yellow-200"
-                              : member.role === "招待中"
-                              ? "bg-gray-50 text-gray-500 border-gray-200"
-                              : "bg-blue-50 text-blue-700 border-blue-200"
-                          }
-                        >
-                          {member.role}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        {member.joinedAt 
-                          ? new Date(member.joinedAt).toLocaleDateString("ja-JP")
-                          : "未参加"
-                        }
-                      </TableCell>
-                      <TableCell>
-                        {member.lastActive || "未アクセス"}
-                      </TableCell>
-                      <TableCell>
-                        {member.status === "invited" ? (
-                          <Button variant="ghost" size="sm" className="text-gray-400">
-                            <Mail className="w-4 h-4" />
-                          </Button>
-                        ) : (
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="sm">
-                                <MoreHorizontal className="w-4 h-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem>
-                                <Edit className="w-4 h-4 mr-2" />
-                                役割を変更
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>
-                                <Mail className="w-4 h-4 mr-2" />
-                                メッセージ送信
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem className="text-red-600">
-                                <Trash2 className="w-4 h-4 mr-2" />
-                                メンバー削除
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-                </div>
-            </CardContent>
-          </Card>
+          <div className="space-y-6">
+            {/* Header */}
+            <MembersHeader
+              projectName={project.name}
+              isInviteOpen={isInviteOpen}
+              onOpenInvite={() => setIsInviteOpen(true)}
+              onCloseInvite={() => setIsInviteOpen(false)}
+              inviteEmail={inviteEmail}
+              inviteRole={inviteRole}
+              onInviteEmailChange={setInviteEmail}
+              onInviteRoleChange={setInviteRole}
+              onSendInvite={() => {
+                console.log("Invite member:", { email: inviteEmail, role: inviteRole })
+                setInviteEmail("")
+                setInviteRole("member")
+                setIsInviteOpen(false)
+              }}
+            />
+
+            {/* Members Table */}
+            <Card>
+              <CardContent>
+                <MembersTable members={project.members} />
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
         <TabsContent value="wiki" className="mt-6">
