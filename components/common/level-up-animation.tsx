@@ -69,27 +69,27 @@ export function LevelUpAnimation({ isVisible, newLevel, onComplete }: LevelUpAni
 
         {/* メインカード */}
         <Card
-          className={`w-96 transform transition-all duration-1000 bg-white border-slate-200 shadow-lg ${
+          className={`w-[90vw] max-w-96 transform transition-all duration-1000 bg-white border-slate-200 shadow-lg ${
             animationPhase >= 1 ? "scale-100 opacity-100" : "scale-50 opacity-0"
           }`}
         >
-          <CardContent className="p-8 text-center space-y-6">
+          <CardContent className="p-4 sm:p-8 text-center space-y-4 sm:space-y-6">
             {/* レベルアップアイコン */}
             <div className="relative">
               <div
-                className={`mx-auto w-24 h-24 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center transform transition-all duration-1000 ${
+                className={`mx-auto w-16 h-16 sm:w-24 sm:h-24 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center transform transition-all duration-1000 ${
                   animationPhase >= 2 ? "scale-110 rotate-12" : "scale-100"
                 }`}
               >
-                <Trophy className="h-12 w-12 text-white" />
+                <Trophy className="h-8 w-8 sm:h-12 sm:w-12 text-white" />
               </div>
 
               {/* 星エフェクト */}
               {animationPhase >= 2 && (
                 <>
-                  <Star className="absolute -top-2 -right-2 h-6 w-6 text-yellow-400 animate-bounce" />
-                  <Star className="absolute -bottom-2 -left-2 h-4 w-4 text-yellow-400 animate-bounce delay-300" />
-                  <Sparkles className="absolute top-0 left-0 h-5 w-5 text-yellow-400 animate-pulse delay-500" />
+                  <Star className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 h-4 w-4 sm:h-6 sm:w-6 text-yellow-400 animate-bounce" />
+                  <Star className="absolute -bottom-1 -left-1 sm:-bottom-2 sm:-left-2 h-3 w-3 sm:h-4 sm:w-4 text-yellow-400 animate-bounce delay-300" />
+                  <Sparkles className="absolute top-0 left-0 h-4 w-4 sm:h-5 sm:w-5 text-yellow-400 animate-pulse delay-500" />
                 </>
               )}
             </div>
@@ -97,14 +97,14 @@ export function LevelUpAnimation({ isVisible, newLevel, onComplete }: LevelUpAni
             {/* レベルアップテキスト */}
             <div className="space-y-2">
               <h2
-                className={`text-3xl font-bold text-yellow-600 transform transition-all duration-500 ${
+                className={`text-2xl sm:text-3xl font-bold text-yellow-600 transform transition-all duration-500 ${
                   animationPhase >= 2 ? "scale-110" : "scale-100"
                 }`}
               >
                 LEVEL UP!
               </h2>
               <div
-                className={`text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 transform transition-all duration-700 ${
+                className={`text-4xl sm:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 transform transition-all duration-700 ${
                   animationPhase >= 3 ? "scale-125" : "scale-100"
                 }`}
               >
@@ -113,10 +113,10 @@ export function LevelUpAnimation({ isVisible, newLevel, onComplete }: LevelUpAni
             </div>
 
             {/* 新しいタイトル */}
-            <div className="space-y-3">
-              <p className="text-lg text-muted-foreground">新しいタイトルを獲得しました！</p>
+            <div className="space-y-2 sm:space-y-3">
+              <p className="text-sm sm:text-lg text-muted-foreground">新しいタイトルを獲得しました！</p>
               <Badge
-                className={`text-lg px-4 py-2 bg-gradient-to-r from-emerald-500 to-green-600 text-white border-0 transform transition-all duration-500 ${
+                className={`text-sm sm:text-lg px-3 py-1 sm:px-4 sm:py-2 bg-gradient-to-r from-emerald-500 to-green-600 text-white border-0 transform transition-all duration-500 ${
                   animationPhase >= 3 ? "scale-110" : "scale-100"
                 }`}
               >
@@ -130,8 +130,8 @@ export function LevelUpAnimation({ isVisible, newLevel, onComplete }: LevelUpAni
                 animationPhase >= 3 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               }`}
             >
-              <p className="text-lg font-semibold text-green-600">おめでとうございます！🎉</p>
-              <p className="text-sm text-muted-foreground">さらなる成長を目指しましょう！</p>
+              <p className="text-base sm:text-lg font-semibold text-green-600">おめでとうございます！🎉</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">さらなる成長を目指しましょう！</p>
             </div>
           </CardContent>
         </Card>

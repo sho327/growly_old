@@ -56,7 +56,7 @@ export function LoginBonusModal({ user, isOpen, onClose, onClaimBonus }: LoginBo
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-lg bg-white border-slate-200 shadow-sm">
+      <DialogContent className="w-[92vw] max-w-md bg-white border-slate-200 shadow-sm max-h-[85vh] overflow-y-auto">
         <DialogHeader className="text-center">
           <DialogTitle className="flex items-center justify-center gap-2 text-xl font-bold text-slate-900">
             <div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg flex items-center justify-center">
@@ -66,27 +66,27 @@ export function LoginBonusModal({ user, isOpen, onClose, onClaimBonus }: LoginBo
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-6 py-4">
+        <div className="space-y-4 sm:space-y-6 py-2 sm:py-4">
           {/* ログイン状況 */}
           <Card className="bg-gradient-to-br from-emerald-50 to-green-50 border-emerald-200">
-            <CardContent className="p-6 text-center">
-              <div className="text-5xl mb-3">{getStreakIcon(user.loginStreak)}</div>
-              <div className="text-3xl font-bold text-emerald-700 mb-2">{user.loginStreak}日連続</div>
-              <div className="text-sm text-slate-600 font-medium">総ログイン回数: {user.totalLogins}回</div>
+            <CardContent className="p-2 text-center">
+              <div className="text-4xl sm:text-5xl mb-2 sm:mb-3">{getStreakIcon(user.loginStreak)}</div>
+              <div className="text-2xl sm:text-3xl font-bold text-emerald-700 mb-1 sm:mb-2">{user.loginStreak}日連続</div>
+              <div className="text-xs sm:text-sm text-slate-600 font-medium">総ログイン回数: {user.totalLogins}回</div>
             </CardContent>
           </Card>
 
           {/* ボーナス内容 */}
-          <div className="text-center space-y-4">
-            <div className="text-lg font-medium text-slate-700">{getStreakMessage(user.loginStreak)}</div>
+          <div className="text-center space-y-3 sm:space-y-4">
+            <div className="text-base sm:text-lg font-medium text-slate-700">{getStreakMessage(user.loginStreak)}</div>
 
-            <div className="flex items-center justify-center gap-3">
-              <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
-                <Coins className="h-6 w-6 text-white" />
+            <div className="flex items-center justify-center gap-2 sm:gap-3">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+                <Coins className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
               </div>
               <div className="text-center">
-                <div className="text-4xl font-bold text-yellow-600">+{bonusPoints}</div>
-                <div className="text-sm text-slate-600 font-medium">ポイント</div>
+                <div className="text-3xl sm:text-4xl font-bold text-yellow-600">+{bonusPoints}</div>
+                <div className="text-xs sm:text-sm text-slate-600 font-medium">ポイント</div>
               </div>
             </div>
 
@@ -100,16 +100,16 @@ export function LoginBonusModal({ user, isOpen, onClose, onClaimBonus }: LoginBo
 
           {/* 連続ログインカレンダー */}
           <Card className="border-slate-200">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm flex items-center gap-2 text-slate-900">
-                <div className="w-5 h-5 bg-slate-100 rounded flex items-center justify-center">
+            <CardHeader className="pb-0 sm:pb-1">
+              <CardTitle className="text-sm sm:text-base flex items-center gap-2 text-slate-900">
+                <div className="w-4 h-4 sm:w-5 sm:h-5 bg-slate-100 rounded flex items-center justify-center">
                   <Calendar className="h-3 w-3 text-slate-600" />
                 </div>
                 今週のログイン状況
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-7 gap-2">
+              <div className="grid grid-cols-7 gap-1 sm:gap-2">
                 {["日", "月", "火", "水", "木", "金", "土"].map((day, index) => {
                   const isToday = index === new Date().getDay()
                   const hasLoggedIn = index <= new Date().getDay() && user.loginStreak > 0
@@ -117,7 +117,7 @@ export function LoginBonusModal({ user, isOpen, onClose, onClaimBonus }: LoginBo
                   return (
                     <div
                       key={day}
-                      className={`text-center p-3 rounded-lg text-xs border transition-colors ${
+                      className={`text-center p-2 sm:p-3 rounded-lg text-xs border transition-colors ${
                         isToday
                           ? "bg-emerald-500 text-white border-emerald-500"
                           : hasLoggedIn
@@ -138,7 +138,7 @@ export function LoginBonusModal({ user, isOpen, onClose, onClaimBonus }: LoginBo
           <Button
             onClick={handleClaimBonus}
             disabled={claimed}
-            className="w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-semibold shadow-sm"
+            className="w-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-semibold shadow-sm text-sm sm:text-base"
             size="lg"
           >
             {claimed ? (
