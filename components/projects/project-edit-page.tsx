@@ -160,29 +160,31 @@ export default function ProjectEditPage({ projectId }: ProjectEditPageProps) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
+      <div className="space-y-4">
+        {/* 戻るボタン */}
+        <div className="flex justify-start">
           <Link href={`/projects/${projectId}`}>
             <Button variant="outline" size="sm" className="border-slate-200 text-slate-600 hover:bg-slate-50">
               <ArrowLeft className="w-4 h-4 mr-2" />
               戻る
             </Button>
           </Link>
+        </div>
+        
+        {/* ヘッダー */}
+        <div className="flex items-center gap-3">
           <div className="p-2 bg-purple-500 rounded-lg">
             <Settings className="h-6 w-6 text-white" />
           </div>
-          <div>
-            <h1 className="text-2xl font-bold">プロジェクト設定</h1>
-            <p className="text-muted-foreground">{editedProject.name}の設定を管理</p>
+          <div className="min-w-0">
+            <h1 className="text-xl sm:text-2xl font-bold truncate">プロジェクト設定</h1>
+            <p className="text-sm sm:text-base text-muted-foreground truncate">{editedProject.name}の設定を管理</p>
           </div>
         </div>
-        <div className="flex gap-2">
-          <Link href={`/projects/${projectId}`}>
-            <Button variant="outline">
-              キャンセル
-            </Button>
-          </Link>
-          <Button onClick={handleSave}>
+        
+        {/* 保存ボタン */}
+        <div className="flex justify-start">
+          <Button onClick={handleSave} size="sm" className="text-xs sm:text-sm">
             <Save className="h-4 w-4 mr-2" />
             保存
           </Button>
