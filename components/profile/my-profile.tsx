@@ -347,51 +347,72 @@ export default function MyProfile() {
         </CardHeader>
         <CardContent>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="profile">プロフィール</TabsTrigger>
-              <TabsTrigger value="privacy">プライバシー</TabsTrigger>
-              <TabsTrigger value="notifications">通知</TabsTrigger>
-              <TabsTrigger value="customization">カスタマイズ</TabsTrigger>
+            <TabsList className="flex flex-wrap w-full gap-1 p-1 bg-slate-100 rounded-lg">
+              <TabsTrigger value="profile" className="text-xs sm:text-sm flex-1 min-w-0">プロフィール</TabsTrigger>
+              <TabsTrigger value="privacy" className="text-xs sm:text-sm flex-1 min-w-0">プライバシー</TabsTrigger>
+              <TabsTrigger value="notifications" className="text-xs sm:text-sm flex-1 min-w-0">通知</TabsTrigger>
+              <TabsTrigger value="customization" className="text-xs sm:text-sm flex-1 min-w-0">カスタマイズ</TabsTrigger>
             </TabsList>
 
             <TabsContent value="profile" className="space-y-4 mt-6">
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-3">
-                  <h4 className="font-medium text-slate-900">基本情報</h4>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-slate-600">表示名</span>
-                      <span className="font-medium">{profile.displayName}</span>
+              <div className="space-y-4">
+                <div className="p-4 bg-slate-50 rounded-lg">
+                  <h4 className="font-medium text-slate-900 mb-3 flex items-center gap-2">
+                    <User className="w-4 h-4 text-slate-600" />
+                    基本情報
+                  </h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between py-2 border-b border-slate-200 last:border-b-0">
+                      <span className="text-sm text-slate-600">表示名</span>
+                      <span className="text-sm font-medium text-slate-900">{profile.displayName}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-600">ユーザー名</span>
-                      <span className="font-medium">@{profile.username}</span>
+                    <div className="flex items-center justify-between py-2 border-b border-slate-200 last:border-b-0">
+                      <span className="text-sm text-slate-600">ユーザー名</span>
+                      <span className="text-sm font-medium text-slate-900">@{profile.username}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-600">メールアドレス</span>
-                      <span className="font-medium">{profile.email}</span>
+                    <div className="flex items-center justify-between py-2 border-b border-slate-200 last:border-b-0">
+                      <span className="text-sm text-slate-600">メールアドレス</span>
+                      <span className="text-sm font-medium text-slate-900">{profile.email}</span>
                     </div>
                   </div>
                 </div>
-                <div className="space-y-3">
-                  <h4 className="font-medium text-slate-900">ソーシャルリンク</h4>
-                  <div className="space-y-2 text-sm">
+
+                <div className="p-4 bg-slate-50 rounded-lg">
+                  <h4 className="font-medium text-slate-900 mb-3 flex items-center gap-2">
+                    <Globe className="w-4 h-4 text-slate-600" />
+                    ソーシャルリンク
+                  </h4>
+                  <div className="space-y-3">
                     {profile.socialLinks.twitter && (
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">Twitter</span>
-                        <span className="font-medium text-blue-600">設定済み</span>
+                      <div className="flex items-center justify-between py-2 border-b border-slate-200 last:border-b-0">
+                        <div className="flex items-center gap-2">
+                          <Twitter className="w-4 h-4 text-blue-500" />
+                          <span className="text-sm text-slate-600">Twitter</span>
+                        </div>
+                        <span className="text-sm font-medium text-blue-600">設定済み</span>
                       </div>
                     )}
                     {profile.socialLinks.github && (
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">GitHub</span>
-                        <span className="font-medium text-blue-600">設定済み</span>
+                      <div className="flex items-center justify-between py-2 border-b border-slate-200 last:border-b-0">
+                        <div className="flex items-center gap-2">
+                          <Github className="w-4 h-4 text-slate-700" />
+                          <span className="text-sm text-slate-600">GitHub</span>
+                        </div>
+                        <span className="text-sm font-medium text-blue-600">設定済み</span>
                       </div>
                     )}
                     {profile.socialLinks.website && (
-                      <div className="flex justify-between">
-                        <span className="text-slate-600">ウェブサイト</span>
-                        <span className="font-medium text-blue-600">設定済み</span>
+                      <div className="flex items-center justify-between py-2 border-b border-slate-200 last:border-b-0">
+                        <div className="flex items-center gap-2">
+                          <ExternalLink className="w-4 h-4 text-emerald-600" />
+                          <span className="text-sm text-slate-600">ウェブサイト</span>
+                        </div>
+                        <span className="text-sm font-medium text-blue-600">設定済み</span>
+                      </div>
+                    )}
+                    {!profile.socialLinks.twitter && !profile.socialLinks.github && !profile.socialLinks.website && (
+                      <div className="text-sm text-slate-500 py-2">
+                        ソーシャルリンクが設定されていません
                       </div>
                     )}
                   </div>

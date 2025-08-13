@@ -213,7 +213,7 @@ export function TaskDetail({ task, projectId }: TaskDetailPageProps) {
                 )}
               </div>
               <CardTitle className="text-2xl font-bold text-slate-900 mb-3">{currentTask.title}</CardTitle>
-              <div className="flex items-center gap-4 text-sm text-slate-600">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-slate-600">
                 {currentTask.assignee && (
                   <div className="flex items-center gap-2">
                     <Avatar className="w-6 h-6">

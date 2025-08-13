@@ -94,11 +94,11 @@ export default function AppSettings() {
       </div>
 
       <Tabs defaultValue="general" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="general">一般</TabsTrigger>
-          <TabsTrigger value="notifications">通知</TabsTrigger>
-          <TabsTrigger value="privacy">プライバシー</TabsTrigger>
-          <TabsTrigger value="performance">パフォーマンス</TabsTrigger>
+        <TabsList className="flex flex-wrap w-full gap-1 p-1 bg-slate-100 rounded-lg">
+          <TabsTrigger value="general" className="text-xs sm:text-sm flex-1 min-w-0">一般</TabsTrigger>
+          <TabsTrigger value="notifications" className="text-xs sm:text-sm flex-1 min-w-0">通知</TabsTrigger>
+          <TabsTrigger value="privacy" className="text-xs sm:text-sm flex-1 min-w-0">プライバシー</TabsTrigger>
+          <TabsTrigger value="performance" className="text-xs sm:text-sm flex-1 min-w-0">パフォーマンス</TabsTrigger>
         </TabsList>
 
         {/* General Tab */}
@@ -111,23 +111,23 @@ export default function AppSettings() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                <div className="flex-1">
                   <h4 className="font-medium text-slate-900">テーマ</h4>
                   <p className="text-sm text-slate-600">アプリケーションのテーマを選択</p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   {(["light", "dark", "system"] as const).map((theme) => (
                     <Button
                       key={theme}
                       variant={settings.theme === theme ? "default" : "outline"}
                       size="sm"
                       onClick={() => handleSimpleSettingUpdate("theme", theme)}
-                      className="flex items-center gap-2"
+                      className="flex items-center gap-2 text-xs sm:text-sm"
                     >
-                      {theme === "light" && <Sun className="w-4 h-4" />}
-                      {theme === "dark" && <Moon className="w-4 h-4" />}
-                      {theme === "system" && <Monitor className="w-4 h-4" />}
+                      {theme === "light" && <Sun className="w-3 h-3 sm:w-4 sm:h-4" />}
+                      {theme === "dark" && <Moon className="w-3 h-3 sm:w-4 sm:h-4" />}
+                      {theme === "system" && <Monitor className="w-3 h-3 sm:w-4 sm:h-4" />}
                       {theme === "light" && "ライト"}
                       {theme === "dark" && "ダーク"}
                       {theme === "system" && "システム"}
@@ -138,18 +138,19 @@ export default function AppSettings() {
 
               <Separator />
 
-              <div className="flex items-center justify-between">
-                <div>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                <div className="flex-1">
                   <h4 className="font-medium text-slate-900">言語</h4>
                   <p className="text-sm text-slate-600">アプリケーションの言語を選択</p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   {(["ja", "en"] as const).map((lang) => (
                     <Button
                       key={lang}
                       variant={settings.language === lang ? "default" : "outline"}
                       size="sm"
                       onClick={() => handleSimpleSettingUpdate("language", lang)}
+                      className="text-xs sm:text-sm"
                     >
                       {lang === "ja" ? "日本語" : "English"}
                     </Button>
@@ -167,8 +168,8 @@ export default function AppSettings() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                <div className="flex-1">
                   <h4 className="font-medium text-slate-900">自動保存</h4>
                   <p className="text-sm text-slate-600">変更を自動的に保存する</p>
                 </div>
