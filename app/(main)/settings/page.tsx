@@ -1,8 +1,5 @@
-import UserSettings from "@/components/settings/user-settings"
+import AppSettings from "@/components/settings/app-settings"
+
 export default function SettingsPage() {
-  return (
-    
-      <UserSettings />
-    
-  )
+  return <AppSettings />
 }

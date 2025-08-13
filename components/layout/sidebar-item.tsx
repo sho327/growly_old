@@ -17,7 +17,33 @@ interface SidebarItemProps {
 
 export function SidebarItem({ title, href, icon: Icon, badge, premium }: SidebarItemProps) {
   const pathname = usePathname()
-  const isActive = pathname === href
+  
+  // アクティブ判定を改善: 各ページの特性に合わせた判定
+  const getIsActive = () => {
+    // 完全一致の場合
+    if (pathname === href) return true
+    
+    // ダッシュボードは完全一致のみ
+    if (href === "/dashboard") return pathname === "/dashboard"
+    
+    // プロジェクトページ: /projects で始まるパスすべて
+    if (href === "/projects") return pathname.startsWith("/projects")
+    
+    // タスクページ: /tasks で始まるパスすべて
+    if (href === "/tasks") return pathname.startsWith("/tasks")
+    
+    // 組織管理ページ: /organizations で始まるパスすべて
+    if (href === "/organizations") return pathname.startsWith("/organizations")
+    
+    // プロフィールページ: /profile で始まるパスすべて
+    if (href === "/profile/me") return pathname.startsWith("/profile")
+    
+    // その他のページは先頭部分でマッチ
+    return pathname.startsWith(href)
+  }
+  
+  const isActive = getIsActive()
+  
   const { isMobile, setOpenMobile } = useSidebar()
 
   const handleClick = () => {
