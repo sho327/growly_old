@@ -52,6 +52,13 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
     id: projectId,
     name: "Webサイトリニューアル",
     description: "コーポレートサイトの全面リニューアルプロジェクト。デザインとUXの改善を行います。",
+    category: "development",
+    tags: ["React", "TypeScript", "Web開発"],
+    githubUrl: "",
+    websiteUrl: "",
+    icon: "W",
+    isPublic: true,
+    allowInvites: true,
     status: "active" as const,
     priority: "high" as const,
     progress: 65,
@@ -260,9 +267,11 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem>
-                      <Settings className="w-4 h-4 mr-2" />
-                      プロジェクト設定
+                    <DropdownMenuItem asChild>
+                      <Link href={`/projects/${projectId}/edit`}>
+                        <Settings className="w-4 h-4 mr-2" />
+                        プロジェクト設定
+                      </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                       <Star className="w-4 h-4 mr-2" />

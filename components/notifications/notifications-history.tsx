@@ -406,8 +406,8 @@ export function NotificationsHistory() {
                       </div>
 
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="flex-1">
+                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+                          <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
                               <h3 className={`font-medium truncate ${
                                 item.isRead ? "text-slate-900" : "text-slate-900 font-semibold"
@@ -419,25 +419,30 @@ export function NotificationsHistory() {
                               )}
                             </div>
                             <p className="text-sm text-slate-600 mb-2">{item.description}</p>
-                                                         <div className="flex items-center gap-2">
-                               <Badge className={getTypeColor(item.type)}>
-                                 {getTypeLabel(item.type)}
-                               </Badge>
-                               {!item.isRead && (
-                                 <Button
-                                   variant="ghost"
-                                   size="sm"
-                                   onClick={() => handleMarkAsRead(item.id)}
-                                   className="h-6 px-2 text-xs text-slate-600 hover:text-slate-800"
-                                 >
-                                   既読にする
-                                 </Button>
-                               )}
-                             </div>
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                              <div className="flex items-center gap-2">
+                                <Badge className={getTypeColor(item.type)}>
+                                  {getTypeLabel(item.type)}
+                                </Badge>
+                                {!item.isRead && (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      handleMarkAsRead(item.id)
+                                    }}
+                                    className="h-6 px-2 text-xs text-slate-600 hover:text-slate-800"
+                                  >
+                                    既読にする
+                                  </Button>
+                                )}
+                              </div>
+                              <p className="text-xs text-slate-400 sm:whitespace-nowrap">
+                                {formatTimestamp(item.timestamp)}
+                              </p>
+                            </div>
                           </div>
-                          <p className="text-xs text-slate-400 whitespace-nowrap">
-                            {formatTimestamp(item.timestamp)}
-                          </p>
                         </div>
                       </div>
                     </div>
