@@ -32,10 +32,13 @@ import {
   EyeOff,
   Lock,
   Unlock,
+  Activity,
+  BarChart3,
 } from "lucide-react"
 import Link from "next/link"
 import { format } from "date-fns"
 import { ja } from "date-fns/locale"
+import { StatCard } from "@/components/common"
 
 interface UserProfile {
   id: string
@@ -150,9 +153,14 @@ export default function MyProfile() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">マイプロフィール</h1>
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-emerald-100 rounded-xl">
+              <User className="w-6 h-6 text-emerald-600" />
+            </div>
+            <h1 className="text-2xl font-bold text-slate-900">マイプロフィール</h1>
+          </div>
           <p className="text-slate-600 mt-1">プロフィール情報と設定の確認</p>
         </div>
         <Link href="/profile/edit">
@@ -164,7 +172,7 @@ export default function MyProfile() {
       </div>
 
       {/* Profile Overview */}
-      <Card className="bg-white border-slate-200 shadow-sm">
+      <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
         <CardContent className="p-6">
           <div className="flex flex-col lg:flex-row gap-6">
             {/* Avatar Section */}
@@ -257,70 +265,48 @@ export default function MyProfile() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="bg-white border-slate-200 shadow-sm">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-slate-600">総ポイント</p>
-                <p className="text-2xl font-bold text-slate-900">{stats.totalPoints}</p>
-              </div>
-              <div className="p-2 bg-emerald-100 rounded-lg">
-                <Star className="w-5 h-5 text-emerald-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white border-slate-200 shadow-sm">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-slate-600">完了タスク</p>
-                <p className="text-2xl font-bold text-slate-900">{stats.tasksCompleted}</p>
-              </div>
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Target className="w-5 h-5 text-blue-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white border-slate-200 shadow-sm">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-slate-600">連続ログイン</p>
-                <p className="text-2xl font-bold text-slate-900">{stats.currentStreak}日</p>
-              </div>
-              <div className="p-2 bg-orange-100 rounded-lg">
-                <Zap className="w-5 h-5 text-orange-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white border-slate-200 shadow-sm">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-slate-600">実績</p>
-                <p className="text-2xl font-bold text-slate-900">{stats.achievementsUnlocked}/{stats.totalAchievements}</p>
-              </div>
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <Trophy className="w-5 h-5 text-purple-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <StatCard
+          icon={<Star className="w-5 h-5 sm:w-6 sm:h-6" />}
+          title="総ポイント"
+          value={stats.totalPoints.toString()}
+          subtitle="累計獲得"
+          color="emerald"
+        />
+        <StatCard
+          icon={<Target className="w-5 h-5 sm:w-6 sm:h-6" />}
+          title="完了タスク"
+          value={stats.tasksCompleted.toString()}
+          subtitle="総完了数"
+          color="blue"
+        />
+        <StatCard
+          icon={<Zap className="w-5 h-5 sm:w-6 sm:h-6" />}
+          title="連続ログイン"
+          value={`${stats.currentStreak}日`}
+          subtitle="現在の記録"
+          color="orange"
+        />
+        <StatCard
+          icon={<Trophy className="w-5 h-5 sm:w-6 sm:h-6" />}
+          title="実績"
+          value={`${stats.achievementsUnlocked}/${stats.totalAchievements}`}
+          subtitle="獲得済み"
+          color="purple"
+        />
       </div>
 
       {/* Level Progress */}
-      <Card className="bg-white border-slate-200 shadow-sm">
+      <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
         <CardHeader>
-          <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-            <User className="w-5 h-5 text-slate-600" />
-            レベル進捗
-          </CardTitle>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
+              <User className="w-5 h-5 text-emerald-600" />
+            </div>
+            <div>
+              <CardTitle className="text-lg font-bold text-slate-900">レベル進捗</CardTitle>
+              <p className="text-sm text-slate-600">現在のレベルと次のレベルまでの進捗</p>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -335,19 +321,29 @@ export default function MyProfile() {
                 次のレベルまで {profile.nextLevelXP - profile.currentXP} XP
               </Badge>
             </div>
-            <Progress value={xpProgress} className="h-3 bg-slate-200" />
+            <div className="relative">
+              <Progress value={xpProgress} className="h-3 bg-slate-200" />
+              <div
+                className="absolute inset-0 h-3 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-full transition-all duration-500"
+                style={{ width: `${xpProgress}%` }}
+              ></div>
+            </div>
           </div>
         </CardContent>
       </Card>
 
       {/* Settings Overview */}
-      <Card className="bg-white border-slate-200 shadow-sm">
+      <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
         <CardHeader>
-          <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-            <Settings className="w-5 h-5 text-slate-600" />
-            設定情報
-          </CardTitle>
-          <CardDescription>現在の設定状況を確認できます</CardDescription>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+              <Settings className="w-5 h-5 text-blue-600" />
+            </div>
+            <div>
+              <CardTitle className="text-lg font-bold text-slate-900">設定情報</CardTitle>
+              <p className="text-sm text-slate-600">現在の設定状況を確認できます</p>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -532,13 +528,17 @@ export default function MyProfile() {
       </Card>
 
       {/* Recent Achievements */}
-      <Card className="bg-white border-slate-200 shadow-sm">
+      <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
         <CardHeader>
-          <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-slate-600" />
-            最近の実績
-          </CardTitle>
-          <CardDescription>最近獲得した実績</CardDescription>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
+              <Trophy className="w-5 h-5 text-purple-600" />
+            </div>
+            <div>
+              <CardTitle className="text-lg font-bold text-slate-900">最近の実績</CardTitle>
+              <p className="text-sm text-slate-600">最近獲得した実績</p>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-3">
