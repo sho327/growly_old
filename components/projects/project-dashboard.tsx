@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Progress } from "@/components/ui/progress"
 import { Button } from "@/components/ui/button"
+import { StatCard } from "@/components/common"
 
 import {
   TrendingUp,
@@ -238,83 +239,40 @@ export default function ProjectDashboard({ projectId, projectName }: ProjectDash
       </div>
 
       {/* Overview Stats */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="border border-slate-200">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-slate-600">進捗率</p>
-                <p className="text-2xl font-bold text-slate-900">{progressPercentage.toFixed(1)}%</p>
-              </div>
-              <div className="p-2 bg-emerald-100 rounded-lg">
-                <TrendingUp className="w-5 h-5 text-emerald-600" />
-              </div>
-            </div>
-            <div className="mt-4">
-              <Progress value={progressPercentage} className="h-2 bg-slate-200" />
-            </div>
-            <p className="text-sm text-slate-600 mt-2">
-              {projectStats.completedTasks}/{projectStats.totalTasks} タスク完了
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card className="border border-slate-200">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-slate-600">総ポイント</p>
-                <p className="text-2xl font-bold text-slate-900">{projectStats.totalPoints}</p>
-              </div>
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Star className="w-5 h-5 text-blue-600" />
-              </div>
-            </div>
-            <div className="flex items-center gap-1 mt-2">
-              <TrendingUp className="w-4 h-4 text-green-600" />
-              <span className="text-sm text-green-600">+{projectStats.weeklyPoints} 今週</span>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border border-slate-200">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-slate-600">チーム生産性</p>
-                <p className="text-2xl font-bold text-slate-900">{projectStats.teamProductivity}%</p>
-              </div>
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <Zap className="w-5 h-5 text-purple-600" />
-              </div>
-            </div>
-            <div className="flex items-center gap-1 mt-2">
-              <Clock3 className="w-4 h-4 text-slate-600" />
-              <span className="text-sm text-slate-600">平均 {projectStats.averageCompletionTime}日</span>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border border-slate-200">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-slate-600">期限超過</p>
-                <p className="text-2xl font-bold text-red-600">{projectStats.overdueTasks}</p>
-              </div>
-              <div className="p-2 bg-red-100 rounded-lg">
-                <AlertCircle className="w-5 h-5 text-red-600" />
-              </div>
-            </div>
-            <p className="text-sm text-slate-600 mt-2">タスクが期限を超過</p>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard
+          icon={<TrendingUp className="w-5 h-5 sm:w-6 sm:h-6" />}
+          title="進捗率"
+          value={`${progressPercentage.toFixed(1)}%`}
+          subtitle={`${projectStats.completedTasks}/${projectStats.totalTasks} タスク完了`}
+          color="emerald"
+        />
+        <StatCard
+          icon={<Star className="w-5 h-5 sm:w-6 sm:h-6" />}
+          title="総ポイント"
+          value={projectStats.totalPoints.toString()}
+          subtitle={`+${projectStats.weeklyPoints} 今週`}
+          color="blue"
+        />
+        <StatCard
+          icon={<Zap className="w-5 h-5 sm:w-6 sm:h-6" />}
+          title="チーム生産性"
+          value={`${projectStats.teamProductivity}%`}
+          subtitle={`平均 ${projectStats.averageCompletionTime}日`}
+          color="purple"
+        />
+        <StatCard
+          icon={<AlertCircle className="w-5 h-5 sm:w-6 sm:h-6" />}
+          title="期限超過"
+          value={projectStats.overdueTasks.toString()}
+          subtitle="タスクが期限を超過"
+          color="red"
+        />
       </div>
 
-      {/* Project Overview Section */}
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-4 lg:grid-cols-3">
         {/* Task Status Overview */}
-        <Card className="border border-slate-200">
+        <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
           <CardHeader>
             <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
               <BarChart3 className="w-5 h-5 text-slate-600" />
@@ -366,7 +324,7 @@ export default function ProjectDashboard({ projectId, projectName }: ProjectDash
         </Card>
 
         {/* Team Performance */}
-        <Card className="border border-slate-200">
+        <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
           <CardHeader>
             <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
               <Zap className="w-5 h-5 text-slate-600" />
@@ -392,31 +350,30 @@ export default function ProjectDashboard({ projectId, projectName }: ProjectDash
             </div>
           </CardContent>
         </Card>
-      </div>
 
-      {/* Member Contributions Section */}
-      <Card className="border border-slate-200">
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-slate-600" />
-            メンバー貢献度ランキング
-          </CardTitle>
-          <CardDescription>ポイント獲得数とタスク完了数に基づくランキング</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {memberContributions
-              .sort((a, b) => b.points - a.points)
-              .map((member, index) => (
-                <div key={member.id} className="flex items-center gap-4 p-4 bg-slate-50 rounded-lg">
-                  <div className="flex items-center gap-3 flex-1">
+        {/* Member Contributions Section */}
+        <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+              <Trophy className="w-5 h-5 text-slate-600" />
+              貢献度ランキング
+            </CardTitle>
+            <CardDescription>ポイント獲得数によるランキング</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {memberContributions
+                .sort((a, b) => b.points - a.points)
+                .slice(0, 3)
+                .map((member, index) => (
+                  <div key={member.id} className="flex items-center gap-3 p-2 bg-slate-50 rounded-lg">
                     <div className="relative">
                       {index < 3 && (
                         <div className="absolute -top-2 -right-2 w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center shadow-sm">
                           <span className="text-xs font-bold text-white">{index + 1}</span>
                         </div>
                       )}
-                      <Avatar className="w-10 h-10">
+                      <Avatar className="w-8 h-8">
                         <AvatarImage src={member.avatar} alt={member.name} />
                         <AvatarFallback className="text-sm font-medium">
                           {member.name.charAt(0)}
@@ -425,30 +382,27 @@ export default function ProjectDashboard({ projectId, projectName }: ProjectDash
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
-                        <h4 className="font-medium text-slate-900">{member.name}</h4>
+                        <h4 className="font-medium text-sm text-slate-900">{member.name}</h4>
                         <Badge variant="outline" className="text-xs">
                           {member.role}
                         </Badge>
                       </div>
-                      <div className="flex items-center gap-4 mt-1 text-sm text-slate-600">
-                        <span>{member.tasksCompleted} タスク完了</span>
-                        <span>評価 {member.averageRating}/5.0</span>
-                        <span>生産性 {member.productivity}%</span>
+                      <div className="text-xs text-slate-600">
+                        {member.tasksCompleted} タスク完了
                       </div>
                     </div>
+                    <div className="text-right">
+                      <div className="text-sm font-bold text-slate-900">{member.points}pt</div>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <div className="text-lg font-bold text-slate-900">{member.points}pt</div>
-                    <div className="text-sm text-slate-600">{member.lastActive}</div>
-                  </div>
-                </div>
-              ))}
-          </div>
-        </CardContent>
-      </Card>
+                ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Recent Activities Section */}
-      <Card className="border border-slate-200">
+      <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
         <CardHeader>
           <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
             <Activity className="w-5 h-5 text-slate-600" />
