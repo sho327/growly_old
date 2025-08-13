@@ -14,6 +14,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Bell, Trophy, Megaphone, CheckCircle, FolderOpen, X } from "lucide-react"
 import { Notification } from "./types"
+import { useRouter } from "next/navigation"
 
 interface NotificationDropdownProps {
   notifications: Notification[]
@@ -57,6 +58,7 @@ export function NotificationDropdown({
   onMarkAllAsRead 
 }: NotificationDropdownProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const router = useRouter()
 
   const handleMarkAsRead = (id: string) => {
     onMarkAsRead(id)
@@ -64,6 +66,14 @@ export function NotificationDropdown({
 
   const handleMarkAllAsRead = () => {
     onMarkAllAsRead()
+  }
+
+  const handleNotificationClick = (notification: Notification) => {
+    // Mark as read first
+    handleMarkAsRead(notification.id)
+    // Navigate to notification detail page
+    router.push(`/notifications/${notification.id}`)
+    setIsOpen(false)
   }
 
   return (
@@ -108,7 +118,7 @@ export function NotificationDropdown({
                   className={`p-3 cursor-pointer hover:bg-slate-50 ${
                     !notification.isRead ? "bg-blue-50/50" : ""
                   }`}
-                  onClick={() => handleMarkAsRead(notification.id)}
+                  onClick={() => handleNotificationClick(notification)}
                 >
                   <div className="flex items-start gap-3 w-full">
                     <div className="flex-shrink-0 mt-0.5">
@@ -142,7 +152,13 @@ export function NotificationDropdown({
         {notifications.length > 0 && (
           <>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-center text-sm text-slate-600 hover:text-slate-800 cursor-pointer">
+            <DropdownMenuItem 
+              className="text-center text-sm text-slate-600 hover:text-slate-800 cursor-pointer"
+              onClick={() => {
+                router.push("/notifications")
+                setIsOpen(false)
+              }}
+            >
               すべてのお知らせを見る
             </DropdownMenuItem>
           </>

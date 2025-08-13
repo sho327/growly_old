@@ -21,6 +21,7 @@ import { ActiveFiltersDisplay } from "@/components/common/active-filters-display
 import { NotificationFilters } from "@/components/notifications/notification-filters"
 import { format } from "date-fns"
 import { ja } from "date-fns/locale"
+import { useRouter } from "next/navigation"
 
 interface NotificationHistoryItem {
   id: string
@@ -38,6 +39,7 @@ export function NotificationsHistory() {
   const [readStatusFilter, setReadStatusFilter] = useState("all")
   const [startDate, setStartDate] = useState<Date | undefined>()
   const [endDate, setEndDate] = useState<Date | undefined>()
+  const router = useRouter()
 
   // Mock data for notifications history
   const notificationsHistory: NotificationHistoryItem[] = [
@@ -248,6 +250,11 @@ export function NotificationsHistory() {
     console.log("Mark as read:", id)
   }
 
+  const handleNotificationClick = (item: NotificationHistoryItem) => {
+    // Navigate to notification detail page
+    router.push(`/notifications/${item.id}`)
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -385,11 +392,12 @@ export function NotificationsHistory() {
                   filteredNotifications.map((item) => (
                     <div
                       key={item.id}
-                      className={`flex items-start gap-4 p-4 rounded-lg border transition-colors ${
+                      className={`flex items-start gap-4 p-4 rounded-lg border transition-colors cursor-pointer ${
                         item.isRead 
                           ? "border-slate-200 hover:bg-slate-50" 
                           : "border-blue-200 bg-blue-50/50 hover:bg-blue-50"
                       }`}
+                      onClick={() => handleNotificationClick(item)}
                     >
                       <div className="flex-shrink-0">
                         <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">

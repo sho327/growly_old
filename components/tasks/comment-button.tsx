@@ -19,10 +19,10 @@ export function CommentButton({
       variant="ghost"
       size="sm"
       onClick={onClick}
-      className={`h-8 px-2 text-xs text-slate-600 hover:text-slate-700 hover:bg-slate-50 ${className}`}
+      className={`h-8 px-2 text-xs text-slate-500 hover:text-slate-600 hover:bg-slate-50 ${className}`}
     >
       <MessageSquare className="w-3 h-3 mr-1" />
-      {commentCount}
+      コメント({commentCount})
     </Button>
   )
 }

@@ -594,11 +594,20 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
                             {format(new Date(task.completedAt), "M/d", { locale: ja })}
                           </div>
                         )}
+                        {task.assignee && (
+                          <div className="flex items-center gap-1 text-xs text-slate-600">
+                            <Avatar className="w-3 h-3">
+                              <AvatarImage src={task.assignee.avatar || "/placeholder.svg"} alt={task.assignee.name} />
+                              <AvatarFallback className="text-xs">{task.assignee.name.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            {task.assignee.name}
+                          </div>
+                        )}
                       </div>
 
                       {/* 評価・コメントセクション */}
                       {isCompleted && (
-                        <div className="mt-2 flex items-center gap-2">
+                        <div className="mt-2 flex flex-wrap items-center gap-2">
                           {task.evaluation ? (
                             <EvaluationButton
                               isEvaluated={true}
@@ -628,32 +637,45 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
                         </div>
                       )}
 
+                      {/* 未完了タスクのコメントボタン */}
+                      {!isCompleted && (
+                        <div className="mt-2 flex flex-wrap items-center gap-2">
+                          <CommentButton
+                            commentCount={task.comments?.length || 0}
+                            onClick={(e) => {
+                              e?.stopPropagation()
+                              toggleCommentExpansion(task.id)
+                            }}
+                          />
+                        </div>
+                      )}
+
                       {/* コメント展開セクション */}
-                      {isCompleted && expandedComments.has(task.id) && (
-                        <div className="mt-4">
+                      {(expandedComments.has(task.id)) && (
+                        <div className="mt-4 -ml-7 -mr-4 sm:-ml-4 sm:mx-0">
                           <Card className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm">
-                            <div className="px-6 pb-3">
+                            <div className="px-4 sm:px-6 pb-3">
                               <h4 className="font-semibold text-sm">コメント</h4>
                             </div>
-                            <div className="px-6 space-y-4">
+                            <div className="px-4 sm:px-6 space-y-4">
                               {task.comments && task.comments.length > 0 ? (
                                 <div className="space-y-3">
                                   {task.comments.map((comment) => (
                                     <div key={comment.id} className="flex gap-3 p-3 bg-gray-50 rounded-lg">
-                                      <Avatar className="w-8 h-8">
+                                      <Avatar className="w-8 h-8 flex-shrink-0">
                                         <AvatarImage src={comment.author.avatar} alt={comment.author.name} />
                                         <AvatarFallback className="text-xs">
                                           {comment.author.name.charAt(0)}
                                         </AvatarFallback>
                                       </Avatar>
-                                      <div className="flex-1">
+                                      <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2 mb-1">
                                           <span className="font-medium text-sm">{comment.author.name}</span>
                                           <span className="text-xs text-muted-foreground">
                                             {format(new Date(comment.createdAt), "M/d H:mm", { locale: ja })}
                                           </span>
                                         </div>
-                                        <p className="text-sm text-gray-700">{comment.content}</p>
+                                        <p className="text-sm text-gray-700 break-words">{comment.content}</p>
                                       </div>
                                     </div>
                                   ))}
@@ -670,7 +692,7 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
                                   value={newCommentTexts[task.id] || ""}
                                   onChange={(e) => handleCommentTextChange(task.id, e.target.value)}
                                   maxLength={500}
-                                  className="min-h-[80px]"
+                                  className="min-h-[80px] resize-none"
                                 />
                                 <div className="flex justify-between items-center">
                                   <span className="text-xs text-muted-foreground">
@@ -691,16 +713,6 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
                               </div>
                             </div>
                           </Card>
-                        </div>
-                      )}
-                      
-                      {task.assignee && (
-                        <div className="flex items-center gap-2">
-                          <Avatar className="w-5 h-5">
-                            <AvatarImage src={task.assignee.avatar || "/placeholder.svg"} alt={task.assignee.name} />
-                            <AvatarFallback className="text-xs">{task.assignee.name.charAt(0)}</AvatarFallback>
-                          </Avatar>
-                          <span className="text-xs text-slate-600">{task.assignee.name}</span>
                         </div>
                       )}
                     </div>
