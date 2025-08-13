@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Progress } from "@/components/ui/progress"
 import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
 import {
   TrendingUp,
   TrendingDown,
@@ -71,7 +71,6 @@ interface RecentActivity {
 }
 
 export default function ProjectDashboard({ projectId, projectName }: ProjectDashboardProps) {
-  const [activeTab, setActiveTab] = useState("overview")
 
   // モックデータ
   const projectStats: ProjectStats = {
@@ -312,195 +311,186 @@ export default function ProjectDashboard({ projectId, projectName }: ProjectDash
         </Card>
       </div>
 
-      {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="flex w-max min-w-full bg-slate-100 p-1 rounded-lg">
-          <TabsTrigger value="overview" className="data-[state=active]:bg-white data-[state=active]:text-slate-900 text-sm whitespace-nowrap flex-shrink-0">
-            <BarChart3 className="w-4 h-4 mr-2" />
-            概要
-          </TabsTrigger>
-          <TabsTrigger value="contributions" className="data-[state=active]:bg-white data-[state=active]:text-slate-900 text-sm whitespace-nowrap flex-shrink-0">
-            <Trophy className="w-4 h-4 mr-2" />
-            貢献度ランキング
-          </TabsTrigger>
-          <TabsTrigger value="activity" className="data-[state=active]:bg-white data-[state=active]:text-slate-900 text-sm whitespace-nowrap flex-shrink-0">
-            <Activity className="w-4 h-4 mr-2" />
-            最近の活動
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="overview" className="mt-6">
-          <div className="grid gap-6 lg:grid-cols-2">
-            {/* Task Status Overview */}
-            <Card className="border border-slate-200">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-slate-900">タスク状況</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                    <span className="text-sm font-medium">完了</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold">{projectStats.completedTasks}</span>
-                    <span className="text-sm text-slate-600">タスク</span>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                    <span className="text-sm font-medium">進行中</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold">{projectStats.inProgressTasks}</span>
-                    <span className="text-sm text-slate-600">タスク</span>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 bg-slate-400 rounded-full"></div>
-                    <span className="text-sm font-medium">未着手</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold">{projectStats.totalTasks - projectStats.completedTasks - projectStats.inProgressTasks}</span>
-                    <span className="text-sm text-slate-600">タスク</span>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                    <span className="text-sm font-medium">期限超過</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-red-600">{projectStats.overdueTasks}</span>
-                    <span className="text-sm text-slate-600">タスク</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Team Performance */}
-            <Card className="border border-slate-200">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold text-slate-900">チームパフォーマンス</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">平均完了時間</span>
-                  <span className="text-sm font-bold">{projectStats.averageCompletionTime}日</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">週間ポイント獲得</span>
-                  <span className="text-sm font-bold text-green-600">+{projectStats.weeklyPoints}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">チーム生産性</span>
-                  <span className="text-sm font-bold">{projectStats.teamProductivity}%</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">アクティブメンバー</span>
-                  <span className="text-sm font-bold">{memberContributions.length}人</span>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="contributions" className="mt-6">
-          <Card className="border border-slate-200">
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-slate-900">メンバー貢献度ランキング</CardTitle>
-              <CardDescription>ポイント獲得数とタスク完了数に基づくランキング</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {memberContributions
-                  .sort((a, b) => b.points - a.points)
-                  .map((member, index) => (
-                    <div key={member.id} className="flex items-center gap-4 p-4 bg-slate-50 rounded-lg">
-                      <div className="flex items-center gap-3 flex-1">
-                        <div className="relative">
-                          {index < 3 && (
-                            <div className="absolute -top-1 -right-1 w-5 h-5 bg-amber-500 rounded-full flex items-center justify-center">
-                              <span className="text-xs font-bold text-white">{index + 1}</span>
-                            </div>
-                          )}
-                          <Avatar className="w-10 h-10">
-                            <AvatarImage src={member.avatar} alt={member.name} />
-                            <AvatarFallback className="text-sm font-medium">
-                              {member.name.charAt(0)}
-                            </AvatarFallback>
-                          </Avatar>
-                        </div>
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <h4 className="font-medium text-slate-900">{member.name}</h4>
-                            <Badge variant="outline" className="text-xs">
-                              {member.role}
-                            </Badge>
-                          </div>
-                          <div className="flex items-center gap-4 mt-1 text-sm text-slate-600">
-                            <span>{member.tasksCompleted} タスク完了</span>
-                            <span>評価 {member.averageRating}/5.0</span>
-                            <span>生産性 {member.productivity}%</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-lg font-bold text-slate-900">{member.points}pt</div>
-                        <div className="text-sm text-slate-600">{member.lastActive}</div>
-                      </div>
-                    </div>
-                  ))}
+      {/* Project Overview Section */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        {/* Task Status Overview */}
+        <Card className="border border-slate-200">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+              <BarChart3 className="w-5 h-5 text-slate-600" />
+              タスク状況
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                <span className="text-sm font-medium">完了</span>
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-bold">{projectStats.completedTasks}</span>
+                <span className="text-sm text-slate-600">タスク</span>
+              </div>
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                <span className="text-sm font-medium">進行中</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-bold">{projectStats.inProgressTasks}</span>
+                <span className="text-sm text-slate-600">タスク</span>
+              </div>
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-3 h-3 bg-slate-400 rounded-full"></div>
+                <span className="text-sm font-medium">未着手</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-bold">{projectStats.totalTasks - projectStats.completedTasks - projectStats.inProgressTasks}</span>
+                <span className="text-sm text-slate-600">タスク</span>
+              </div>
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                <span className="text-sm font-medium">期限超過</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-bold text-red-600">{projectStats.overdueTasks}</span>
+                <span className="text-sm text-slate-600">タスク</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-        <TabsContent value="activity" className="mt-6">
-          <Card className="border border-slate-200">
-            <CardHeader>
-              <CardTitle className="text-lg font-semibold text-slate-900">最近の活動</CardTitle>
-              <CardDescription>プロジェクト内での最新の活動履歴</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {recentActivities.map((activity) => (
-                  <div key={activity.id} className="flex gap-3 p-3 bg-slate-50 rounded-lg">
-                    <div className={`p-2 rounded-lg ${getActivityColor(activity.type)}`}>
-                      {getActivityIcon(activity.type)}
+        {/* Team Performance */}
+        <Card className="border border-slate-200">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+              <Zap className="w-5 h-5 text-slate-600" />
+              チームパフォーマンス
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium">平均完了時間</span>
+              <span className="text-sm font-bold">{projectStats.averageCompletionTime}日</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium">週間ポイント獲得</span>
+              <span className="text-sm font-bold text-green-600">+{projectStats.weeklyPoints}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium">チーム生産性</span>
+              <span className="text-sm font-bold">{projectStats.teamProductivity}%</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium">アクティブメンバー</span>
+              <span className="text-sm font-bold">{memberContributions.length}人</span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Member Contributions Section */}
+      <Card className="border border-slate-200">
+        <CardHeader>
+          <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+            <Trophy className="w-5 h-5 text-slate-600" />
+            メンバー貢献度ランキング
+          </CardTitle>
+          <CardDescription>ポイント獲得数とタスク完了数に基づくランキング</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {memberContributions
+              .sort((a, b) => b.points - a.points)
+              .map((member, index) => (
+                <div key={member.id} className="flex items-center gap-4 p-4 bg-slate-50 rounded-lg">
+                  <div className="flex items-center gap-3 flex-1">
+                    <div className="relative">
+                      {index < 3 && (
+                        <div className="absolute -top-2 -right-2 w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center shadow-sm">
+                          <span className="text-xs font-bold text-white">{index + 1}</span>
+                        </div>
+                      )}
+                      <Avatar className="w-10 h-10">
+                        <AvatarImage src={member.avatar} alt={member.name} />
+                        <AvatarFallback className="text-sm font-medium">
+                          {member.name.charAt(0)}
+                        </AvatarFallback>
+                      </Avatar>
                     </div>
                     <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-medium text-sm">{activity.title}</span>
-                        {activity.points && (
-                          <Badge variant="outline" className="text-xs">
-                            +{activity.points}pt
-                          </Badge>
-                        )}
-                      </div>
-                      <p className="text-sm text-slate-700 mb-1">{activity.description}</p>
                       <div className="flex items-center gap-2">
-                        <Avatar className="w-5 h-5">
-                          <AvatarImage src={activity.user.avatar} alt={activity.user.name} />
-                          <AvatarFallback className="text-xs">
-                            {activity.user.name.charAt(0)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <span className="text-xs text-slate-600">{activity.user.name}</span>
-                        <span className="text-xs text-slate-500">
-                          {format(new Date(activity.timestamp), "M/d H:mm", { locale: ja })}
-                        </span>
+                        <h4 className="font-medium text-slate-900">{member.name}</h4>
+                        <Badge variant="outline" className="text-xs">
+                          {member.role}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center gap-4 mt-1 text-sm text-slate-600">
+                        <span>{member.tasksCompleted} タスク完了</span>
+                        <span>評価 {member.averageRating}/5.0</span>
+                        <span>生産性 {member.productivity}%</span>
                       </div>
                     </div>
                   </div>
-                ))}
+                  <div className="text-right">
+                    <div className="text-lg font-bold text-slate-900">{member.points}pt</div>
+                    <div className="text-sm text-slate-600">{member.lastActive}</div>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Recent Activities Section */}
+      <Card className="border border-slate-200">
+        <CardHeader>
+          <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+            <Activity className="w-5 h-5 text-slate-600" />
+            最近の活動
+          </CardTitle>
+          <CardDescription>プロジェクト内での最新の活動履歴</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {recentActivities.map((activity) => (
+              <div key={activity.id} className="flex gap-3 p-3 bg-slate-50 rounded-lg">
+                <div className={`p-2 rounded-lg ${getActivityColor(activity.type)} flex-shrink-0`}>
+                  {getActivityIcon(activity.type)}
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="font-medium text-sm">{activity.title}</span>
+                    {activity.points && (
+                      <Badge variant="outline" className="text-xs">
+                        +{activity.points}pt
+                      </Badge>
+                    )}
+                  </div>
+                  <p className="text-sm text-slate-700 mb-1">{activity.description}</p>
+                  <div className="flex items-center gap-2">
+                    <Avatar className="w-5 h-5">
+                      <AvatarImage src={activity.user.avatar} alt={activity.user.name} />
+                      <AvatarFallback className="text-xs">
+                        {activity.user.name.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="text-xs text-slate-600">{activity.user.name}</span>
+                    <span className="text-xs text-slate-500">
+                      {format(new Date(activity.timestamp), "M/d H:mm", { locale: ja })}
+                    </span>
+                  </div>
+                </div>
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
