@@ -18,7 +18,7 @@ import {
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu"
 import { CreateTaskModal } from "./create-task-modal"
-import { TaskDetailModal } from "./task-detail-modal"
+
 import { EditTaskModal } from "./edit-task-modal"
 import { EvaluationDialog } from "./evaluation-dialog"
 import { CommentDialog } from "./comment-dialog"
@@ -33,8 +33,6 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
   const [statusFilters, setStatusFilters] = useState<string[]>([])
   const [priorityFilters, setPriorityFilters] = useState<string[]>([])
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null)
-  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false)
   const [editingTask, setEditingTask] = useState<Task | null>(null)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [evaluatingTask, setEvaluatingTask] = useState<Task | null>(null)
@@ -222,8 +220,8 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
   }
 
   const handleTaskClick = (task: Task) => {
-    setSelectedTask(task)
-    setIsDetailModalOpen(true)
+    // Navigate to task detail page instead of opening modal
+    window.location.href = `/projects/${projectId}/tasks/${task.id}`
   }
 
   const handleStatusChange = (taskId: string, newStatus: Task["status"]) => {
@@ -652,7 +650,7 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
 
                       {/* コメント展開セクション */}
                       {(expandedComments.has(task.id)) && (
-                        <div className="mt-4 -ml-7 -mr-4 sm:-ml-4 sm:mx-0">
+                        <div className="mt-4 -ml-7 -mr-2 sm:-ml-4 sm:mx-0">
                           <Card className="bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm">
                             <div className="px-4 sm:px-6 pb-3">
                               <h4 className="font-semibold text-sm">コメント</h4>
@@ -742,18 +740,7 @@ export default function TaskList({ projectId, projectName }: TaskListProps) {
         onCreate={handleCreateTask}
       />
 
-      {/* Task Detail Modal */}
-      <TaskDetailModal
-        task={selectedTask}
-        isOpen={isDetailModalOpen}
-        onClose={() => {
-          setIsDetailModalOpen(false)
-          setSelectedTask(null)
-        }}
-        onStatusChange={handleStatusChange}
-        onEdit={handleEditTask}
-        onAddComment={handleAddComment}
-      />
+
 
       {/* Edit Task Modal */}
       <EditTaskModal
