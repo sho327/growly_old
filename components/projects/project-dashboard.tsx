@@ -24,6 +24,7 @@ import {
   Award,
   Zap,
   Clock3,
+  Sprout,
 } from "lucide-react"
 import { format } from "date-fns"
 import { ja } from "date-fns/locale"
@@ -270,7 +271,7 @@ export default function ProjectDashboard({ projectId, projectName }: ProjectDash
         />
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid gap-4 lg:grid-cols-2">
         {/* Task Status Overview */}
         <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
           <CardHeader>
@@ -350,56 +351,167 @@ export default function ProjectDashboard({ projectId, projectName }: ProjectDash
             </div>
           </CardContent>
         </Card>
+      </div>
 
-        {/* Member Contributions Section */}
-        <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-              <Trophy className="w-5 h-5 text-slate-600" />
-              貢献度ランキング
-            </CardTitle>
-            <CardDescription>ポイント獲得数によるランキング</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {memberContributions
-                .sort((a, b) => b.points - a.points)
-                .slice(0, 3)
-                .map((member, index) => (
-                  <div key={member.id} className="flex items-center gap-3 p-2 bg-slate-50 rounded-lg">
-                    <div className="relative">
-                      {index < 3 && (
-                        <div className="absolute -top-2 -right-2 w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center shadow-sm">
-                          <span className="text-xs font-bold text-white">{index + 1}</span>
+      {/* Member Contributions Section */}
+      <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+        <CardHeader>
+          <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
+            <Trophy className="w-5 h-5 text-slate-600" />
+            今月の貢献度ランキング
+          </CardTitle>
+          <CardDescription>2025年8月のプロジェクト貢献度ランキング</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* Top 3 Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-6">
+            {memberContributions
+              .sort((a, b) => b.points - a.points)
+              .slice(0, 3)
+              .map((member, index) => {
+                const rankConfig = [
+                  {
+                    icon: <Trophy className="h-4 w-4 sm:h-5 sm:w-5 text-amber-500" />,
+                    bgClass: "bg-gradient-to-br from-amber-50 to-yellow-50 border-amber-200",
+                    badgeClass: "bg-amber-100 text-amber-800 border-amber-200",
+                    badgeText: "🏆 今月のMVP！",
+                    rank: "1st"
+                  },
+                  {
+                    icon: <Award className="h-4 w-4 sm:h-5 sm:w-5 text-slate-500" />,
+                    bgClass: "bg-gradient-to-br from-slate-50 to-gray-50 border-slate-200",
+                    badgeClass: "bg-slate-100 text-slate-800 border-slate-200",
+                    badgeText: "🥈 素晴らしい貢献！",
+                    rank: "2nd"
+                  },
+                  {
+                    icon: <Award className="h-4 w-4 sm:h-5 sm:w-5 text-orange-500" />,
+                    bgClass: "bg-gradient-to-br from-orange-50 to-amber-50 border-orange-200",
+                    badgeClass: "bg-orange-100 text-orange-800 border-orange-200",
+                    badgeText: "🥉 頑張っています！",
+                    rank: "3rd"
+                  }
+                ]
+                const config = rankConfig[index]
+                
+                return (
+                  <div key={member.id} className={`p-3 sm:p-4 rounded-lg border-2 ${config.bgClass}`}>
+                    <div className="text-center space-y-2 sm:space-y-3">
+                      <div className="flex justify-center">
+                        {config.icon}
+                      </div>
+                      <div className="relative">
+                        <Avatar className="h-12 w-12 sm:h-16 sm:w-16 mx-auto">
+                          <AvatarImage src={member.avatar} alt={member.name} />
+                          <AvatarFallback className="text-sm font-medium">
+                            {member.name.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
+                        {index === 0 && (
+                          <div className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs px-1 sm:px-2 py-0.5 sm:py-1 rounded-full">
+                            YOU
+                          </div>
+                        )}
+                      </div>
+                      <div>
+                        <div className="font-semibold text-sm sm:text-lg">{member.name}</div>
+                        <div className="text-lg sm:text-2xl font-bold text-green-600 flex items-center justify-center gap-1">
+                          <Sprout className="h-4 w-4 sm:h-5 sm:w-5" />
+                          {member.points}pt
                         </div>
-                      )}
-                      <Avatar className="w-8 h-8">
-                        <AvatarImage src={member.avatar} alt={member.name} />
-                        <AvatarFallback className="text-sm font-medium">
-                          {member.name.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <h4 className="font-medium text-sm text-slate-900">{member.name}</h4>
-                        <Badge variant="outline" className="text-xs">
-                          {member.role}
-                        </Badge>
                       </div>
-                      <div className="text-xs text-slate-600">
-                        {member.tasksCompleted} タスク完了
+                      <div className="space-y-1 sm:space-y-2 text-xs sm:text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">完了タスク:</span>
+                          <span className="font-medium">{member.tasksCompleted}個</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-muted-foreground">平均評価:</span>
+                          <div className="flex items-center gap-1">
+                            <Star className="h-3 w-3 text-yellow-400 fill-current" />
+                            <span className="font-medium">{member.averageRating.toFixed(1)}</span>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-sm font-bold text-slate-900">{member.points}pt</div>
+                      <Badge className={`${config.badgeClass} text-xs`}>
+                        {config.badgeText}
+                      </Badge>
                     </div>
                   </div>
-                ))}
+                )
+              })}
+          </div>
+          
+          {/* Other Members */}
+          <div className="space-y-3">
+            <h3 className="font-medium text-muted-foreground border-b pb-2 text-sm sm:text-base">その他のメンバー</h3>
+            {memberContributions
+              .sort((a, b) => b.points - a.points)
+              .slice(3)
+              .map((member, index) => (
+                <div key={member.id} className="flex items-center justify-between p-3 sm:p-4 border rounded-lg hover:bg-gray-50 transition-colors">
+                  <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
+                    <div className="flex items-center gap-1 sm:gap-2">
+                      <div className="h-4 w-4 sm:h-5 sm:w-5 flex items-center justify-center text-xs sm:text-sm font-bold text-muted-foreground">
+                        #{index + 4}
+                      </div>
+                      <span className="font-medium text-muted-foreground text-xs sm:text-sm">#{index + 4}</span>
+                    </div>
+                    <Avatar className="h-8 w-8 sm:h-10 sm:w-10">
+                      <AvatarImage src={member.avatar} alt={member.name} />
+                      <AvatarFallback className="text-xs">
+                        {member.name.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-semibold text-sm sm:text-base truncate">{member.name}</div>
+                      <div className="text-xs sm:text-sm text-muted-foreground">{member.tasksCompleted}個のタスク完了</div>
+                    </div>
+                  </div>
+                  <div className="text-right space-y-1">
+                    <div className="font-bold text-green-600 flex items-center gap-1 text-sm sm:text-base">
+                      <Sprout className="h-3 w-3 sm:h-4 sm:w-4" />
+                      {member.points}pt
+                    </div>
+                    <div className="w-16 sm:w-24">
+                      <Progress value={member.productivity} className="h-1 sm:h-2" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+          </div>
+          
+          {/* Summary Stats */}
+          <div className="mt-6 p-3 sm:p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 text-center">
+              <div>
+                <div className="text-lg sm:text-2xl font-bold text-green-700">
+                  {memberContributions.reduce((sum, member) => sum + member.points, 0)}
+                </div>
+                <div className="text-xs sm:text-sm text-muted-foreground">総獲得ポイント</div>
+              </div>
+              <div>
+                <div className="text-lg sm:text-2xl font-bold text-blue-700">
+                  {memberContributions.reduce((sum, member) => sum + member.tasksCompleted, 0)}
+                </div>
+                <div className="text-xs sm:text-sm text-muted-foreground">総完了タスク</div>
+              </div>
+              <div>
+                <div className="text-lg sm:text-2xl font-bold text-purple-700">
+                  {memberContributions.filter(member => member.tasksCompleted > 0).length}
+                </div>
+                <div className="text-xs sm:text-sm text-muted-foreground">アクティブメンバー</div>
+              </div>
+              <div>
+                <div className="text-lg sm:text-2xl font-bold text-orange-700">
+                  {(memberContributions.reduce((sum, member) => sum + member.averageRating, 0) / memberContributions.length).toFixed(1)}
+                </div>
+                <div className="text-xs sm:text-sm text-muted-foreground">平均評価</div>
+              </div>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Recent Activities Section */}
       <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
