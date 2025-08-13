@@ -27,10 +27,12 @@ import {
   CheckCircle,
   FileText,
   MoreHorizontal,
+  BarChart3,
 } from "lucide-react"
 import Link from "next/link"
 import TaskList from "@/components/tasks/task-list"
 import ProjectWiki from "@/components/projects/project-wiki"
+import ProjectDashboard from "@/components/projects/project-dashboard"
 import { MembersHeader } from "./members-header"
 import { MembersTable } from "./members-table"
 
@@ -39,7 +41,7 @@ interface ProjectDetailProps {
 }
 
 export default function ProjectDetail({ projectId }: ProjectDetailProps) {
-  const [activeTab, setActiveTab] = useState("tasks")
+  const [activeTab, setActiveTab] = useState("dashboard")
   const [isInviteOpen, setIsInviteOpen] = useState(false)
   const [inviteEmail, setInviteEmail] = useState("")
   const [inviteRole, setInviteRole] = useState("member")
@@ -231,6 +233,10 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
                     <Calendar className="w-4 h-4" />
                     期限: {new Date(project.dueDate).toLocaleDateString("ja-JP")}
                   </div>
+                  <div className="flex items-center gap-1 text-sm text-slate-600">
+                    <Users className="w-4 h-4" />
+                    メンバー: {project.members.length}人
+                  </div>
                 </div>
               </div>
 
@@ -278,76 +284,17 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
           </CardHeader>
         </Card>
 
-        {/* Stats Cards */}
-        <div className="grid gap-4 md:grid-cols-3">
-          <Card className="border border-slate-200">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-slate-600">進捗</p>
-                  <p className="text-2xl font-bold text-slate-900">{project.progress}%</p>
-                </div>
-                <div className="p-2 bg-emerald-100 rounded-lg">
-                  <Target className="w-5 h-5 text-emerald-600" />
-                </div>
-              </div>
-              <div className="mt-4 relative">
-                <Progress value={project.progress} className="h-2 bg-slate-200" />
-                <div
-                  className={`absolute inset-0 h-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full transition-all duration-500`}
-                  style={{ width: `${String(project.progress)}%` }}
-                ></div>
-              </div>
-            </CardContent>
-          </Card>
 
-          <Card className="border border-slate-200">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-slate-600">タスク</p>
-                  <p className="text-2xl font-bold text-slate-900">
-                    {project.completedTasks}/{project.totalTasks}
-                  </p>
-                </div>
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <CheckCircle className="w-5 h-5 text-blue-600" />
-                </div>
-              </div>
-              <p className="text-sm text-slate-600 mt-2">{project.totalTasks - project.completedTasks} 残り</p>
-            </CardContent>
-          </Card>
-
-          <Card className="border border-slate-200">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-slate-600">メンバー</p>
-                  <p className="text-2xl font-bold text-slate-900">{project.members.length}</p>
-                </div>
-                <div className="p-2 bg-purple-100 rounded-lg">
-                  <Users className="w-5 h-5 text-purple-600" />
-                </div>
-              </div>
-              <div className="flex -space-x-2 mt-2">
-                {project.members.slice(0, 4).map((member) => (
-                  <Avatar key={member.id} className="w-6 h-6 border-2 border-white">
-                    <AvatarImage src={member.avatar || "/placeholder.svg"} alt={member.name} />
-                    <AvatarFallback className="text-xs font-medium bg-slate-100">
-                      {member.name.charAt(0)}
-                    </AvatarFallback>
-                  </Avatar>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
       </div>
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="overflow-x-auto">
           <TabsList className="flex w-max min-w-full bg-slate-100 p-1 rounded-lg">
+            <TabsTrigger value="dashboard" className="data-[state=active]:bg-white data-[state=active]:text-slate-900 text-sm whitespace-nowrap flex-shrink-0">
+              <BarChart3 className="w-4 h-4 mr-2" />
+              ダッシュボード
+            </TabsTrigger>
             <TabsTrigger value="tasks" className="data-[state=active]:bg-white data-[state=active]:text-slate-900 text-sm whitespace-nowrap flex-shrink-0">
               <CheckCircle className="w-4 h-4 mr-2" />
               タスク一覧
@@ -362,6 +309,10 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
             </TabsTrigger>
           </TabsList>
         </div>
+
+        <TabsContent value="dashboard" className="mt-6">
+          <ProjectDashboard projectId={project.id} projectName={project.name} />
+        </TabsContent>
 
         <TabsContent value="tasks" className="mt-6">
           <TaskList projectId={project.id} projectName={project.name} />
