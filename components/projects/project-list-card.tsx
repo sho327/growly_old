@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Progress } from "@/components/ui/progress"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Star, MoreHorizontal, Users, Calendar, CheckCircle } from "lucide-react"
+import { Star, MoreHorizontal, Users, Calendar, CheckCircle, Crown, Archive, Building2 } from "lucide-react"
 import Link from "next/link"
 
 interface ProjectMember {
@@ -17,7 +17,7 @@ interface Project {
   id: string
   name: string
   description: string
-  status: "active" | "completed" | "on-hold" | "planning"
+  status: "active" | "completed" | "on-hold" | "planning" | "archived"
   priority: "high" | "medium" | "low"
   progress: number
   totalTasks: number
@@ -27,6 +27,13 @@ interface Project {
   members: ProjectMember[]
   color: string
   starred: boolean
+  type: "owned" | "participating" | "archived"
+  owner?: ProjectMember
+  organization?: {
+    id: string
+    name: string
+    color: string
+  }
 }
 
 interface ProjectListCardProps {
@@ -43,6 +50,8 @@ const getStatusColor = (status: string) => {
       return "bg-amber-100 text-amber-800 border-amber-200"
     case "planning":
       return "bg-slate-100 text-slate-800 border-slate-200"
+    case "archived":
+      return "bg-gray-100 text-gray-800 border-gray-200"
     default:
       return "bg-slate-100 text-slate-800 border-slate-200"
   }
@@ -58,6 +67,8 @@ const getStatusDotColor = (status: string) => {
       return "bg-amber-500"
     case "planning":
       return "bg-slate-500"
+    case "archived":
+      return "bg-gray-500"
     default:
       return "bg-slate-400"
   }
@@ -73,6 +84,8 @@ const getStatusText = (status: string) => {
       return "保留"
     case "planning":
       return "計画中"
+    case "archived":
+      return "アーカイブ"
     default:
       return "不明"
   }
@@ -105,20 +118,57 @@ const getPriorityText = (priority: string) => {
 }
 
 export function ProjectListCard({ project }: ProjectListCardProps) {
+  const getOrganizationColor = (color: string) => {
+    switch (color) {
+      case "purple": return "bg-purple-100 text-purple-800 border-purple-200"
+      case "blue": return "bg-blue-100 text-blue-800 border-blue-200"
+      case "green": return "bg-green-100 text-green-800 border-green-200"
+      case "red": return "bg-red-100 text-red-800 border-red-200"
+      case "orange": return "bg-orange-100 text-orange-800 border-orange-200"
+      default: return "bg-slate-100 text-slate-800 border-slate-200"
+    }
+  }
+
   return (
     <Link href={`/projects/${project.id}`}>
-      <Card className="border border-slate-200 hover:shadow-md transition-all duration-200 cursor-pointer h-full">
+      <Card className={`border border-slate-200 hover:shadow-md transition-all duration-200 cursor-pointer h-full mb-2 ${
+        project.type === "archived" ? "opacity-80" : ""
+      }`}>
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
                 <div className={`w-3 h-3 rounded-full ${getStatusDotColor(project.status)}`} />
-                <CardTitle className="text-lg font-semibold text-slate-900 line-clamp-1">{project.name}</CardTitle>
+                <CardTitle className="text-lg font-semibold text-slate-900 line-clamp-1">
+                  {project.name}
+                </CardTitle>
                 {project.starred && <Star className="w-4 h-4 text-amber-500 fill-current flex-shrink-0" />}
+                {project.type === "archived" && <Archive className="w-4 h-4 text-gray-500 flex-shrink-0" />}
               </div>
               <CardDescription className="text-slate-600 text-sm leading-relaxed line-clamp-2">
                 {project.description}
               </CardDescription>
+              <div className="flex items-center gap-4 mt-2">
+                {project.type === "participating" && project.owner && (
+                  <div className="flex items-center gap-2">
+                    <Crown className="w-3 h-3 text-amber-500" />
+                    <span className="text-xs text-slate-500">
+                      所有者: {project.owner.name}
+                    </span>
+                  </div>
+                )}
+                {project.type === "participating" && project.organization && (
+                  <div className="flex items-center gap-2">
+                    <Building2 className="w-3 h-3 text-slate-500" />
+                    <Badge 
+                      variant="outline" 
+                      className={`text-xs ${getOrganizationColor(project.organization.color)}`}
+                    >
+                      {project.organization.name}
+                    </Badge>
+                  </div>
+                )}
+              </div>
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild onClick={(e) => e.preventDefault()}>
@@ -129,7 +179,11 @@ export function ProjectListCard({ project }: ProjectListCardProps) {
               <DropdownMenuContent align="end">
                 <DropdownMenuItem>編集</DropdownMenuItem>
                 <DropdownMenuItem>複製</DropdownMenuItem>
-                <DropdownMenuItem>アーカイブ</DropdownMenuItem>
+                {project.type !== "archived" ? (
+                  <DropdownMenuItem>アーカイブ</DropdownMenuItem>
+                ) : (
+                  <DropdownMenuItem>アーカイブ解除</DropdownMenuItem>
+                )}
                 <DropdownMenuItem className="text-red-600">削除</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

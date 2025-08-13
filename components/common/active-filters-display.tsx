@@ -13,6 +13,11 @@ interface ActiveFiltersDisplayProps {
   endDate?: Date
   isStatusMultiSelect?: boolean
   isPriorityMultiSelect?: boolean
+  projectTypeFilters?: {
+    showOwned: boolean
+    showParticipating: boolean
+    showArchived: boolean
+  }
 }
 
 // 複数選択フィルター用の表示
@@ -241,7 +246,8 @@ export function ActiveFiltersDisplay({
   startDate, 
   endDate,
   isStatusMultiSelect = false,
-  isPriorityMultiSelect = false
+  isPriorityMultiSelect = false,
+  projectTypeFilters
 }: ActiveFiltersDisplayProps) {
   if (activeFiltersCount === 0) {
     return null
@@ -304,8 +310,29 @@ export function ActiveFiltersDisplay({
         </Badge>
       )}
 
+      {/* プロジェクトタイプフィルター */}
+      {projectTypeFilters && (
+        <>
+          {!projectTypeFilters.showOwned && (
+            <Badge className="bg-blue-100 text-blue-800 border border-blue-200">
+              プロジェクトタイプ: 所有を除外
+            </Badge>
+          )}
+          {!projectTypeFilters.showParticipating && (
+            <Badge className="bg-green-100 text-green-800 border border-green-200">
+              プロジェクトタイプ: 参加中を除外
+            </Badge>
+          )}
+          {projectTypeFilters.showArchived && (
+            <Badge className="bg-gray-100 text-gray-800 border border-gray-200">
+              プロジェクトタイプ: アーカイブを表示
+            </Badge>
+          )}
+        </>
+      )}
+
       {/* 種類フィルター（他のフィルターがない場合のみ表示） */}
-      {!statusFilter && !priorityFilter && !readStatusFilter && !startDate && !endDate && typeFilter !== "all" && (
+      {!statusFilter && !priorityFilter && !readStatusFilter && !startDate && !endDate && !projectTypeFilters && typeFilter !== "all" && (
         <Badge className={getTypeSummaryBadgeClass(typeFilter)}>
           種類: {getTypeText(typeFilter)}
         </Badge>

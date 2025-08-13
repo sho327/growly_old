@@ -13,7 +13,7 @@ interface Project {
   id: string
   name: string
   description: string
-  status: "active" | "completed" | "on-hold" | "planning"
+  status: "active" | "completed" | "on-hold" | "planning" | "archived"
   priority: "high" | "medium" | "low"
   progress: number
   totalTasks: number
@@ -27,6 +27,17 @@ interface Project {
   }>
   color: string
   starred: boolean
+  type: "owned" | "participating" | "archived"
+  owner?: {
+    id: string
+    name: string
+    avatar: string
+  }
+  organization?: {
+    id: string
+    name: string
+    color: string
+  }
 }
 
 export default function JapaneseModernProjectList() {
@@ -40,8 +51,14 @@ export default function JapaneseModernProjectList() {
     priority: "medium" as "high" | "medium" | "low",
     dueDate: "",
   })
+  
+  // プロジェクトタイプの表示設定
+  const [showOwned, setShowOwned] = useState(true)
+  const [showParticipating, setShowParticipating] = useState(true)
+  const [showArchived, setShowArchived] = useState(false)
 
   const [projects] = useState<Project[]>([
+    // 所有プロジェクト（アクティブ）
     {
       id: "1",
       name: "Webサイトリニューアル",
@@ -60,6 +77,7 @@ export default function JapaneseModernProjectList() {
       ],
       color: "blue",
       starred: true,
+      type: "owned",
     },
     {
       id: "2",
@@ -78,6 +96,7 @@ export default function JapaneseModernProjectList() {
       ],
       color: "green",
       starred: false,
+      type: "owned",
     },
     {
       id: "3",
@@ -93,6 +112,7 @@ export default function JapaneseModernProjectList() {
       members: [{ id: "6", name: "高橋健太", avatar: "/placeholder.svg?height=32&width=32&text=高" }],
       color: "purple",
       starred: false,
+      type: "owned",
     },
     {
       id: "4",
@@ -111,6 +131,87 @@ export default function JapaneseModernProjectList() {
       ],
       color: "orange",
       starred: true,
+      type: "owned",
+    },
+    // 参加中プロジェクト（他グループから招待）
+    {
+      id: "5",
+      name: "デザインシステム構築",
+      description: "UI/UXデザインシステムの構築とコンポーネントライブラリの開発プロジェクト。",
+      status: "active",
+      priority: "high",
+      progress: 45,
+      totalTasks: 20,
+      completedTasks: 9,
+      dueDate: "2024-04-30",
+      createdAt: "2024-01-25",
+      members: [
+        { id: "9", name: "渡辺誠", avatar: "/placeholder.svg?height=32&width=32&text=渡" },
+        { id: "10", name: "斎藤美咲", avatar: "/placeholder.svg?height=32&width=32&text=斎" },
+        { id: "1", name: "田中太郎", avatar: "/placeholder.svg?height=32&width=32&text=田" },
+      ],
+      color: "indigo",
+      starred: false,
+      type: "participating",
+      owner: { id: "9", name: "渡辺誠", avatar: "/placeholder.svg?height=32&width=32&text=渡" },
+      organization: { id: "1", name: "デザインチーム", color: "purple" },
+    },
+    {
+      id: "6",
+      name: "API開発プロジェクト",
+      description: "RESTful APIの設計・開発とドキュメント作成プロジェクト。",
+      status: "active",
+      priority: "medium",
+      progress: 75,
+      totalTasks: 16,
+      completedTasks: 12,
+      dueDate: "2024-03-25",
+      createdAt: "2024-01-30",
+      members: [
+        { id: "11", name: "佐々木健", avatar: "/placeholder.svg?height=32&width=32&text=佐" },
+        { id: "1", name: "田中太郎", avatar: "/placeholder.svg?height=32&width=32&text=田" },
+      ],
+      color: "teal",
+      starred: true,
+      type: "participating",
+      owner: { id: "11", name: "佐々木健", avatar: "/placeholder.svg?height=32&width=32&text=佐" },
+      organization: { id: "2", name: "バックエンドチーム", color: "blue" },
+    },
+    // アーカイブされたプロジェクト
+    {
+      id: "7",
+      name: "旧システム移行",
+      description: "レガシーシステムから新システムへの移行プロジェクト（完了済み）。",
+      status: "archived",
+      priority: "high",
+      progress: 100,
+      totalTasks: 30,
+      completedTasks: 30,
+      dueDate: "2023-12-15",
+      createdAt: "2023-09-01",
+      members: [
+        { id: "1", name: "田中太郎", avatar: "/placeholder.svg?height=32&width=32&text=田" },
+        { id: "2", name: "佐藤花子", avatar: "/placeholder.svg?height=32&width=32&text=佐" },
+      ],
+      color: "gray",
+      starred: false,
+      type: "archived",
+    },
+    {
+      id: "8",
+      name: "初期プロトタイプ開発",
+      description: "MVP開発のための初期プロトタイプ作成プロジェクト（アーカイブ済み）。",
+      status: "archived",
+      priority: "medium",
+      progress: 100,
+      totalTasks: 8,
+      completedTasks: 8,
+      dueDate: "2023-11-20",
+      createdAt: "2023-10-15",
+      members: [{ id: "1", name: "田中太郎", avatar: "/placeholder.svg?height=32&width=32&text=田" }],
+      color: "gray",
+      starred: false,
+      type: "archived",
     },
   ])
 
@@ -122,13 +223,29 @@ export default function JapaneseModernProjectList() {
       project.description.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesStatus = statusFilter === "all" || project.status === statusFilter
     const matchesPriority = priorityFilter === "all" || project.priority === priorityFilter
-    return matchesSearch && matchesStatus && matchesPriority
+    const matchesType = 
+      (showOwned && project.type === "owned") ||
+      (showParticipating && project.type === "participating") ||
+      (showArchived && project.type === "archived")
+    return matchesSearch && matchesStatus && matchesPriority && matchesType
   })
 
-  const activeFiltersCount = [statusFilter, priorityFilter].filter((f) => f !== "all").length
+  const activeFiltersCount = [
+    searchQuery ? 1 : 0,
+    statusFilter !== "all" ? 1 : 0,
+    priorityFilter !== "all" ? 1 : 0,
+    !showOwned ? 1 : 0,
+    !showParticipating ? 1 : 0,
+    showArchived ? 1 : 0
+  ].reduce((sum, count) => sum + count, 0)
+  
   const clearFilters = () => {
+    setSearchQuery("")
     setStatusFilter("all")
     setPriorityFilter("all")
+    setShowOwned(true)
+    setShowParticipating(true)
+    setShowArchived(false)
   }
 
 
@@ -162,7 +279,7 @@ export default function JapaneseModernProjectList() {
               { value: "active", label: "進行中" },
               { value: "planning", label: "計画中" },
               { value: "on-hold", label: "保留" },
-              { value: "completed", label: "完了" }
+              { value: "completed" }
             ],
             onValueChange: setStatusFilter,
             getBadgeClass: (value) => {
@@ -200,6 +317,17 @@ export default function JapaneseModernProjectList() {
         onClearFilters={clearFilters}
         activeFiltersCount={activeFiltersCount}
         searchPlaceholder="プロジェクトを検索..."
+        projectTypeFilters={{
+          showOwned,
+          showParticipating,
+          showArchived,
+          onToggleOwned: () => setShowOwned(!showOwned),
+          onToggleParticipating: () => setShowParticipating(!showParticipating),
+          onToggleArchived: () => setShowArchived(!showArchived),
+          ownedCount: projects.filter(p => p.type === "owned").length,
+          participatingCount: projects.filter(p => p.type === "participating").length,
+          archivedCount: projects.filter(p => p.type === "archived").length,
+        }}
       />
 
       <ActiveFiltersDisplay
@@ -207,10 +335,15 @@ export default function JapaneseModernProjectList() {
         activeFiltersCount={activeFiltersCount}
         statusFilter={statusFilter}
         priorityFilter={priorityFilter}
+        projectTypeFilters={{
+          showOwned,
+          showParticipating,
+          showArchived,
+        }}
       />
 
-      {/* Project Grid */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {/* Project List */}
+      <div className="space-y-2">
         {filteredProjects.map((project) => (
           <ProjectListCard key={project.id} project={project} />
         ))}

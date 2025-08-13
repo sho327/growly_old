@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Search, Filter } from "lucide-react"
+import { Search, Filter, X } from "lucide-react"
 
 interface FilterOption {
   value: string
@@ -26,6 +26,17 @@ interface SearchFiltersProps {
   onClearFilters: () => void
   activeFiltersCount: number
   searchPlaceholder?: string
+  projectTypeFilters?: {
+    showOwned: boolean
+    showParticipating: boolean
+    showArchived: boolean
+    onToggleOwned: () => void
+    onToggleParticipating: () => void
+    onToggleArchived: () => void
+    ownedCount: number
+    participatingCount: number
+    archivedCount: number
+  }
 }
 
 export function SearchFilters({
@@ -34,7 +45,8 @@ export function SearchFilters({
   filters,
   onClearFilters,
   activeFiltersCount,
-  searchPlaceholder = "検索..."
+  searchPlaceholder = "検索...",
+  projectTypeFilters
 }: SearchFiltersProps) {
   return (
     <Card className="border border-slate-200 bg-white">
@@ -45,8 +57,18 @@ export function SearchFilters({
             placeholder={searchPlaceholder}
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-10 border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 bg-white"
+            className="pl-10 pr-10 border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 bg-white"
           />
+          {searchQuery && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onSearchChange("")}
+              className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0 hover:bg-slate-100"
+            >
+              <X className="w-3 h-3 text-slate-400" />
+            </Button>
+          )}
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3">
@@ -97,6 +119,64 @@ export function SearchFilters({
             </Button>
           )}
         </div>
+
+        {/* Project Type Filters */}
+        {projectTypeFilters && (
+          <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-slate-200">
+            <span className="text-sm font-medium text-slate-700 mr-2">プロジェクトタイプ:</span>
+            <Button
+              variant={projectTypeFilters.showOwned ? "default" : "outline"}
+              size="sm"
+              onClick={projectTypeFilters.onToggleOwned}
+              className={`flex items-center gap-2 ${
+                projectTypeFilters.showOwned 
+                  ? "bg-emerald-600 hover:bg-emerald-700 text-white" 
+                  : "border-slate-200 text-slate-600 hover:bg-slate-50"
+              }`}
+            >
+              <span>所有</span>
+              <Badge variant="secondary" className={`text-xs ${
+                projectTypeFilters.showOwned ? "bg-emerald-500 text-white" : "bg-slate-100 text-slate-600"
+              }`}>
+                {projectTypeFilters.ownedCount}
+              </Badge>
+            </Button>
+            <Button
+              variant={projectTypeFilters.showParticipating ? "default" : "outline"}
+              size="sm"
+              onClick={projectTypeFilters.onToggleParticipating}
+              className={`flex items-center gap-2 ${
+                projectTypeFilters.showParticipating 
+                  ? "bg-emerald-600 hover:bg-emerald-700 text-white" 
+                  : "border-slate-200 text-slate-600 hover:bg-slate-50"
+              }`}
+            >
+              <span>参加中</span>
+              <Badge variant="secondary" className={`text-xs ${
+                projectTypeFilters.showParticipating ? "bg-emerald-500 text-white" : "bg-slate-100 text-slate-600"
+              }`}>
+                {projectTypeFilters.participatingCount}
+              </Badge>
+            </Button>
+            <Button
+              variant={projectTypeFilters.showArchived ? "default" : "outline"}
+              size="sm"
+              onClick={projectTypeFilters.onToggleArchived}
+              className={`flex items-center gap-2 ${
+                projectTypeFilters.showArchived 
+                  ? "bg-emerald-600 hover:bg-emerald-700 text-white" 
+                  : "border-slate-200 text-slate-600 hover:bg-slate-50"
+              }`}
+            >
+              <span>アーカイブ</span>
+              <Badge variant="secondary" className={`text-xs ${
+                projectTypeFilters.showArchived ? "bg-emerald-500 text-white" : "bg-slate-100 text-slate-600"
+              }`}>
+                {projectTypeFilters.archivedCount}
+              </Badge>
+            </Button>
+          </div>
+        )}
       </CardContent>
     </Card>
   )
