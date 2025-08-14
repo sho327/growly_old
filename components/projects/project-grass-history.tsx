@@ -92,20 +92,9 @@ export function ProjectGrassHistory({ tasks, projectId }: ProjectGrassHistoryPro
       const gridX = positionIndex % gridSizeX // 横方向のグリッド位置（0-5）
       const gridY = Math.floor(positionIndex / gridSizeY) // 縦方向のグリッド位置（0-7）
       
-      // ベース位置の計算（グリッド座標をパーセンテージに変換）
-      const baseLeft = (gridX / gridSizeX) * 84 + 8
-      // 縦方向: グレー側に集中（20%から100%の範囲、緑エリアは20%以下）
-      const baseBottom = (gridY / gridSizeY) * 80 + 20
-      
-      // ランダム要素の追加
-      const randomLeft = (Math.random() - 0.5) * 16
-      // 縦方向のランダム要素を調整（グレー側に集中）
-      const randomBottom = (Math.random() - 0.5) * 40
-      
-      // 最終位置の計算（場外制限付き）
-      const left = Math.max(3, Math.min(87, baseLeft + randomLeft))
-      // 緑エリア（下部20%）への侵入を制限（最小20%まで）
-      const bottom = Math.max(20, Math.min(100, baseBottom + randomBottom))
+      // 完全にランダムな配置（グリッドベースを廃止）
+      const left = Math.random() * 84 + 3 // 3%〜87%
+      const bottom = Math.random() * 85 + 5 // 5%〜90%（グレーエリア内）
       
       console.log(`位置計算完了: ${date.toLocaleDateString()}, 位置: ${left}%, ${bottom}%`)
       
