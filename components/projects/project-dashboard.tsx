@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Progress } from "@/components/ui/progress"
 import { Button } from "@/components/ui/button"
 import { StatCard } from "@/components/common"
+import { ProjectGrassHistory } from "./project-grass-history"
 
 import {
   TrendingUp,
@@ -25,6 +26,9 @@ import {
   Zap,
   Clock3,
   Sprout,
+  Leaf,
+  TreePine,
+  Flower,
 } from "lucide-react"
 import { format } from "date-fns"
 import { ja } from "date-fns/locale"
@@ -70,6 +74,17 @@ interface RecentActivity {
   }
   timestamp: string
   points?: number
+}
+
+interface ProjectTask {
+  id: string
+  title: string
+  difficulty: number
+  completed: boolean
+  completedAt?: Date
+  assignee: string
+  projectId: string
+  rating?: number
 }
 
 export default function ProjectDashboard({ projectId, projectName }: ProjectDashboardProps) {
@@ -189,6 +204,110 @@ export default function ProjectDashboard({ projectId, projectName }: ProjectDash
     },
   ]
 
+  // モックタスクデータ（過去30日間の活動用）
+  const projectTasks: ProjectTask[] = [
+    {
+      id: "1",
+      title: "デザインシステムの構築",
+      difficulty: 3,
+      completed: true,
+      completedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2日前
+      assignee: "田中太郎",
+      projectId: projectId,
+      rating: 4,
+    },
+    {
+      id: "2",
+      title: "API設計書の作成",
+      difficulty: 2,
+      completed: true,
+      completedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5日前
+      assignee: "佐藤花子",
+      projectId: projectId,
+      rating: 5,
+    },
+    {
+      id: "3",
+      title: "フロントエンド実装",
+      difficulty: 4,
+      completed: true,
+      completedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 7日前
+      assignee: "鈴木一郎",
+      projectId: projectId,
+      rating: 3,
+    },
+    {
+      id: "4",
+      title: "データベース設計",
+      difficulty: 3,
+      completed: true,
+      completedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), // 10日前
+      assignee: "山田次郎",
+      projectId: projectId,
+      rating: 4,
+    },
+    {
+      id: "5",
+      title: "テストケース作成",
+      difficulty: 2,
+      completed: true,
+      completedAt: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000), // 12日前
+      assignee: "田中太郎",
+      projectId: projectId,
+      rating: 5,
+    },
+    {
+      id: "6",
+      title: "ドキュメント整備",
+      difficulty: 1,
+      completed: true,
+      completedAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000), // 15日前
+      assignee: "佐藤花子",
+      projectId: projectId,
+      rating: 4,
+    },
+    {
+      id: "7",
+      title: "セキュリティレビュー",
+      difficulty: 4,
+      completed: true,
+      completedAt: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000), // 18日前
+      assignee: "鈴木一郎",
+      projectId: projectId,
+      rating: 3,
+    },
+    {
+      id: "8",
+      title: "パフォーマンス最適化",
+      difficulty: 3,
+      completed: true,
+      completedAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000), // 20日前
+      assignee: "山田次郎",
+      projectId: projectId,
+      rating: 4,
+    },
+    {
+      id: "9",
+      title: "UI/UX改善",
+      difficulty: 2,
+      completed: true,
+      completedAt: new Date(Date.now() - 22 * 24 * 60 * 60 * 1000), // 22日前
+      assignee: "田中太郎",
+      projectId: projectId,
+      rating: 5,
+    },
+    {
+      id: "10",
+      title: "バグ修正",
+      difficulty: 1,
+      completed: true,
+      completedAt: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000), // 25日前
+      assignee: "佐藤花子",
+      projectId: projectId,
+      rating: 4,
+    },
+  ]
+
   const getActivityIcon = (type: RecentActivity["type"]) => {
     switch (type) {
       case "task_completed":
@@ -270,6 +389,8 @@ export default function ProjectDashboard({ projectId, projectName }: ProjectDash
           color="red"
         />
       </div>
+
+
 
       <div className="grid gap-4 lg:grid-cols-2">
         {/* Task Status Overview */}
@@ -510,6 +631,17 @@ export default function ProjectDashboard({ projectId, projectName }: ProjectDash
               </div>
             </div>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* 成長記録セクション */}
+      <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+        <CardHeader>
+          <CardTitle className="text-lg font-semibold text-slate-900">成長記録</CardTitle>
+          <CardDescription>過去30日間のタスク完了状況</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ProjectGrassHistory tasks={projectTasks} projectId={projectId} />
         </CardContent>
       </Card>
 

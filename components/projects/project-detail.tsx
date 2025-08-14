@@ -28,6 +28,8 @@ import {
   FileText,
   MoreHorizontal,
   BarChart3,
+  UserPlus,
+  Copy,
 } from "lucide-react"
 import Link from "next/link"
 import TaskList from "@/components/tasks/task-list"
@@ -112,14 +114,42 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
         name: "高橋美咲", 
         email: "takahashi@example.com",
         avatar: "/placeholder.svg?height=32&width=32&text=高", 
-        role: "招待中",
+        role: "メンバー",
         joinedAt: null,
         lastActive: null,
         status: "invited" as const,
+        inviteCode: "WEB2024",
+        invitedAt: "2024-02-15T10:00:00Z",
+      },
+      { 
+        id: "6", 
+        name: "渡辺誠", 
+        email: "watanabe@example.com",
+        avatar: "/placeholder.svg?height=32&width=32&text=渡", 
+        role: "リーダー",
+        joinedAt: null,
+        lastActive: null,
+        status: "invited" as const,
+        inviteCode: "WEB2024",
+        invitedAt: "2024-02-14T15:30:00Z",
+      },
+      { 
+        id: "7", 
+        name: "佐々木健", 
+        email: "sasaki@example.com",
+        avatar: "/placeholder.svg?height=32&width=32&text=佐", 
+        role: "メンバー",
+        joinedAt: null,
+        lastActive: null,
+        status: "declined" as const,
+        inviteCode: "WEB2024",
+        invitedAt: "2024-02-10T14:00:00Z",
+        declinedAt: "2024-02-12T16:00:00Z",
       },
     ],
     color: "blue",
     starred: true,
+    inviteCode: "WEB2024",
   }
 
   const getStatusColor = (status: string) => {
@@ -244,6 +274,19 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
                     <Users className="w-4 h-4" />
                     メンバー: {project.members.length}人
                   </div>
+                  {project.inviteCode && (
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs font-mono text-slate-800 bg-slate-100 px-2 py-1 rounded-md border border-slate-200">#{project.inviteCode}</span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => navigator.clipboard.writeText(project.inviteCode!)}
+                        className="h-6 w-6 p-0 hover:bg-slate-200"
+                      >
+                        <Copy className="w-3 h-3 text-slate-600" />
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
 

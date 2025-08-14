@@ -6,7 +6,7 @@ import "./globals.css"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Growly - 成長を楽しむタスク管理",
+  title: "Grasle - 成長を楽しむタスク管理",
   description: "ゲーミフィケーション要素で楽しくタスク管理。レベルアップしながら目標を達成しよう。",
   generator: 'Next.js'
 }

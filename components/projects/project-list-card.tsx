@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Progress } from "@/components/ui/progress"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Star, MoreHorizontal, Users, Calendar, CheckCircle, Crown, Archive, Building2 } from "lucide-react"
+import { Star, MoreHorizontal, Users, Calendar, CheckCircle, Crown, Archive, Building2, Copy, UserPlus, CheckCircle2 } from "lucide-react"
 import Link from "next/link"
 
 interface ProjectMember {
@@ -34,6 +34,7 @@ interface Project {
     name: string
     color: string
   }
+  inviteCode?: string
 }
 
 interface ProjectListCardProps {
@@ -131,44 +132,44 @@ export function ProjectListCard({ project }: ProjectListCardProps) {
 
   return (
     <Link href={`/projects/${project.id}`}>
-      <Card className={`border border-slate-200 hover:shadow-md transition-all duration-200 cursor-pointer h-full mb-2 ${
+      <Card className={`border border-slate-200 hover:shadow-md transition-all duration-200 cursor-pointer h-full mb-2 gap-2 ${
         project.type === "archived" ? "opacity-80" : ""
       }`}>
-        <CardHeader className="pb-3">
+        <CardHeader className="pb-0">
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
                 <div className={`w-3 h-3 rounded-full ${getStatusDotColor(project.status)}`} />
-                <CardTitle className="text-lg font-semibold text-slate-900 line-clamp-1">
-                  {project.name}
-                </CardTitle>
-                {project.starred && <Star className="w-4 h-4 text-amber-500 fill-current flex-shrink-0" />}
-                {project.type === "archived" && <Archive className="w-4 h-4 text-gray-500 flex-shrink-0" />}
-              </div>
-              <CardDescription className="text-slate-600 text-sm leading-relaxed line-clamp-2">
-                {project.description}
-              </CardDescription>
-              <div className="flex items-center gap-4 mt-2">
-                {project.type === "participating" && project.owner && (
-                  <div className="flex items-center gap-2">
-                    <Crown className="w-3 h-3 text-amber-500" />
-                    <span className="text-xs text-slate-500">
-                      所有者: {project.owner.name}
-                    </span>
-                  </div>
-                )}
-                {project.type === "participating" && project.organization && (
-                  <div className="flex items-center gap-2">
-                    <Building2 className="w-3 h-3 text-slate-500" />
-                    <Badge 
-                      variant="outline" 
-                      className={`text-xs ${getOrganizationColor(project.organization.color)}`}
-                    >
-                      {project.organization.name}
-                    </Badge>
-                  </div>
-                )}
-              </div>
+                                            <CardTitle className="text-xl font-semibold text-slate-900 line-clamp-1">
+                {project.name}
+              </CardTitle>
+              {project.starred && <Star className="w-4 h-4 text-amber-500 fill-current flex-shrink-0" />}
+              {project.type === "archived" && <Archive className="w-4 h-4 text-gray-500 flex-shrink-0" />}
+            </div>
+                        <div className="flex items-center gap-4 mt-2 mb-2">
+              {project.type === "participating" && project.owner && (
+                <div className="flex items-center gap-2">
+                  <Crown className="w-3 h-3 text-amber-500" />
+                  <span className="text-xs text-slate-500">
+                    所有者: {project.owner.name}
+                  </span>
+                </div>
+              )}
+              {project.type === "participating" && project.organization && (
+                <div className="flex items-center gap-2">
+                  <Building2 className="w-3 h-3 text-slate-500" />
+                  <Badge 
+                    variant="outline" 
+                    className={`text-xs ${getOrganizationColor(project.organization.color)}`}
+                  >
+                    {project.organization.name}
+                  </Badge>
+                </div>
+              )}
+            </div>
+            <CardDescription className="text-slate-600 text-sm leading-relaxed line-clamp-2">
+              {project.description}
+            </CardDescription>
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild onClick={(e) => e.preventDefault()}>
@@ -189,14 +190,31 @@ export function ProjectListCard({ project }: ProjectListCardProps) {
             </DropdownMenu>
           </div>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex flex-wrap gap-2">
+        <CardContent className="space-y-2 pt-0">
+          
+          <div className="flex flex-wrap items-center gap-2">
             <Badge className={getStatusColor(project.status)} variant="outline">
               {getStatusText(project.status)}
             </Badge>
             <div className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(project.priority)}`}>
               優先度: {getPriorityText(project.priority)}
             </div>
+            {project.inviteCode && (
+              <div className="flex items-center gap-1">
+                <span className="text-xs font-mono text-slate-800 bg-slate-100 px-2 py-1 rounded-md border border-slate-200">#{project.inviteCode}</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    navigator.clipboard.writeText(project.inviteCode!)
+                  }}
+                  className="h-6 w-6 p-0 hover:bg-slate-200"
+                >
+                  <Copy className="w-3 h-3 text-slate-600" />
+                </Button>
+              </div>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -247,6 +265,7 @@ export function ProjectListCard({ project }: ProjectListCardProps) {
               )}
             </div>
           </div>
+
         </CardContent>
       </Card>
     </Link>

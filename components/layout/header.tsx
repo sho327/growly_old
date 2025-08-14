@@ -54,14 +54,14 @@ export function Header({
   return (
     <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 sm:px-5 bg-white sticky top-0 z-40">
       <SidebarTrigger className="-ml-1" />
-      {/* <div className="flex items-center gap-3 ml-2">
-        <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-emerald-500 to-green-500 rounded-xl shadow-sm">
+      <div className="flex items-center gap-3 ml-2">
+        {/* <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-emerald-500 to-green-500 rounded-xl shadow-sm">
           <Leaf className="w-6 h-6 text-white" />
-        </div>
+        </div> */}
         <div>
-          <h1 className="text-2xl font-bold">Growly</h1>
+          <h1 className="text-xl font-bold">Grasle</h1>
         </div>
-      </div> */}
+      </div>
       
       {/* User Info & Actions */}
       <div className="flex items-center space-x-4 ml-auto">

@@ -50,6 +50,7 @@ import {
   Check,
   Leaf,
   Calendar,
+  UserPlus,
 } from "lucide-react"
 
 const navigationItems = [
@@ -166,6 +167,13 @@ const sidebarItems = [
     badge: undefined,
     premium: false,
   },
+  {
+    title: "招待一覧",
+    href: "/invitations",
+    icon: UserPlus,
+    badge: "2",
+    premium: false,
+  },
 ]
 
 const bottomItems = [
@@ -236,7 +244,7 @@ export function AppSidebar() {
           </div>
           <div className="flex-1">
             <h1 className="text-2xl font-bold">
-              Growly
+              Grasle
             </h1>
             <p className="text-xs text-gray-500">タスク完了で育てる 🌱</p>
           </div>

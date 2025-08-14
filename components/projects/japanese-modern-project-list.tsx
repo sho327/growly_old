@@ -78,6 +78,7 @@ export default function JapaneseModernProjectList() {
       color: "blue",
       starred: true,
       type: "owned",
+      inviteCode: "WEB2024",
     },
     {
       id: "2",
@@ -97,6 +98,7 @@ export default function JapaneseModernProjectList() {
       color: "green",
       starred: false,
       type: "owned",
+      inviteCode: "MOBILE2024",
     },
     {
       id: "3",
@@ -113,6 +115,7 @@ export default function JapaneseModernProjectList() {
       color: "purple",
       starred: false,
       type: "owned",
+      inviteCode: "DB2024",
     },
     {
       id: "4",
@@ -132,6 +135,7 @@ export default function JapaneseModernProjectList() {
       color: "orange",
       starred: true,
       type: "owned",
+      inviteCode: "MARKETING2024",
     },
     // 参加中プロジェクト（他グループから招待）
     {
@@ -155,6 +159,7 @@ export default function JapaneseModernProjectList() {
       type: "participating",
       owner: { id: "9", name: "渡辺誠", avatar: "/placeholder.svg?height=32&width=32&text=渡" },
       organization: { id: "1", name: "デザインチーム", color: "purple" },
+      inviteCode: "DESIGN2024",
     },
     {
       id: "6",
@@ -176,6 +181,7 @@ export default function JapaneseModernProjectList() {
       type: "participating",
       owner: { id: "11", name: "佐々木健", avatar: "/placeholder.svg?height=32&width=32&text=佐" },
       organization: { id: "2", name: "バックエンドチーム", color: "blue" },
+      inviteCode: "API2024",
     },
     // アーカイブされたプロジェクト
     {
