@@ -74,22 +74,22 @@ export function StatCard({ icon, title, value, subtitle, color, change }: StatCa
   const colors = colorClasses[color]
 
   return (
-    <Card className={`bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow ${colors.bg}`}>
-      <CardContent className="p-4 sm:px-6 sm:py-2">
-        <div className="flex items-center justify-between mb-3 sm:mb-4">
-          <div className={`w-9 h-9 sm:w-11 sm:h-11 ${colors.iconBg} rounded-xl flex items-center justify-center`}>
+    <Card className={`bg-white border-gray-200 shadow-sm hover:shadow-md transition-shadow ${colors.bg}`}>
+      <CardContent className="p-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className={`w-12 h-12 ${colors.iconBg} rounded-xl flex items-center justify-center`}>
             <div className={colors.iconColor}>
               {icon}
             </div>
           </div>
-          <div className={`text-xs sm:text-sm font-medium text-right ${colors.titleColor}`}>
+          <div className={`text-sm font-semibold text-right ${colors.titleColor}`}>
             {title}
           </div>
         </div>
-        <div className={`text-xl sm:text-2xl font-bold mb-1 ${colors.valueColor}`}>
+        <div className={`text-2xl font-bold mb-2 ${colors.valueColor}`}>
           {value}
         </div>
-        <div className={`text-xs sm:text-sm font-medium ${colors.subtitleColor}`}>
+        <div className={`text-sm font-medium ${colors.subtitleColor}`}>
           {subtitle}
           {change && <span className="text-red-500"> {change}</span>}
         </div>

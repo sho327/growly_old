@@ -181,12 +181,12 @@ export function TaskDetail({ task, projectId }: TaskDetailPageProps) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 mb-6">
         <Link href={`/projects/${projectId}`}>
           <Button
             variant="outline"
             size="sm"
-            className="border-slate-200 text-slate-600 hover:bg-slate-50 bg-transparent"
+            className="border-gray-200 text-gray-700 hover:bg-gray-50 bg-transparent"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             {currentTask.project.name}に戻る
@@ -194,77 +194,84 @@ export function TaskDetail({ task, projectId }: TaskDetailPageProps) {
         </Link>
       </div>
 
-      {/* Task Content */}
-      <Card className="border border-slate-200">
-        <CardHeader>
-          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-3">
-                <Badge className={getStatusColor(currentTask.status)} variant="outline">
-                  {getStatusText(currentTask.status)}
-                </Badge>
-                <Badge className={getPriorityColor(currentTask.priority)} variant="outline">
-                  {getPriorityText(currentTask.priority)}
-                </Badge>
-                {currentTask.evaluation && (
-                  <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200" variant="outline">
-                    {getRatingBadge(currentTask.evaluation.rating)}
-                  </Badge>
-                )}
-              </div>
-              <CardTitle className="text-2xl font-bold text-slate-900 mb-3">{currentTask.title}</CardTitle>
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-slate-600">
-                {currentTask.assignee && (
-                  <div className="flex items-center gap-2">
-                    <Avatar className="w-6 h-6">
-                      <AvatarImage src={currentTask.assignee.avatar || "/placeholder.svg"} alt={currentTask.assignee.name} />
-                      <AvatarFallback className="text-xs">{currentTask.assignee.name.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                    <span>{currentTask.assignee.name}</span>
+      {/* 2カラムレイアウト */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* 左カラム - メインコンテンツ */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* タスクヘッダー */}
+          <Card className="border border-gray-200 bg-white">
+            <CardHeader className="pb-4">
+              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+                <div className="flex-1">
+                  {/* タスクタイトルとアイコン */}
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="p-3 bg-emerald-100 rounded-xl">
+                      <div className="w-8 h-8 text-emerald-600 font-bold text-xl flex items-center justify-center">
+                        T
+                      </div>
+                    </div>
+                    <div>
+                      <CardTitle className="text-2xl font-semibold text-gray-900 mb-2">{currentTask.title}</CardTitle>
+                      <p className="text-gray-600 text-base">{currentTask.project.name}</p>
+                    </div>
                   </div>
-                )}
-                <div className="flex items-center gap-1">
-                  <Calendar className="w-4 h-4" />
-                  <span>{format(new Date(currentTask.createdAt), "yyyy年M月d日", { locale: ja })}</span>
+
+                  {/* タスク情報 */}
+                  <div className="flex flex-wrap items-center gap-6 mb-4">
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <Calendar className="w-4 h-4" />
+                      <span>作成日: {format(new Date(currentTask.createdAt), "yyyy年M月d日", { locale: ja })}</span>
+                    </div>
+                    {currentTask.dueDate && (
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <Clock className="w-4 h-4" />
+                        <span>期限: {format(new Date(currentTask.dueDate), "M月d日", { locale: ja })}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* バッジ */}
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Badge className={getStatusColor(currentTask.status)} variant="outline">
+                      {getStatusText(currentTask.status)}
+                    </Badge>
+                    <Badge className={getPriorityColor(currentTask.priority)} variant="outline">
+                      {getPriorityText(currentTask.priority)}
+                    </Badge>
+                    {currentTask.evaluation && (
+                      <Badge className="bg-yellow-100 text-yellow-800 border-yellow-200" variant="outline">
+                        {getRatingBadge(currentTask.evaluation.rating)}
+                      </Badge>
+                    )}
+                  </div>
                 </div>
-                {currentTask.dueDate && (
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
-                    <span>期限: {format(new Date(currentTask.dueDate), "M月d日", { locale: ja })}</span>
-                  </div>
-                )}
-                {currentTask.completedAt && (
-                  <div className="flex items-center gap-1">
-                    <CheckCircle className="w-4 h-4" />
-                    <span>完了: {format(new Date(currentTask.completedAt), "M月d日", { locale: ja })}</span>
-                  </div>
-                )}
+
+                <div className="flex items-center gap-3">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-gray-200 text-gray-700 hover:bg-gray-50 bg-transparent"
+                    onClick={handleEditTask}
+                  >
+                    <Edit className="w-4 h-4 mr-2" />
+                    編集
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-gray-200 text-red-600 hover:bg-red-50 bg-transparent"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    削除
+                  </Button>
+                </div>
               </div>
-            </div>
+            </CardHeader>
+          </Card>
 
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                className="border-slate-200 text-slate-600 hover:bg-slate-50 bg-transparent"
-                onClick={handleEditTask}
-              >
-                <Edit className="w-4 h-4 mr-2" />
-                編集
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="border-slate-200 text-red-600 hover:bg-red-50 bg-transparent"
-              >
-                <Trash2 className="w-4 h-4 mr-2" />
-                削除
-              </Button>
-            </div>
-          </div>
-        </CardHeader>
-
-        <CardContent className="space-y-6">
+          {/* タスク詳細コンテンツ */}
+          <Card className="border border-gray-200 bg-white">
+            <CardContent className="p-6 space-y-6">
           {/* Description */}
           {currentTask.description && (
             <div>
@@ -278,8 +285,8 @@ export function TaskDetail({ task, projectId }: TaskDetailPageProps) {
             <h3 className="font-semibold text-slate-900 mb-3">添付ファイル (2)</h3>
             <div className="space-y-3">
               <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <FileText className="w-4 h-4 text-blue-600" />
+                <div className="p-2 bg-emerald-100 rounded-lg">
+                  <FileText className="w-4 h-4 text-emerald-600" />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
@@ -290,14 +297,14 @@ export function TaskDetail({ task, projectId }: TaskDetailPageProps) {
                     2.3 MB • 田中太郎 が 2時間前にアップロード
                   </p>
                 </div>
-                <Button variant="outline" size="sm" className="border-slate-200 text-slate-600 hover:bg-slate-50 bg-transparent">
+                <Button variant="outline" size="sm" className="border-gray-200 text-gray-600 hover:bg-gray-50 bg-transparent">
                   <Download className="h-4 w-4" />
                 </Button>
               </div>
 
               <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                <div className="p-2 bg-green-100 rounded-lg">
-                  <FileText className="w-4 h-4 text-green-600" />
+                <div className="p-2 bg-emerald-100 rounded-lg">
+                  <FileText className="w-4 h-4 text-emerald-600" />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
@@ -308,7 +315,7 @@ export function TaskDetail({ task, projectId }: TaskDetailPageProps) {
                     1.8 MB • 佐藤花子 が 1日前にアップロード
                   </p>
                 </div>
-                <Button variant="outline" size="sm" className="border-slate-200 text-slate-600 hover:bg-slate-50 bg-transparent">
+                <Button variant="outline" size="sm" className="border-gray-200 text-gray-600 hover:bg-gray-50 bg-transparent">
                   <Download className="h-4 w-4" />
                 </Button>
               </div>
@@ -553,6 +560,111 @@ export function TaskDetail({ task, projectId }: TaskDetailPageProps) {
           </div>
         </CardContent>
       </Card>
+        </div>
+
+        {/* 右カラム - サイドバー */}
+        <div className="space-y-6">
+          {/* 時間追跡 */}
+          <Card className="border border-gray-200 bg-white">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-lg font-semibold text-gray-900">時間追跡</CardTitle>
+            </CardHeader>
+            <CardContent className="text-center">
+              <div className="p-4 bg-emerald-100 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                <div className="text-emerald-600 font-bold text-2xl">V</div>
+              </div>
+              <div className="text-3xl font-bold text-gray-900 mb-2">9時間 13分</div>
+              <div className="text-gray-600 mb-4">{currentTask.title}</div>
+              <div className="flex gap-2">
+                <Button className="bg-red-600 hover:bg-red-700 text-white flex-1">
+                  停止
+                </Button>
+                <Button className="bg-emerald-600 hover:bg-emerald-700 text-white flex-1">
+                  開始
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* 担当者 */}
+          <Card className="border border-gray-200 bg-white">
+            <CardHeader className="pb-4">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg font-semibold text-gray-900">担当者</CardTitle>
+                <Button size="sm" className="bg-red-600 hover:bg-red-700 text-white">
+                  + 担当者追加
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {currentTask.assignee && (
+                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="w-8 h-8">
+                      <AvatarImage src={currentTask.assignee.avatar || "/placeholder.svg"} alt={currentTask.assignee.name} />
+                      <AvatarFallback className="text-sm">{currentTask.assignee.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <div className="font-medium text-gray-900">{currentTask.assignee.name}</div>
+                      <div className="text-sm text-gray-600">フルスタック開発者</div>
+                    </div>
+                  </div>
+                  <Button variant="ghost" size="sm">
+                    <MoreHorizontal className="w-4 h-4" />
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* 添付ファイル */}
+          <Card className="border border-gray-200 bg-white">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-lg font-semibold text-gray-900">添付ファイル</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-emerald-100 rounded-lg">
+                    <FileText className="w-4 h-4 text-emerald-600" />
+                  </div>
+                  <div>
+                    <div className="font-medium text-gray-900">App pages.zip</div>
+                    <div className="text-sm text-gray-600">2.2MB</div>
+                  </div>
+                </div>
+                <div className="flex gap-1">
+                  <Button variant="ghost" size="sm">
+                    <Download className="w-4 h-4" />
+                  </Button>
+                  <Button variant="ghost" size="sm">
+                    <MoreHorizontal className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-emerald-100 rounded-lg">
+                    <FileText className="w-4 h-4 text-emerald-600" />
+                  </div>
+                  <div>
+                    <div className="font-medium text-gray-900">Velzon admin.ppt</div>
+                    <div className="text-sm text-gray-600">2.4MB</div>
+                  </div>
+                </div>
+                <div className="flex gap-1">
+                  <Button variant="ghost" size="sm">
+                    <Download className="w-4 h-4" />
+                  </Button>
+                  <Button variant="ghost" size="sm">
+                    <MoreHorizontal className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
 
       {/* Modals */}
       <EvaluationDialog

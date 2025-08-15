@@ -49,8 +49,8 @@ export function SearchFilters({
   projectTypeFilters
 }: SearchFiltersProps) {
   return (
-    <Card className="border border-slate-200 bg-white">
-      <CardContent className="p-4 space-y-3">
+    <Card className="border border-gray-200 bg-white mb-6">
+      <CardContent className="p-6 space-y-4">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
           <Input
@@ -71,7 +71,7 @@ export function SearchFilters({
           )}
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex flex-col sm:flex-row gap-4">
           {filters.map((filter) => {
             const Icon = filter.icon || Filter
             const selectedOption = filter.options.find(opt => opt.value === filter.value)
@@ -82,8 +82,8 @@ export function SearchFilters({
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="outline"
-                    className={`w-full sm:w-auto justify-start bg-white hover:bg-slate-50 text-slate-600 ${
-                      isActive ? "border-emerald-300" : "border-slate-200"
+                    className={`w-full sm:w-auto justify-start bg-white hover:bg-gray-50 text-gray-700 ${
+                      isActive ? "border-emerald-300" : "border-gray-200"
                     }`}
                   >
                     <Icon className="w-4 h-4 mr-2" />

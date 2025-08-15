@@ -234,7 +234,7 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
             <Button
               variant="outline"
               size="sm"
-              className="border-slate-200 text-slate-600 hover:bg-slate-50 bg-transparent"
+              className="border-gray-200 text-gray-700 hover:bg-gray-50 bg-transparent"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               プロジェクト一覧
@@ -242,59 +242,56 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
           </Link>
         </div>
 
-        <Card className="border border-slate-200">
-          <CardHeader>
-            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+        {/* プロジェクトヘッダー */}
+        <Card className="border border-gray-200 bg-white">
+          <CardHeader className="pb-4">
+            <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
               <div className="flex-1">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className={`w-3 h-3 rounded-full ${getStatusDotColor(project.status)}`} />
-                  <CardTitle className="text-2xl font-bold text-slate-900">{project.name}</CardTitle>
+                                  {/* プロジェクトタイトルとアイコン */}
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="p-3 bg-emerald-100 rounded-xl">
+                      <div className="w-8 h-8 text-emerald-600 font-bold text-xl flex items-center justify-center">
+                        {project.icon}
+                      </div>
+                    </div>
+                  <div>
+                    <CardTitle className="text-2xl font-semibold text-gray-900 mb-2">{project.name}</CardTitle>
+                    <p className="text-gray-600 text-base">Themesbrand</p>
+                  </div>
                   {project.starred && (
-                    <div className="p-1 bg-slate-100 rounded-full">
-                      <Star className="w-4 h-4 text-amber-500 fill-current" />
+                    <div className="p-2 bg-amber-100 rounded-full">
+                      <Star className="w-5 h-5 text-amber-500 fill-current" />
                     </div>
                   )}
                 </div>
-                <CardDescription className="text-slate-600 text-base leading-relaxed mb-4">
-                  {project.description}
-                </CardDescription>
 
-                <div className="flex flex-wrap items-center gap-4">
-                  <Badge className={getStatusColor(project.status)} variant="outline">
-                    {getStatusText(project.status)}
-                  </Badge>
-                  <div className={`px-3 py-1 rounded-full text-sm font-medium ${getPriorityColor(project.priority)}`}>
-                    優先度: {getPriorityText(project.priority)}
-                  </div>
-                  <div className="flex items-center gap-1 text-sm text-slate-600">
+                {/* プロジェクト情報 */}
+                <div className="flex flex-wrap items-center gap-6 mb-4">
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
                     <Calendar className="w-4 h-4" />
-                    期限: {new Date(project.dueDate).toLocaleDateString("ja-JP")}
+                    <span>作成日: {new Date(project.createdAt).toLocaleDateString("ja-JP")}</span>
                   </div>
-                  <div className="flex items-center gap-1 text-sm text-slate-600">
-                    <Users className="w-4 h-4" />
-                    メンバー: {project.members.length}人
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <Calendar className="w-4 h-4" />
+                    <span>期限: {new Date(project.dueDate).toLocaleDateString("ja-JP")}</span>
                   </div>
-                  {project.inviteCode && (
-                    <div className="flex items-center gap-1">
-                      <span className="text-xs font-mono text-slate-800 bg-slate-100 px-2 py-1 rounded-md border border-slate-200">#{project.inviteCode}</span>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => navigator.clipboard.writeText(project.inviteCode!)}
-                        className="h-6 w-6 p-0 hover:bg-slate-200"
-                      >
-                        <Copy className="w-3 h-3 text-slate-600" />
-                      </Button>
-                    </div>
-                  )}
                 </div>
+
+                                  {/* バッジ */}
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200">新規</Badge>
+                    <Badge className="bg-red-100 text-red-800 border-red-200">高優先度</Badge>
+                    <Badge className={getStatusColor(project.status)} variant="outline">
+                      {getStatusText(project.status)}
+                    </Badge>
+                  </div>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 <Button
                   variant="outline"
                   size="sm"
-                  className="border-slate-200 text-slate-600 hover:bg-slate-50 bg-transparent"
+                  className="border-gray-200 text-gray-700 hover:bg-gray-50 bg-transparent"
                 >
                   <Share2 className="w-4 h-4 mr-2" />
                   共有
@@ -304,7 +301,7 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="border-slate-200 text-slate-600 hover:bg-slate-50 bg-transparent"
+                      className="border-gray-200 text-gray-700 hover:bg-gray-50 bg-transparent"
                     >
                       <MoreHorizontal className="w-4 h-4" />
                     </Button>
@@ -335,42 +332,40 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
             </div>
           </CardHeader>
         </Card>
-
-
       </div>
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="overflow-x-auto">
-          <TabsList className="flex w-max min-w-full bg-slate-100 p-1 rounded-lg">
-            <TabsTrigger value="dashboard" className="data-[state=active]:bg-white data-[state=active]:text-slate-900 text-sm whitespace-nowrap flex-shrink-0">
-              <BarChart3 className="w-4 h-4 mr-2" />
+          <TabsList className="flex w-max min-w-full bg-gray-100 p-1 rounded-lg">
+            <TabsTrigger value="dashboard" className="data-[state=active]:bg-white data-[state=active]:text-gray-900 text-sm font-medium whitespace-nowrap flex-shrink-0 px-4 py-3">
+              <BarChart3 className="w-5 h-5 mr-2" />
               ダッシュボード
             </TabsTrigger>
-            <TabsTrigger value="tasks" className="data-[state=active]:bg-white data-[state=active]:text-slate-900 text-sm whitespace-nowrap flex-shrink-0">
-              <CheckCircle className="w-4 h-4 mr-2" />
+            <TabsTrigger value="tasks" className="data-[state=active]:bg-white data-[state=active]:text-gray-900 text-sm font-medium whitespace-nowrap flex-shrink-0 px-4 py-3">
+              <CheckCircle className="w-5 h-5 mr-2" />
               タスク一覧
             </TabsTrigger>
-            <TabsTrigger value="wiki" className="data-[state=active]:bg-white data-[state=active]:text-slate-900 text-sm whitespace-nowrap flex-shrink-0">
-              <FileText className="w-4 h-4 mr-2" />
+            <TabsTrigger value="wiki" className="data-[state=active]:bg-white data-[state=active]:text-gray-900 text-sm font-medium whitespace-nowrap flex-shrink-0 px-4 py-3">
+              <FileText className="w-5 h-5 mr-2" />
               Wiki・お知らせ
             </TabsTrigger>
-            <TabsTrigger value="members" className="data-[state=active]:bg-white data-[state=active]:text-slate-900 text-sm whitespace-nowrap flex-shrink-0">
-              <Users className="w-4 h-4 mr-2" />
+            <TabsTrigger value="members" className="data-[state=active]:bg-white data-[state=active]:text-gray-900 text-sm font-medium whitespace-nowrap flex-shrink-0 px-4 py-3">
+              <Users className="w-5 h-5 mr-2" />
               メンバー
             </TabsTrigger>
           </TabsList>
         </div>
 
-        <TabsContent value="dashboard" className="mt-6">
+        <TabsContent value="dashboard" className="mt-4">
           <ProjectDashboard projectId={project.id} projectName={project.name} />
         </TabsContent>
 
-        <TabsContent value="tasks" className="mt-6">
+        <TabsContent value="tasks" className="mt-4">
           <TaskList projectId={project.id} projectName={project.name} />
         </TabsContent>
 
-        <TabsContent value="members" className="mt-6">
+        <TabsContent value="members" className="mt-4">
           <div className="space-y-6">
             {/* Header */}
             <MembersHeader
@@ -391,15 +386,15 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
             />
 
             {/* Members Table */}
-            <Card>
-              <CardContent>
+            <Card className="border-gray-200 bg-white shadow-sm">
+              <CardContent className="p-6">
                 <MembersTable members={project.members} />
               </CardContent>
             </Card>
           </div>
         </TabsContent>
 
-        <TabsContent value="wiki" className="mt-6">
+        <TabsContent value="wiki" className="mt-4">
           <ProjectWiki projectId={project.id} projectName={project.name} />
         </TabsContent>
       </Tabs>

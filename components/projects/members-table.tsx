@@ -146,10 +146,10 @@ export function MembersTable({ members }: MembersTableProps) {
     <div className="space-y-6">
       {/* 承認済みメンバー */}
       <div>
-        <div className="flex items-center gap-2 mb-4">
-          <CheckCircle className="w-5 h-5 text-emerald-600" />
-          <h3 className="text-lg font-semibold text-slate-900">承認済みメンバー</h3>
-          <Badge variant="secondary" className="bg-emerald-100 text-emerald-800">
+        <div className="flex items-center gap-3 mb-6">
+          <CheckCircle className="w-6 h-6 text-emerald-600" />
+          <h3 className="text-xl font-semibold text-gray-900">承認済みメンバー</h3>
+          <Badge variant="secondary" className="bg-emerald-100 text-emerald-800 px-3 py-1">
             {activeMembers.length}人
           </Badge>
         </div>
@@ -269,10 +269,10 @@ export function MembersTable({ members }: MembersTableProps) {
       {/* 招待中メンバー */}
       {invitedMembers.length > 0 && (
         <div>
-          <div className="flex items-center gap-2 mb-4">
-            <Clock className="w-5 h-5 text-amber-600" />
-            <h3 className="text-lg font-semibold text-slate-900">招待中メンバー</h3>
-            <Badge variant="secondary" className="bg-amber-100 text-amber-800">
+          <div className="flex items-center gap-3 mb-6">
+            <Clock className="w-6 h-6 text-amber-600" />
+            <h3 className="text-xl font-semibold text-gray-900">招待中メンバー</h3>
+            <Badge variant="secondary" className="bg-amber-100 text-amber-800 px-3 py-1">
               {invitedMembers.length}人
             </Badge>
           </div>
@@ -356,11 +356,11 @@ export function MembersTable({ members }: MembersTableProps) {
       {/* 辞退済みメンバー */}
       {declinedMembers.length > 0 && (
         <div>
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <XCircle className="w-5 h-5 text-red-600" />
-              <h3 className="text-lg font-semibold text-slate-900">辞退済みメンバー</h3>
-              <Badge variant="secondary" className="bg-red-100 text-red-800">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <XCircle className="w-6 h-6 text-red-600" />
+              <h3 className="text-xl font-semibold text-gray-900">辞退済みメンバー</h3>
+              <Badge variant="secondary" className="bg-red-100 text-red-800 px-3 py-1">
                 {declinedMembers.length}人
               </Badge>
             </div>
@@ -368,6 +368,7 @@ export function MembersTable({ members }: MembersTableProps) {
               variant="outline"
               size="sm"
               onClick={() => setShowDeclined(!showDeclined)}
+              className="border-gray-200 text-gray-700 hover:bg-gray-50"
             >
               {showDeclined ? "非表示" : "表示"}
             </Button>

@@ -244,7 +244,7 @@ export default function DashboardOverview() {
       />
 
       {/* 統計カード */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <StatCard
           icon={<Sparkles className="w-5 h-5 sm:w-6 sm:h-6" />}
           title="総草ポイント"
@@ -276,7 +276,8 @@ export default function DashboardOverview() {
         />
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-3">
+      {/* メインコンテンツエリア */}
+      <div className="grid gap-6 lg:grid-cols-3">
         <TaskListCard
           title="今日のタスク"
           description="今日のタスクの進捗状況"
@@ -316,15 +317,15 @@ export default function DashboardOverview() {
           ]}
         />
         {/* Weekly Missions */}
-        <Card>
-          <CardHeader>
+        <Card className="border-gray-200 bg-white shadow-sm">
+          <CardHeader className="pb-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
                 <Calendar className="w-5 h-5 text-purple-600" />
               </div>
               <div>
-                <CardTitle className="text-lg font-bold text-slate-900">週次ミッション</CardTitle>
-                <p className="text-sm text-slate-600">今週のチャレンジ進捗</p>
+                <CardTitle className="text-lg font-semibold text-gray-900">週次ミッション</CardTitle>
+                <p className="text-sm text-gray-600">今週のチャレンジ進捗</p>
               </div>
             </div>
           </CardHeader>
@@ -332,15 +333,15 @@ export default function DashboardOverview() {
             {weeklyMissions.map((mission) => (
               <div key={mission.id} className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <p className="text-sm font-medium">{mission.title}</p>
-                  <span className="text-xs text-muted-foreground">
+                  <p className="text-sm font-medium text-gray-700">{mission.title}</p>
+                  <span className="text-xs text-gray-500">
                     {mission.current}/{mission.target}
                   </span>
                 </div>
                 <div className="relative">
-                  <Progress value={mission.progress} className="h-2 bg-slate-200" />
+                  <Progress value={mission.progress} className="h-2 bg-gray-200" />
                   <div
-                    className={`absolute inset-0 h-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full transition-all duration-500`}
+                    className={`absolute inset-0 h-2 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-full transition-all duration-500`}
                     style={{ width: `${String(mission.progress)}%` }}
                   ></div>
                 </div>
@@ -472,30 +473,30 @@ export default function DashboardOverview() {
         </Card> */}
 
         {/* 草履歴セクション */}
-        <Card className="bg-white border-slate-200 shadow-sm">
-          <CardHeader>
+        <Card className="border-gray-200 bg-white shadow-sm">
+          <CardHeader className="pb-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-emerald-600" />
+                <Sprout className="w-5 h-5 text-emerald-600" />
               </div>
               <div>
-                <CardTitle className="text-lg font-bold text-slate-900">あなたの草履歴</CardTitle>
-                <p className="text-sm text-slate-600">過去1年間のタスク完了による成長記録 🌱</p>
+                <CardTitle className="text-lg font-semibold text-gray-900">成長記録</CardTitle>
+                <p className="text-sm text-gray-600">過去30日間の活動</p>
               </div>
             </div>
           </CardHeader>
           <CardContent>
             <GrassHistory tasks={userTasks} />
-            <div className="mt-6 text-center p-4 bg-slate-50 rounded-xl">
+            <div className="mt-6 text-center p-4 bg-gray-50 rounded-xl">
               <div className="flex items-center justify-center gap-2 text-emerald-600 mb-2">
                 <Sparkles className="w-4 h-4" />
                 <span className="font-semibold">継続は力なり</span>
               </div>
-              <div className="text-sm text-slate-600 mb-2">
+              <div className="text-sm text-gray-600 mb-2">
                 総完了タスク数: <span className="font-semibold text-emerald-600">{userTasks.length}個</span> •
-                今月の完了数: <span className="font-semibold text-blue-600">{thisMonthTasks.length}個</span>
+                今月の完了数: <span className="font-semibold text-emerald-600">{thisMonthTasks.length}個</span>
               </div>
-              <div className="text-xs text-slate-500">毎日の積み重ねが美しい草履歴を作ります 🌿</div>
+              <div className="text-xs text-gray-500">毎日の積み重ねが美しい草履歴を作ります 🌿</div>
             </div>
           </CardContent>
         </Card>

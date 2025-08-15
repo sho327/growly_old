@@ -347,19 +347,19 @@ export default function ProjectDashboard({ projectId, projectName }: ProjectDash
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900">プロジェクトダッシュボード</h2>
-          <p className="text-slate-600 mt-1">{projectName} の進捗状況とチーム活動</p>
+          <h2 className="text-2xl font-semibold text-gray-900 mb-2">ダッシュボード</h2>
+          <p className="text-gray-600 text-base">{projectName} の進捗状況とチーム活動</p>
         </div>
-        <Button variant="outline" size="sm" className="border-slate-200 text-slate-600 hover:bg-slate-50">
+        <Button variant="outline" size="sm" className="border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400">
           <BarChart3 className="w-4 h-4 mr-2" />
           詳細レポート
         </Button>
       </div>
 
       {/* Overview Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <StatCard
           icon={<TrendingUp className="w-5 h-5 sm:w-6 sm:h-6" />}
           title="進捗率"
@@ -392,96 +392,96 @@ export default function ProjectDashboard({ projectId, projectName }: ProjectDash
 
 
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-2 mb-8">
         {/* Task Status Overview */}
-        <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-              <BarChart3 className="w-5 h-5 text-slate-600" />
+        <Card className="bg-white border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-xl font-semibold text-gray-900 flex items-center gap-3">
+              <BarChart3 className="w-5 h-5 text-gray-600" />
               タスク状況
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
+          <CardContent className="space-y-5">
+            <div className="flex items-center justify-between py-2">
               <div className="flex items-center gap-3">
                 <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <span className="text-sm font-medium">完了</span>
+                <span className="text-base font-medium text-gray-700">完了</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-bold">{projectStats.completedTasks}</span>
-                <span className="text-sm text-slate-600">タスク</span>
+                <span className="text-lg font-semibold text-gray-900">{projectStats.completedTasks}</span>
+                <span className="text-sm text-gray-500">タスク</span>
               </div>
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between py-2">
               <div className="flex items-center gap-3">
                 <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                <span className="text-sm font-medium">進行中</span>
+                <span className="text-base font-medium text-gray-700">進行中</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-bold">{projectStats.inProgressTasks}</span>
-                <span className="text-sm text-slate-600">タスク</span>
+                <span className="text-lg font-semibold text-gray-900">{projectStats.inProgressTasks}</span>
+                <span className="text-sm text-gray-500">タスク</span>
               </div>
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between py-2">
               <div className="flex items-center gap-3">
-                <div className="w-3 h-3 bg-slate-400 rounded-full"></div>
-                <span className="text-sm font-medium">未着手</span>
+                <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
+                <span className="text-base font-medium text-gray-700">未着手</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-bold">{projectStats.totalTasks - projectStats.completedTasks - projectStats.inProgressTasks}</span>
-                <span className="text-sm text-slate-600">タスク</span>
+                <span className="text-lg font-semibold text-gray-900">{projectStats.totalTasks - projectStats.completedTasks - projectStats.inProgressTasks}</span>
+                <span className="text-sm text-gray-500">タスク</span>
               </div>
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between py-2">
               <div className="flex items-center gap-3">
                 <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                <span className="text-sm font-medium">期限超過</span>
+                <span className="text-base font-medium text-gray-700">期限超過</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-bold text-red-600">{projectStats.overdueTasks}</span>
-                <span className="text-sm text-slate-600">タスク</span>
+                <span className="text-lg font-semibold text-red-600">{projectStats.overdueTasks}</span>
+                <span className="text-sm text-gray-500">タスク</span>
               </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Team Performance */}
-        <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-          <CardHeader>
-            <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-              <Zap className="w-5 h-5 text-slate-600" />
+        <Card className="bg-white border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-xl font-semibold text-gray-900 flex items-center gap-3">
+              <Zap className="w-5 h-5 text-gray-600" />
               チームパフォーマンス
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">平均完了時間</span>
-              <span className="text-sm font-bold">{projectStats.averageCompletionTime}日</span>
+          <CardContent className="space-y-5">
+            <div className="flex items-center justify-between py-2">
+              <span className="text-base font-medium text-gray-700">平均完了時間</span>
+              <span className="text-lg font-semibold text-gray-900">{projectStats.averageCompletionTime}日</span>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">週間ポイント獲得</span>
-              <span className="text-sm font-bold text-green-600">+{projectStats.weeklyPoints}</span>
+            <div className="flex items-center justify-between py-2">
+              <span className="text-base font-medium text-gray-700">週間ポイント獲得</span>
+              <span className="text-lg font-semibold text-green-600">+{projectStats.weeklyPoints}</span>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">チーム生産性</span>
-              <span className="text-sm font-bold">{projectStats.teamProductivity}%</span>
+            <div className="flex items-center justify-between py-2">
+              <span className="text-base font-medium text-gray-700">チーム生産性</span>
+              <span className="text-lg font-semibold text-gray-900">{projectStats.teamProductivity}%</span>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">アクティブメンバー</span>
-              <span className="text-sm font-bold">{memberContributions.length}人</span>
+            <div className="flex items-center justify-between py-2">
+              <span className="text-base font-medium text-gray-700">アクティブメンバー</span>
+              <span className="text-lg font-semibold text-gray-900">{memberContributions.length}人</span>
             </div>
           </CardContent>
         </Card>
       </div>
 
       {/* Member Contributions Section */}
-      <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-slate-600" />
+      <Card className="bg-white border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-xl font-semibold text-gray-900 flex items-center gap-3">
+            <Trophy className="w-5 h-5 text-gray-600" />
             今月の貢献度ランキング
           </CardTitle>
-          <CardDescription>2025年8月のプロジェクト貢献度ランキング</CardDescription>
+          <CardDescription className="text-gray-600">2025年8月のプロジェクト貢献度ランキング</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Top 3 Cards */}
@@ -635,10 +635,10 @@ export default function ProjectDashboard({ projectId, projectName }: ProjectDash
       </Card>
 
       {/* 成長記録セクション */}
-      <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold text-slate-900">成長記録</CardTitle>
-          <CardDescription>過去30日間のタスク完了状況</CardDescription>
+      <Card className="bg-white border-gray-200 shadow-sm hover:shadow-md transition-shadow mb-8">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-xl font-semibold text-gray-900">成長記録</CardTitle>
+          <CardDescription className="text-gray-600">過去30日間のタスク完了状況</CardDescription>
         </CardHeader>
         <CardContent>
           <ProjectGrassHistory tasks={projectTasks} projectId={projectId} />
@@ -646,40 +646,40 @@ export default function ProjectDashboard({ projectId, projectName }: ProjectDash
       </Card>
 
       {/* Recent Activities Section */}
-      <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-            <Activity className="w-5 h-5 text-slate-600" />
+      <Card className="bg-white border-gray-200 shadow-sm hover:shadow-md transition-shadow mb-8">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-xl font-semibold text-gray-900 flex items-center gap-3">
+            <Activity className="w-5 h-5 text-gray-600" />
             最近の活動
           </CardTitle>
-          <CardDescription>プロジェクト内での最新の活動履歴</CardDescription>
+          <CardDescription className="text-gray-600">プロジェクト内での最新の活動履歴</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {recentActivities.map((activity) => (
-              <div key={activity.id} className="flex gap-3 p-3 bg-slate-50 rounded-lg">
+              <div key={activity.id} className="flex gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                 <div className={`p-2 rounded-lg ${getActivityColor(activity.type)} flex-shrink-0`}>
                   {getActivityIcon(activity.type)}
                 </div>
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-medium text-sm">{activity.title}</span>
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="font-semibold text-base text-gray-900">{activity.title}</span>
                     {activity.points && (
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="outline" className="text-xs border-green-200 text-green-700 bg-green-50">
                         +{activity.points}pt
                       </Badge>
                     )}
                   </div>
-                  <p className="text-sm text-slate-700 mb-1">{activity.description}</p>
-                  <div className="flex items-center gap-2">
-                    <Avatar className="w-5 h-5">
+                  <p className="text-sm text-gray-700 mb-2">{activity.description}</p>
+                  <div className="flex items-center gap-3">
+                    <Avatar className="w-6 h-6">
                       <AvatarImage src={activity.user.avatar} alt={activity.user.name} />
                       <AvatarFallback className="text-xs">
                         {activity.user.name.charAt(0)}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="text-xs text-slate-600">{activity.user.name}</span>
-                    <span className="text-xs text-slate-500">
+                    <span className="text-sm text-gray-600 font-medium">{activity.user.name}</span>
+                    <span className="text-xs text-gray-500">
                       {format(new Date(activity.timestamp), "M/d H:mm", { locale: ja })}
                     </span>
                   </div>

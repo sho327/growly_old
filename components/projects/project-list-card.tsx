@@ -132,45 +132,52 @@ export function ProjectListCard({ project }: ProjectListCardProps) {
 
   return (
     <Link href={`/projects/${project.id}`}>
-      <Card className={`border border-slate-200 hover:shadow-md transition-all duration-200 cursor-pointer h-full mb-2 gap-2 ${
+      <Card className={`bg-white border-gray-200 hover:shadow-md transition-all duration-200 cursor-pointer h-full ${
         project.type === "archived" ? "opacity-80" : ""
       }`}>
-        <CardHeader className="pb-0">
-          <div className="flex items-start justify-between">
+        <CardHeader className="pb-4">
+          {/* ヘッダー部分 */}
+          <div className="flex items-start justify-between mb-3">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
                 <div className={`w-3 h-3 rounded-full ${getStatusDotColor(project.status)}`} />
-                                            <CardTitle className="text-xl font-semibold text-slate-900 line-clamp-1">
-                {project.name}
-              </CardTitle>
-              {project.starred && <Star className="w-4 h-4 text-amber-500 fill-current flex-shrink-0" />}
-              {project.type === "archived" && <Archive className="w-4 h-4 text-gray-500 flex-shrink-0" />}
+                <CardTitle className="text-lg font-semibold text-gray-900 line-clamp-1">
+                  {project.name}
+                </CardTitle>
+                {project.starred && <Star className="w-4 h-4 text-amber-500 fill-current flex-shrink-0" />}
+                {project.type === "archived" && <Archive className="w-4 h-4 text-gray-500 flex-shrink-0" />}
+              </div>
+              
+              {/* プロジェクトタイプ情報 */}
+              <div className="flex items-center gap-3 mb-3">
+                {project.type === "participating" && project.owner && (
+                  <div className="flex items-center gap-2">
+                    <Crown className="w-3 h-3 text-amber-500" />
+                    <span className="text-xs text-gray-500">
+                      所有者: {project.owner.name}
+                    </span>
+                  </div>
+                )}
+                {project.type === "participating" && project.organization && (
+                  <div className="flex items-center gap-2">
+                    <Building2 className="w-3 h-3 text-gray-500" />
+                    <Badge 
+                      variant="outline" 
+                      className={`text-xs ${getOrganizationColor(project.organization.color)}`}
+                    >
+                      {project.organization.name}
+                    </Badge>
+                  </div>
+                )}
+              </div>
+              
+              {/* プロジェクト説明 */}
+              <CardDescription className="text-gray-600 text-sm leading-relaxed line-clamp-2 mb-3">
+                {project.description}
+              </CardDescription>
             </div>
-                        <div className="flex items-center gap-4 mt-2 mb-2">
-              {project.type === "participating" && project.owner && (
-                <div className="flex items-center gap-2">
-                  <Crown className="w-3 h-3 text-amber-500" />
-                  <span className="text-xs text-slate-500">
-                    所有者: {project.owner.name}
-                  </span>
-                </div>
-              )}
-              {project.type === "participating" && project.organization && (
-                <div className="flex items-center gap-2">
-                  <Building2 className="w-3 h-3 text-slate-500" />
-                  <Badge 
-                    variant="outline" 
-                    className={`text-xs ${getOrganizationColor(project.organization.color)}`}
-                  >
-                    {project.organization.name}
-                  </Badge>
-                </div>
-              )}
-            </div>
-            <CardDescription className="text-slate-600 text-sm leading-relaxed line-clamp-2">
-              {project.description}
-            </CardDescription>
-            </div>
+            
+            {/* ドロップダウンメニュー */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild onClick={(e) => e.preventDefault()}>
                 <Button variant="ghost" size="sm" className="h-8 w-8 p-0 flex-shrink-0">
@@ -189,10 +196,9 @@ export function ProjectListCard({ project }: ProjectListCardProps) {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-        </CardHeader>
-        <CardContent className="space-y-2 pt-0">
           
-          <div className="flex flex-wrap items-center gap-2">
+          {/* ステータスと優先度 */}
+          <div className="flex flex-wrap items-center gap-2 mb-4">
             <Badge className={getStatusColor(project.status)} variant="outline">
               {getStatusText(project.status)}
             </Badge>
@@ -201,7 +207,7 @@ export function ProjectListCard({ project }: ProjectListCardProps) {
             </div>
             {project.inviteCode && (
               <div className="flex items-center gap-1">
-                <span className="text-xs font-mono text-slate-800 bg-slate-100 px-2 py-1 rounded-md border border-slate-200">#{project.inviteCode}</span>
+                <span className="text-xs font-mono text-gray-800 bg-gray-100 px-2 py-1 rounded-md border border-gray-200">#{project.inviteCode}</span>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -209,21 +215,24 @@ export function ProjectListCard({ project }: ProjectListCardProps) {
                     e.stopPropagation()
                     navigator.clipboard.writeText(project.inviteCode!)
                   }}
-                  className="h-6 w-6 p-0 hover:bg-slate-200"
+                  className="h-6 w-6 p-0 hover:bg-gray-200"
                 >
-                  <Copy className="w-3 h-3 text-slate-600" />
+                  <Copy className="w-3 h-3 text-gray-600" />
                 </Button>
               </div>
             )}
           </div>
-
+        </CardHeader>
+        
+        <CardContent className="space-y-4">
+          {/* 進捗バー */}
           <div className="space-y-2">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-slate-600">進捗</span>
-              <span className="font-medium text-slate-900">{project.progress}%</span>
+              <span className="text-gray-600">進捗</span>
+              <span className="font-semibold text-gray-900">{project.progress}%</span>
             </div>
             <div className="relative">
-              <Progress value={project.progress} className="h-2 bg-slate-200" />
+              <Progress value={project.progress} className="h-2 bg-gray-200" />
               <div
                 className={`absolute inset-0 h-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full transition-all duration-500`}
                 style={{ width: `${String(project.progress)}%` }}
@@ -231,41 +240,42 @@ export function ProjectListCard({ project }: ProjectListCardProps) {
             </div>
           </div>
 
-          <div className="flex items-center justify-between text-sm text-slate-600">
-            <div className="flex items-center gap-1">
+          {/* タスクと期限 */}
+          <div className="flex items-center justify-between text-sm text-gray-600">
+            <div className="flex items-center gap-2">
               <CheckCircle className="w-4 h-4" />
               <span>
                 {project.completedTasks}/{project.totalTasks} タスク
               </span>
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4" />
               <span>{new Date(project.dueDate).toLocaleDateString("ja-JP")}</span>
             </div>
           </div>
 
+          {/* メンバー */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Users className="w-4 h-4 text-slate-600" />
-              <span className="text-sm text-slate-600">{project.members.length}人</span>
+              <Users className="w-4 h-4 text-gray-600" />
+              <span className="text-sm text-gray-600">{project.members.length}人</span>
             </div>
             <div className="flex -space-x-2">
               {project.members.slice(0, 3).map((member) => (
-                <Avatar key={member.id} className="w-6 h-6 border-2 border-white">
+                <Avatar key={member.id} className="w-7 h-7 border-2 border-white">
                   <AvatarImage src={member.avatar || "/placeholder.svg"} alt={member.name} />
-                  <AvatarFallback className="text-xs font-medium bg-slate-100">
+                  <AvatarFallback className="text-xs font-medium bg-gray-100">
                     {member.name.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
               ))}
               {project.members.length > 3 && (
-                <div className="w-6 h-6 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center">
-                  <span className="text-xs font-medium text-slate-600">+{project.members.length - 3}</span>
+                <div className="w-7 h-7 rounded-full bg-gray-100 border-2 border-white flex items-center justify-center">
+                  <span className="text-xs font-medium text-gray-600">+{project.members.length - 3}</span>
                 </div>
               )}
             </div>
           </div>
-
         </CardContent>
       </Card>
     </Link>

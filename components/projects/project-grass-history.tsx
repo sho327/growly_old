@@ -312,30 +312,30 @@ export function ProjectGrassHistory({ tasks, projectId }: ProjectGrassHistoryPro
         </div>
 
         {/* ===== 植物レベル統計表示 ===== */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-4">
           {/* 新芽: 1-50ポイントの日数 */}
-          <div className="text-center">
-            <Sprout className="w-8 h-8 text-emerald-600 mx-auto mb-2" />
-            <div className="text-2xl font-semibold text-gray-900">{plantLevels.sproutCount}</div>
-            <div className="text-sm text-gray-600">新芽</div>
+          <div className="text-center p-4 bg-gray-50 rounded-lg">
+            <Sprout className="w-10 h-10 text-emerald-600 mx-auto mb-3" />
+            <div className="text-3xl font-bold text-gray-900 mb-1">{plantLevels.sproutCount}</div>
+            <div className="text-base text-gray-600 font-medium">新芽</div>
           </div>
           {/* 若葉: 51-100ポイントの日数 */}
-          <div className="text-center">
-            <Leaf className="w-8 h-8 text-emerald-600 mx-auto mb-2" />
-            <div className="text-2xl font-semibold text-gray-900">{plantLevels.leafCount}</div>
-            <div className="text-sm text-gray-600">若葉</div>
+          <div className="text-center p-4 bg-gray-50 rounded-lg">
+            <Leaf className="w-10 h-10 text-emerald-600 mx-auto mb-3" />
+            <div className="text-3xl font-bold text-gray-900 mb-1">{plantLevels.leafCount}</div>
+            <div className="text-base text-gray-600 font-medium">若葉</div>
           </div>
           {/* 成木: 101-200ポイントの日数 */}
-          <div className="text-center">
-            <TreePine className="w-8 h-8 text-emerald-600 mx-auto mb-2" />
-            <div className="text-2xl font-semibold text-gray-900">{plantLevels.treeCount}</div>
-            <div className="text-sm text-gray-600">成木</div>
+          <div className="text-center p-4 bg-gray-50 rounded-lg">
+            <TreePine className="w-10 h-10 text-emerald-600 mx-auto mb-3" />
+            <div className="text-3xl font-bold text-gray-900 mb-1">{plantLevels.treeCount}</div>
+            <div className="text-base text-gray-600 font-medium">成木</div>
           </div>
           {/* 開花: 201ポイント以上の日数（特別な色で強調） */}
-          <div className="text-center">
-            <Flower className="w-8 h-8 text-pink-500 mx-auto mb-2" />
-            <div className="text-2xl font-semibold text-gray-900">{plantLevels.flowerCount}</div>
-            <div className="text-sm text-gray-600">開花</div>
+          <div className="text-center p-4 bg-gray-50 rounded-lg">
+            <Flower className="w-10 h-10 text-pink-500 mx-auto mb-3" />
+            <div className="text-3xl font-bold text-gray-900 mb-1">{plantLevels.flowerCount}</div>
+            <div className="text-base text-gray-600 font-medium">開花</div>
           </div>
         </div>
       </div>
