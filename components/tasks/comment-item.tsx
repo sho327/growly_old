@@ -31,6 +31,7 @@ import {
 import { Comment, User, Reaction } from "./types"
 import { format } from "date-fns"
 import { ja } from "date-fns/locale/ja"
+import { CommentInput } from "./comment-input"
 
 interface CommentItemProps {
   comment: Comment
@@ -40,6 +41,7 @@ interface CommentItemProps {
   onReply?: (commentId: string, content: string) => void
   onReact?: (commentId: string, emoji: string) => void
   onDownloadAttachment?: (attachmentId: string) => void
+  onDeleteAttachment?: (commentId: string, attachmentId: string) => void
   users: User[]
 }
 
@@ -64,8 +66,8 @@ export function CommentItem({
 }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false)
   const [isReplying, setIsReplying] = useState(false)
+  const [replyToUser, setReplyToUser] = useState<string>("")
   const [editContent, setEditContent] = useState(comment.content)
-  const [replyContent, setReplyContent] = useState("")
 
   const handleEdit = () => {
     if (onEdit && editContent.trim()) {
@@ -74,13 +76,7 @@ export function CommentItem({
     }
   }
 
-  const handleReply = () => {
-    if (onReply && replyContent.trim()) {
-      onReply(comment.id, replyContent)
-      setReplyContent("")
-      setIsReplying(false)
-    }
-  }
+
 
   const handleReact = (emoji: string) => {
     if (onReact) {
@@ -97,40 +93,74 @@ export function CommentItem({
   }
 
   const renderMentions = (content: string) => {
-    const mentionRegex = /@(\w+)/g
-    const parts = content.split(mentionRegex)
-    
-    return parts.map((part, index) => {
-      if (index % 2 === 1) {
-        const user = users.find(u => u.name.includes(part) || u.email.includes(part))
-        if (user) {
-          return (
-            <span key={index} className="inline-flex items-center gap-1 bg-blue-100 text-blue-700 px-1 rounded text-sm">
-              <Avatar className="w-4 h-4">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="text-xs">{user.name.charAt(0)}</AvatarFallback>
-              </Avatar>
-              @{user.name}
-            </span>
-          )
-        }
+    // @メンションを検出して色付きで表示
+    const mentionRegex = /@([^\s]+)/g
+    let lastIndex = 0
+    const elements = []
+    let match
+
+    while ((match = mentionRegex.exec(content)) !== null) {
+      // @の前のテキスト
+      if (match.index > lastIndex) {
+        elements.push(content.slice(lastIndex, match.index))
       }
-      return part
-    })
+
+      const mentionText = match[1]
+      const user = users.find(u => 
+        u.name === mentionText || 
+        u.name.toLowerCase().includes(mentionText.toLowerCase()) ||
+        u.email.toLowerCase().includes(mentionText.toLowerCase())
+      )
+
+      if (user) {
+        // 有効なメンション - 青い背景で表示
+        elements.push(
+          <span key={match.index} className="inline-flex items-center bg-blue-100 text-blue-700 px-1 rounded text-sm font-medium">
+            @{user.name}
+          </span>
+        )
+      } else {
+        // 無効なメンション - グレーで表示
+        elements.push(
+          <span key={match.index} className="inline-flex items-center bg-gray-100 text-gray-500 px-1 rounded text-sm">
+            @{mentionText}
+          </span>
+        )
+      }
+
+      lastIndex = match.index + match[0].length
+    }
+
+    // 残りのテキスト
+    if (lastIndex < content.length) {
+      elements.push(content.slice(lastIndex))
+    }
+
+    return elements.length > 0 ? elements : content
   }
 
   const canEdit = comment.author.id === currentUser.id
   const canDelete = comment.author.id === currentUser.id
+  const isOwnComment = comment.author.id === currentUser.id
 
   return (
     <div className="space-y-3">
-      <div className="flex gap-3 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-        <Avatar className="w-8 h-8">
-          <AvatarImage src={comment.author.avatar} alt={comment.author.name} />
-          <AvatarFallback className="text-xs">
-            {comment.author.name.charAt(0)}
-          </AvatarFallback>
-        </Avatar>
+      <div className={`flex gap-3 p-4 rounded-lg ${
+        isOwnComment 
+          ? 'bg-blue-50' 
+          : 'bg-gray-50'
+      }`}>
+        <div className="relative">
+          <Avatar className="w-8 h-8">
+            <AvatarImage src={comment.author.avatar} alt={comment.author.name} />
+            <AvatarFallback className="text-xs">
+              {comment.author.name.charAt(0)}
+            </AvatarFallback>
+          </Avatar>
+          {isOwnComment && (
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full border-2 border-white"></div>
+          )}
+        </div>
         
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-2">
@@ -173,43 +203,71 @@ export function CommentItem({
               </p>
 
               {/* 添付ファイル */}
-              {comment.attachments.length > 0 && (
+              {comment.attachments && comment.attachments.length > 0 && (
                 <div className="space-y-2">
                   {comment.attachments.map((attachment) => (
-                    <div key={attachment.id} className="flex items-center gap-2 p-2 bg-white rounded border">
-                      <Paperclip className="w-4 h-4 text-gray-500" />
+                    <div key={attachment.id} className={`flex items-center gap-2 p-2 rounded border ${
+                      attachment.isDeleted ? 'bg-gray-100 border-gray-200' : 'bg-white'
+                    }`}>
+                      <Paperclip className={`w-4 h-4 ${attachment.isDeleted ? 'text-gray-400' : 'text-gray-500'}`} />
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium truncate">{attachment.name}</p>
-                        <p className="text-xs text-gray-500">
-                          {formatFileSize(attachment.size)} • {attachment.uploadedBy.name}
-                        </p>
+                        {attachment.isDeleted ? (
+                          <>
+                            <p className="text-sm font-medium truncate text-gray-400">{attachment.name}</p>
+                            <p className="text-xs text-gray-400">このファイルは削除されました</p>
+                          </>
+                        ) : (
+                          <>
+                            <p className="text-sm font-medium truncate">{attachment.name}</p>
+                            <p className="text-xs text-gray-500">
+                              {formatFileSize(attachment.size)} • {attachment.uploadedBy.name}
+                            </p>
+                          </>
+                        )}
                       </div>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => onDownloadAttachment?.(attachment.id)}
-                      >
-                        <Download className="w-4 h-4" />
-                      </Button>
+                      {!attachment.isDeleted && (
+                        <div className="flex gap-1">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => onDownloadAttachment?.(attachment.id)}
+                          >
+                            <Download className="w-4 h-4" />
+                          </Button>
+                          {attachment.uploadedBy.id === currentUser.id && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="text-red-600 hover:text-red-700"
+                              onClick={() => onDeleteAttachment?.(comment.id, attachment.id)}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          )}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
               )}
 
               {/* リアクション */}
-              {comment.reactions.length > 0 && (
+              {comment.reactions && comment.reactions.length > 0 && (
                 <div className="flex flex-wrap gap-1">
-                  {comment.reactions.map((reaction) => (
-                    <Button
-                      key={reaction.id}
-                      size="sm"
-                      variant="outline"
-                      className="h-6 px-2 text-xs"
-                      onClick={() => handleReact(reaction.emoji)}
-                    >
-                      {reaction.emoji} {reaction.count}
-                    </Button>
-                  ))}
+                  {comment.reactions.map((reaction) => {
+                    const hasReacted = reaction.users.includes(currentUser.id)
+                    return (
+                      <Button
+                        key={reaction.id}
+                        size="sm"
+                        variant={hasReacted ? "default" : "outline"}
+                        className={`h-6 px-2 text-xs ${hasReacted ? "bg-blue-100 text-blue-700 border-blue-200" : ""}`}
+                        onClick={() => handleReact(reaction.emoji)}
+                      >
+                        {reaction.emoji} {reaction.count}
+                      </Button>
+                    )
+                  })}
                 </div>
               )}
 
@@ -244,7 +302,10 @@ export function CommentItem({
                   size="sm"
                   variant="ghost"
                   className="h-6 px-2 text-xs"
-                  onClick={() => setIsReplying(true)}
+                  onClick={() => {
+                    setReplyToUser(comment.author.name)
+                    setIsReplying(true)
+                  }}
                 >
                   <Reply className="w-3 h-3 mr-1" />
                   返信
@@ -282,43 +343,128 @@ export function CommentItem({
         </div>
       </div>
 
+      {/* 返信コメント */}
+      {comment.replies && comment.replies.length > 0 && (
+        <div className="ml-11 space-y-3">
+          {comment.replies.map((reply) => {
+            const isOwnReply = reply.author.id === currentUser.id
+            return (
+              <div key={reply.id} className={`flex gap-3 p-3 rounded-lg ${
+                isOwnReply 
+                  ? 'bg-blue-50' 
+                  : 'bg-gray-50'
+              }`}>
+                <div className="relative">
+                  <Avatar className="w-8 h-8">
+                    <AvatarImage src={reply.author.avatar} />
+                    <AvatarFallback>{reply.author.name.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                  {isOwnReply && (
+                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full border-2 border-white"></div>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="font-medium text-sm">{reply.author.name}</span>
+                    <span className="text-xs text-gray-500">
+                      {format(new Date(reply.createdAt), "M/d H:mm", { locale: ja })}
+                    </span>
+                    {reply.isEdited && (
+                      <span className="text-xs text-gray-400">(編集済み)</span>
+                    )}
+                  </div>
+                  <p className="text-sm text-gray-700 whitespace-pre-wrap">
+                    {renderMentions(reply.content)}
+                  </p>
+                  
+                  {/* 返信のリアクション */}
+                  {reply.reactions && reply.reactions.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {reply.reactions.map((reaction) => {
+                        const hasReacted = reaction.users.includes(currentUser.id)
+                        return (
+                          <Button
+                            key={reaction.id}
+                            size="sm"
+                            variant={hasReacted ? "default" : "outline"}
+                            className={`h-6 px-2 text-xs ${hasReacted ? "bg-blue-100 text-blue-700 border-blue-200" : ""}`}
+                            onClick={() => onReact?.(reply.id, reaction.emoji)}
+                          >
+                            {reaction.emoji} {reaction.count}
+                          </Button>
+                        )
+                      })}
+                    </div>
+                  )}
+
+                  {/* 返信のアクションボタン */}
+                  <div className="flex items-center gap-2 pt-2 border-t border-gray-200 mt-2">
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button size="sm" variant="ghost" className="h-6 px-2 text-xs">
+                          <Smile className="w-3 h-3 mr-1" />
+                          リアクション
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-2">
+                        <div className="flex gap-1">
+                          {REACTIONS.map((reaction) => (
+                            <Button
+                              key={reaction.emoji}
+                              size="sm"
+                              variant="ghost"
+                              className="h-8 w-8 p-0"
+                              onClick={() => onReact?.(reply.id, reaction.emoji)}
+                              title={reaction.label}
+                            >
+                              {reaction.emoji}
+                            </Button>
+                          ))}
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="h-6 px-2 text-xs"
+                      onClick={() => {
+                        // 返信の返信は、元のコメントへの返信として扱う
+                        setReplyToUser(reply.author.name)
+                        setIsReplying(true)
+                      }}
+                    >
+                      <Reply className="w-3 h-3 mr-1" />
+                      返信
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
+
       {/* 返信フォーム */}
       {isReplying && (
         <div className="ml-11 space-y-2">
-          <Textarea
-            placeholder={`@${comment.author.name} に返信...`}
-            value={replyContent}
-            onChange={(e) => setReplyContent(e.target.value)}
-            rows={2}
-            className="min-h-16"
+          <CommentInput
+            currentUser={currentUser}
+            users={users}
+            onAddComment={(content, mentions, attachments) => {
+              onReply?.(comment.id, content)
+              setIsReplying(false)
+              setReplyToUser("")
+            }}
+            placeholder="返信内容を入力..."
+            parentId={comment.id}
+            initialContent={replyToUser ? `@${replyToUser} ` : ""}
           />
           <div className="flex gap-2">
-            <Button size="sm" onClick={handleReply}>
-              返信
-            </Button>
             <Button size="sm" variant="outline" onClick={() => setIsReplying(false)}>
               キャンセル
             </Button>
           </div>
-        </div>
-      )}
-
-      {/* 返信コメント */}
-      {comment.replies && comment.replies.length > 0 && (
-        <div className="ml-11 space-y-3">
-          {comment.replies.map((reply) => (
-            <CommentItem
-              key={reply.id}
-              comment={reply}
-              currentUser={currentUser}
-              onEdit={onEdit}
-              onDelete={onDelete}
-              onReply={onReply}
-              onReact={onReact}
-              onDownloadAttachment={onDownloadAttachment}
-              users={users}
-            />
-          ))}
         </div>
       )}
     </div>

@@ -40,6 +40,12 @@ export const useLoginBonusStore = create<LoginBonusState>()(
         hasShownLoginBonus: state.hasShownLoginBonus,
         hasShownDashboardLoginBonus: state.hasShownDashboardLoginBonus,
       }),
+      onRehydrateStorage: () => (state) => {
+        // リハイドレート時のエラーハンドリング
+        if (state) {
+          console.log('Login bonus store rehydrated:', state)
+        }
+      },
     }
   )
 )

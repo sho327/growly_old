@@ -1,7 +1,12 @@
-export { StatCard } from './stat-card'
-export { SearchFilters } from './search-filters'
-export { ActiveFiltersDisplay } from './active-filters-display'
-export { EmptyState } from './empty-state'
-export { UserAvatar } from './user-avatar'
-export { PointsDisplay } from './points-display'
+export { EmptyState } from "./empty-state"
+export { PointsDisplay } from "./points-display"
+export { StatCard } from "./stat-card"
+export { UserAvatar } from "./user-avatar"
+export { SearchFilters } from "./search-filters"
+export { MultiSelectFilters } from "./multi-select-filters"
+export { ActiveFiltersDisplay } from "./active-filters-display"
+export { LoginBonusModal } from "./login-bonus-modal"
+export { LevelUpAnimation } from "./level-up-animation"
+export { AvatarAssistant } from "./avatar-assistant"
+export type { AvatarMessage } from "./avatar-assistant"
 export * from './types'

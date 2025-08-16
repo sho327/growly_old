@@ -4,75 +4,89 @@ import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { 
-  Send, 
-  Paperclip, 
-  AtSign, 
-  X,
-  FileText,
-  Image,
-  Video,
-  Music
-} from "lucide-react"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import { User } from "./types"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { User, Reaction, Attachment } from "./types"
+import { showNoCommentsMessage } from "@/lib/stores/avatar-assistant-store"
+import { AtSign, Paperclip, Send, Smile, ThumbsUp, Heart } from "lucide-react"
 
 interface CommentInputProps {
   currentUser: User
   users: User[]
-  onAddComment: (content: string, mentions: string[], attachments: File[]) => void
+  onAddComment: (content: string, mentions: string[], attachments: Attachment[]) => void
   placeholder?: string
   parentId?: string
+  initialContent?: string
 }
 
-const FILE_TYPES = {
-  image: ["image/jpeg", "image/png", "image/gif", "image/webp"],
-  document: ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "text/plain"],
-  video: ["video/mp4", "video/avi", "video/mov"],
-  audio: ["audio/mpeg", "audio/wav", "audio/ogg"]
-}
-
-export function CommentInput({
-  currentUser,
-  users,
-  onAddComment,
+export function CommentInput({ 
+  currentUser, 
+  users, 
+  onAddComment, 
   placeholder = "コメントを入力...",
-  parentId
+  parentId,
+  initialContent = ""
 }: CommentInputProps) {
-  const [content, setContent] = useState("")
+  const [content, setContent] = useState(initialContent)
   const [mentions, setMentions] = useState<string[]>([])
-  const [attachments, setAttachments] = useState<File[]>([])
+  const [attachments, setAttachments] = useState<Attachment[]>([])
   const [showMentionPopover, setShowMentionPopover] = useState(false)
   const [mentionQuery, setMentionQuery] = useState("")
-  const [mentionIndex, setMentionIndex] = useState(-1)
   const [selectedMentionIndex, setSelectedMentionIndex] = useState(0)
+  const [mentionIndex, setMentionIndex] = useState(-1)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const filteredUsers = users.filter(user => 
+  // コメント欄が空の時にアバターメッセージを表示
+  useEffect(() => {
+    if (!parentId && content.trim() === "") {
+      const timer = setTimeout(() => {
+        showNoCommentsMessage()
+      }, 3000) // 3秒後に表示
+
+      return () => clearTimeout(timer)
+    }
+  }, [content, parentId])
+
+  const filteredUsers = users.filter(user =>
     user.name.toLowerCase().includes(mentionQuery.toLowerCase()) ||
     user.email.toLowerCase().includes(mentionQuery.toLowerCase())
   )
+
+  // デバッグ用：メンション検出状況をログ出力
+  console.log("Mention state:", {
+    showMentionPopover,
+    mentionQuery,
+    filteredUsers: filteredUsers.map(u => u.name),
+    users: users.map(u => u.name)
+  })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value
     setContent(value)
 
-    // @メンション検出
-    const lastAtSign = value.lastIndexOf("@")
-    if (lastAtSign !== -1) {
-      const query = value.slice(lastAtSign + 1).split(/\s/)[0]
-      setMentionQuery(query)
-      setMentionIndex(lastAtSign)
-      setShowMentionPopover(true)
-      setSelectedMentionIndex(0)
+    // @メンション検出 - カーソル位置の前にある@を検出
+    const cursorPosition = e.target.selectionStart
+    const beforeCursor = value.slice(0, cursorPosition)
+    const atIndex = beforeCursor.lastIndexOf("@")
+    
+    if (atIndex !== -1) {
+      // @の後からカーソル位置までの文字列を取得
+      const query = beforeCursor.slice(atIndex + 1)
+      // 空白や改行が含まれていないかチェック
+      if (!query.includes(" ") && !query.includes("\n")) {
+        console.log("Mention detected:", { query, atIndex, cursorPosition })
+        setMentionQuery(query)
+        setMentionIndex(atIndex)
+        setShowMentionPopover(true)
+        setSelectedMentionIndex(0)
+      } else {
+        setShowMentionPopover(false)
+        setMentionIndex(-1)
+      }
     } else {
       setShowMentionPopover(false)
+      setMentionIndex(-1)
     }
   }
 
@@ -107,35 +121,57 @@ export function CommentInput({
     const afterMention = content.slice(mentionIndex + mentionQuery.length + 1)
     const newContent = `${beforeMention}@${user.name} ${afterMention}`
     
+    console.log("Inserting mention:", { user: user.name, newContent })
+    
     setContent(newContent)
     setMentions(prev => [...prev, user.id])
     setShowMentionPopover(false)
-    setMentionQuery("")
+    setMentionIndex(-1)
     
     // フォーカスを戻す
     setTimeout(() => {
-      textareaRef.current?.focus()
-      const newPosition = mentionIndex + user.name.length + 2
-      textareaRef.current?.setSelectionRange(newPosition, newPosition)
+      if (textareaRef.current) {
+        textareaRef.current.focus()
+        const newPosition = mentionIndex + user.name.length + 2
+        textareaRef.current.setSelectionRange(newPosition, newPosition)
+      }
     }, 0)
   }
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || [])
-    setAttachments(prev => [...prev, ...files])
-    e.target.value = ""
+    const files = e.target.files
+    if (files) {
+      const newAttachments: Attachment[] = Array.from(files).map((file, index) => ({
+        id: `temp-${Date.now()}-${index}`,
+        name: file.name,
+        size: file.size,
+        type: file.type,
+        url: URL.createObjectURL(file),
+        uploadedBy: currentUser,
+        uploadedAt: new Date().toISOString()
+      }))
+      
+      setAttachments(prev => [...prev, ...newAttachments])
+    }
   }
 
-  const removeAttachment = (index: number) => {
-    setAttachments(prev => prev.filter((_, i) => i !== index))
+  const removeAttachment = (attachmentId: string) => {
+    setAttachments(prev => prev.filter(att => att.id !== attachmentId))
   }
 
-  const getFileIcon = (file: File) => {
-    if (FILE_TYPES.image.includes(file.type)) return <Image className="w-4 h-4" />
-    if (FILE_TYPES.document.includes(file.type)) return <FileText className="w-4 h-4" />
-    if (FILE_TYPES.video.includes(file.type)) return <Video className="w-4 h-4" />
-    if (FILE_TYPES.audio.includes(file.type)) return <Music className="w-4 h-4" />
-    return <FileText className="w-4 h-4" />
+  const handleSubmit = () => {
+    if (content.trim() || attachments.length > 0) {
+      console.log("Submitting comment with mentions:", {
+        content: content.trim(),
+        mentions: mentions, // メンションされたユーザーIDの配列
+        attachments: attachments
+      })
+      onAddComment(content.trim(), mentions, attachments)
+      setContent("")
+      setMentions([])
+      setAttachments([])
+      setShowMentionPopover(false)
+    }
   }
 
   const formatFileSize = (bytes: number) => {
@@ -146,18 +182,33 @@ export function CommentInput({
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
   }
 
-  const handleSubmit = () => {
-    if (!content.trim() && attachments.length === 0) return
-    
-    onAddComment(content, mentions, attachments)
-    setContent("")
-    setMentions([])
-    setAttachments([])
-    setShowMentionPopover(false)
-  }
-
   return (
     <div className="space-y-3">
+      {/* 添付ファイル表示 */}
+      {attachments.length > 0 && (
+        <div className="space-y-2">
+          {attachments.map((attachment) => (
+            <div key={attachment.id} className="flex items-center gap-2 p-2 bg-gray-50 rounded-md">
+              <Paperclip className="w-4 h-4 text-gray-500" />
+              <span className="text-sm text-gray-700 flex-1 truncate">
+                {attachment.name}
+              </span>
+              <span className="text-xs text-gray-500">
+                {formatFileSize(attachment.size)}
+              </span>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => removeAttachment(attachment.id)}
+                className="h-6 w-6 p-0 text-gray-400 hover:text-red-500"
+              >
+                ×
+              </Button>
+            </div>
+          ))}
+        </div>
+      )}
+
       <div className="flex gap-3">
         <Avatar className="w-8 h-8">
           <AvatarImage src={currentUser.avatar} alt={currentUser.name} />
@@ -165,148 +216,81 @@ export function CommentInput({
             {currentUser.name.charAt(0)}
           </AvatarFallback>
         </Avatar>
-        
-        <div className="flex-1 relative">
-          <Textarea
-            ref={textareaRef}
-            value={content}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyDown}
-            placeholder={placeholder}
-            rows={3}
-            className="min-h-16 resize-none"
-            maxLength={1000}
-          />
-          
-          {/* メンションポップオーバー */}
-          {showMentionPopover && (
-            <div className="absolute bottom-full left-0 mb-2 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-              <div className="p-2">
-                <div className="text-xs text-gray-500 mb-2">メンバーを選択:</div>
-                {filteredUsers.length > 0 ? (
-                  <div className="space-y-1 max-h-32 overflow-y-auto">
-                    {filteredUsers.map((user, index) => (
-                      <button
-                        key={user.id}
-                        className={`w-full flex items-center gap-2 p-2 rounded text-left hover:bg-gray-100 ${
-                          index === selectedMentionIndex ? "bg-blue-50" : ""
-                        }`}
-                        onClick={() => insertMention(user)}
-                      >
-                        <Avatar className="w-6 h-6">
-                          <AvatarImage src={user.avatar} alt={user.name} />
-                          <AvatarFallback className="text-xs">
-                            {user.name.charAt(0)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <div className="text-sm font-medium">{user.name}</div>
-                          <div className="text-xs text-gray-500">{user.email}</div>
+
+        <div className="flex-1 space-y-2">
+          <div className="relative">
+            <Textarea
+              ref={textareaRef}
+              value={content}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              placeholder={placeholder}
+              className="min-h-[80px] resize-none"
+              rows={3}
+            />
+
+            {/* @メンションポップオーバー */}
+            {showMentionPopover && filteredUsers.length > 0 && (
+              <div className="absolute top-full left-0 mt-1 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                <div className="max-h-48 overflow-y-auto">
+                  {filteredUsers.map((user, index) => (
+                    <button
+                      key={user.id}
+                      onClick={() => insertMention(user)}
+                      className={`
+                        w-full flex items-center gap-2 p-2 text-left hover:bg-gray-100 transition-colors
+                        ${index === selectedMentionIndex ? "bg-gray-100" : ""}
+                      `}
+                    >
+                      <Avatar className="w-6 h-6">
+                        <AvatarImage src={user.avatar} alt={user.name} />
+                        <AvatarFallback className="text-xs">
+                          {user.name.charAt(0)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {user.name}
                         </div>
-                      </button>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-sm text-gray-500 p-2">該当するメンバーが見つかりません</div>
-                )}
+                        <div className="text-xs text-gray-500">
+                          {user.email}
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
-        </div>
-      </div>
+            )}
+          </div>
 
-      {/* 添付ファイル表示 */}
-      {attachments.length > 0 && (
-        <div className="ml-11 space-y-2">
-          {attachments.map((file, index) => (
-            <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 rounded border">
-              {getFileIcon(file)}
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">{file.name}</p>
-                <p className="text-xs text-gray-500">{formatFileSize(file.size)}</p>
-              </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1">
               <Button
-                size="sm"
                 variant="ghost"
-                onClick={() => removeAttachment(index)}
-                className="h-6 w-6 p-0"
+                size="sm"
+                onClick={() => fileInputRef.current?.click()}
+                className="h-8 w-8 p-0 text-gray-500 hover:text-gray-700"
               >
-                <X className="w-4 h-4" />
+                <Paperclip className="w-4 h-4" />
               </Button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                onChange={handleFileSelect}
+                className="hidden"
+              />
             </div>
-          ))}
-        </div>
-      )}
 
-      {/* アクションボタン */}
-      <div className="ml-11 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <input
-            ref={fileInputRef}
-            type="file"
-            multiple
-            onChange={handleFileSelect}
-            className="hidden"
-            accept="image/*,.pdf,.doc,.docx,.txt,.mp4,.avi,.mov,.mp3,.wav,.ogg"
-          />
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() => fileInputRef.current?.click()}
-            className="h-8 px-2 text-xs"
-          >
-            <Paperclip className="w-3 h-3 mr-1" />
-            ファイル添付
-          </Button>
-          
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button size="sm" variant="ghost" className="h-8 px-2 text-xs">
-                <AtSign className="w-3 h-3 mr-1" />
-                メンション
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-64 p-2">
-              <div className="text-xs text-gray-500 mb-2">メンバーを選択:</div>
-              <div className="space-y-1 max-h-32 overflow-y-auto">
-                {users.map((user) => (
-                  <button
-                    key={user.id}
-                    className="w-full flex items-center gap-2 p-2 rounded text-left hover:bg-gray-100"
-                    onClick={() => {
-                      setContent(prev => prev + `@${user.name} `)
-                      setMentions(prev => [...prev, user.id])
-                    }}
-                  >
-                    <Avatar className="w-6 h-6">
-                      <AvatarImage src={user.avatar} alt={user.name} />
-                      <AvatarFallback className="text-xs">
-                        {user.name.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <div className="text-sm font-medium">{user.name}</div>
-                      <div className="text-xs text-gray-500">{user.email}</div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </PopoverContent>
-          </Popover>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-gray-500">
-            {content.length}/1000文字
-          </span>
-          <Button
-            onClick={handleSubmit}
-            disabled={!content.trim() && attachments.length === 0}
-            size="sm"
-          >
-            <Send className="w-4 h-4 mr-2" />
-            投稿
-          </Button>
+            <Button
+              onClick={handleSubmit}
+              disabled={!content.trim() && attachments.length === 0}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm"
+            >
+              <Send className="w-4 h-4 mr-1" />
+              送信
+            </Button>
+          </div>
         </div>
       </div>
     </div>

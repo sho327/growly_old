@@ -16,13 +16,18 @@ export function LevelUpAnimation({ isVisible, newLevel, onComplete }: LevelUpAni
 
   useEffect(() => {
     if (isVisible) {
+      console.log('Level up animation started')
       setAnimationPhase(0)
       const timer1 = setTimeout(() => setAnimationPhase(1), 100)
       const timer2 = setTimeout(() => setAnimationPhase(2), 1000)
       const timer3 = setTimeout(() => setAnimationPhase(3), 2000)
       const timer4 = setTimeout(() => {
+        console.log('Level up animation completed')
         setAnimationPhase(0)
-        onComplete()
+        // onCompleteを一度だけ呼び出す
+        if (isVisible) {
+          onComplete()
+        }
       }, 3500)
 
       return () => {
@@ -32,9 +37,11 @@ export function LevelUpAnimation({ isVisible, newLevel, onComplete }: LevelUpAni
         clearTimeout(timer4)
       }
     }
-  }, [isVisible, onComplete])
+  }, [isVisible])
 
   if (!isVisible) return null
+
+
 
   const getLevelTitle = (level: number) => {
     if (level >= 20) return "草の神様"
@@ -47,7 +54,9 @@ export function LevelUpAnimation({ isVisible, newLevel, onComplete }: LevelUpAni
   }
 
   return (
-    <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center">
+    <div 
+      className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center"
+    >
       <div className="relative">
         {/* 背景エフェクト */}
         <div className="absolute inset-0 -m-20">

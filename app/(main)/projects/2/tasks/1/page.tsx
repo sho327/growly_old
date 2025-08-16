@@ -30,6 +30,7 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
       id: "1",
       name: "田中太郎",
       avatar: "/placeholder.svg?height=32&width=32&text=田",
+      email: "tanaka@example.com"
     },
     project: {
       id: projectId,
@@ -48,6 +49,7 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
         id: "2",
         name: "佐藤花子",
         avatar: "/placeholder.svg?height=32&width=32&text=佐",
+        email: "sato@example.com"
       },
     },
     comments: [
@@ -55,21 +57,37 @@ export default async function TaskDetailPage({ params }: TaskDetailPageProps) {
         id: "1",
         content: "デザインがとても良いですね。色使いが統一感があって素晴らしいです。",
         createdAt: "2024-01-12T10:30:00Z",
+        updatedAt: undefined,
         author: {
           id: "1",
           name: "田中太郎",
           avatar: "/placeholder.svg?height=32&width=32&text=田",
+          email: "tanaka@example.com"
         },
+        mentions: [],
+        reactions: [],
+        attachments: [],
+        parentId: undefined,
+        replies: [],
+        isEdited: false
       },
       {
         id: "2",
         content: "モバイルでの表示も確認しました。レスポンシブデザインが適切に実装されています。",
         createdAt: "2024-01-13T15:45:00Z",
+        updatedAt: undefined,
         author: {
           id: "2",
           name: "佐藤花子",
           avatar: "/placeholder.svg?height=32&width=32&text=佐",
+          email: "sato@example.com"
         },
+        mentions: [],
+        reactions: [],
+        attachments: [],
+        parentId: undefined,
+        replies: [],
+        isEdited: false
       },
     ],
   }

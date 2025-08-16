@@ -20,6 +20,7 @@ export interface Attachment {
   url: string
   uploadedBy: User
   uploadedAt: string
+  isDeleted?: boolean
 }
 
 export interface Comment {

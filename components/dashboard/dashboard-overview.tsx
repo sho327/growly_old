@@ -29,39 +29,50 @@ import { AchievementListCard } from "./achievement-list-card"
 import { DashboardHeader } from "./dashboard-header"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Progress } from "../ui/progress"
-import { LevelUpAnimation } from "@/components/common/level-up-animation"
 import { User } from "@/components/common/types"
-import { useLoginBonusStore } from "@/lib/stores/login-bonus-store"
+import { showPageSpecificMessage } from "@/lib/stores/avatar-assistant-store"
 
 
+interface DashboardOverviewProps {
+  user: {
+    name: string
+    level: number
+    experience: number
+    experienceToNext: number
+    points: number
+    streak: number
+  }
+}
 
-export default function DashboardOverview() {
+export function DashboardOverview({ user }: DashboardOverviewProps) {
   // Zustand store for level up
-  const {
-    showLevelUp,
-    newLevel,
-    setShowLevelUp,
-    setNewLevel,
-    resetLevelUp,
-  } = useLoginBonusStore()
+  // const {
+  //   showLevelUp,
+  //   newLevel,
+  //   setShowLevelUp,
+  //   setNewLevel,
+  //   resetLevelUp,
+  // } = useLoginBonusStore()
 
   // Mock user data for login bonus
-  const user: User = {
+  const extendedUser: User = {
     id: "1",
-    name: "Growly User",
-    level: 5,
-    totalPoints: 1250,
+    name: user.name,
+    level: user.level,
+    totalPoints: user.points,
     title: "草の芽",
     coins: 500,
     backgroundTheme: "default",
     nameTag: "🌱",
     lastLogin: new Date(),
-    loginStreak: 7,
+    loginStreak: user.streak,
     totalLogins: 25,
   }
 
   const userTasks: any[] = []
   const thisMonthTasks: any[] = []
+
+
   // const userTasks = tasks.filter((t) => t.assignee === user.id && t.completed)
   // const thisMonthTasks = userTasks.filter((t) => {
   //   const now = new Date()
@@ -128,16 +139,16 @@ export default function DashboardOverview() {
     { id: 3, title: "7日連続ログイン", progress: 85, target: 7, current: 6 },
   ]
 
-  const handleLevelUpComplete = () => {
-    setShowLevelUp(false)
-    resetLevelUp()
-    // Update user level
-    user.level = newLevel
-    user.totalPoints += 50 // Bonus points from level up
-  }
+  // const handleLevelUpComplete = () => {
+  //   setShowLevelUp(false)
+  //   resetLevelUp()
+  //   // Update user level
+  //   extendedUser.level = newLevel
+  //   extendedUser.totalPoints += 50 // Bonus points from level up
+  // }
 
-  const xpProgress = (stats.currentXP / stats.nextLevelXP) * 100
-  const todayProgress = (stats.tasksToday / stats.tasksTotal) * 100
+  // const xpProgress = (stats.currentXP / stats.nextLevelXP) * 100
+  // const todayProgress = (stats.tasksToday / stats.tasksTotal) * 100
 
   return (
     <div className="space-y-6">
@@ -233,13 +244,13 @@ export default function DashboardOverview() {
       </Card> */}
       <UserProfileCard 
         user={{
-          name: "田中太郎",
-          level: 5,
+          name: user.name,
+          level: user.level,
           title: "草の達人",
-          xp: 450,
-          nextLevelXp: 490,
-          loginStreak: 8,
-          totalPoints: 1450
+          xp: user.experience,
+          nextLevelXp: user.experienceToNext,
+          loginStreak: user.streak,
+          totalPoints: user.points
         }}
       />
 
@@ -248,7 +259,7 @@ export default function DashboardOverview() {
         <StatCard
           icon={<Sparkles className="w-5 h-5 sm:w-6 sm:h-6" />}
           title="総草ポイント"
-          value="1,450"
+          value={user.points.toString()}
           subtitle="先週から"
           color="emerald"
           change="+120pt"
@@ -256,7 +267,7 @@ export default function DashboardOverview() {
         <StatCard
           icon={<Trophy className="w-5 h-5 sm:w-6 sm:h-6" />}
           title="現在のレベル"
-          value="5"
+          value={user.level.toString()}
           subtitle="次まで 50pt"
           color="amber"
         />
@@ -501,13 +512,6 @@ export default function DashboardOverview() {
           </CardContent>
         </Card>
       {/* </div> */}
-
-      {/* Level Up Animation */}
-      <LevelUpAnimation
-        isVisible={showLevelUp}
-        newLevel={newLevel}
-        onComplete={handleLevelUpComplete}
-      />
     </div>
   )
 }
