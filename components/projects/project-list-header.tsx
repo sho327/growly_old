@@ -8,18 +8,20 @@ interface ProjectListHeaderProps {
 
 export function ProjectListHeader({ projectCount, onCreateProject }: ProjectListHeaderProps) {
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-8">
+    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mt-2 mb-4">
       <div>
         <div className="flex items-center gap-4 mb-3">
           <div className="p-3 bg-blue-100 rounded-xl">
             <FolderOpen className="w-7 h-7 text-blue-600" />
           </div>
           <div>
-            <h1 className="text-3xl font-semibold text-gray-900 mb-1">プロジェクト</h1>
             <div className="flex items-center gap-3">
+              <h1 className="text-2xl font-semibold text-gray-900 mb-1">プロジェクト</h1>
               <div className="flex items-center gap-1 px-3 py-1 bg-emerald-100 rounded-full">
                 <span className="text-sm font-semibold text-emerald-700">{projectCount}件</span>
               </div>
+            </div>
+            <div className="flex items-center gap-3">
               <p className="text-gray-600 text-base">チームプロジェクトを管理・追跡</p>
             </div>
           </div>

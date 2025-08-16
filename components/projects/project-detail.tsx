@@ -277,14 +277,16 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
                   </div>
                 </div>
 
-                                  {/* バッジ */}
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200">新規</Badge>
-                    <Badge className="bg-red-100 text-red-800 border-red-200">高優先度</Badge>
-                    <Badge className={getStatusColor(project.status)} variant="outline">
-                      {getStatusText(project.status)}
-                    </Badge>
+                {/* バッジ */}
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge className="bg-amber-100 text-amber-800 border-amber-200">新規</Badge>
+                  <Badge className={getStatusColor(project.status)} variant="outline">
+                    {getStatusText(project.status)}
+                  </Badge>
+                  <div className={`py-1 rounded-full text-xs font-medium ${getPriorityColor(project.priority)}`}>
+                    優先度: {getPriorityText(project.priority)}
                   </div>
+                </div>
               </div>
 
               <div className="flex items-center gap-3">

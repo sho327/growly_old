@@ -202,7 +202,7 @@ export function ProjectListCard({ project }: ProjectListCardProps) {
             <Badge className={getStatusColor(project.status)} variant="outline">
               {getStatusText(project.status)}
             </Badge>
-            <div className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(project.priority)}`}>
+            <div className={`me-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(project.priority)}`}>
               優先度: {getPriorityText(project.priority)}
             </div>
             {project.inviteCode && (
