@@ -31,12 +31,14 @@ import {
   UserPlus,
   Copy,
   Folder,
+  CalendarIcon,
 } from "lucide-react"
 import Link from "next/link"
+import ProjectDashboard from "@/components/projects/project-dashboard"
 import TaskList from "@/components/tasks/task-list"
 import ProjectWiki from "@/components/projects/project-wiki"
-import ProjectDashboard from "@/components/projects/project-dashboard"
 import ProjectFiles from "@/components/projects/project-files"
+import ProjectCalendar from "@/components/projects/project-calendar"
 import { MembersHeader } from "./members-header"
 import { MembersTable } from "./members-table"
 
@@ -362,6 +364,10 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
               <Folder className="w-5 h-5 mr-2" />
               ファイル
             </TabsTrigger>
+            <TabsTrigger value="calendar" className="data-[state=active]:bg-white data-[state=active]:text-gray-900 text-sm font-medium whitespace-nowrap flex-shrink-0 px-4 py-3">
+              <CalendarIcon className="w-5 h-5 mr-2" />
+              カレンダー
+            </TabsTrigger>
           </TabsList>
         </div>
 
@@ -408,6 +414,10 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
 
         <TabsContent value="files" className="mt-4">
           <ProjectFiles projectId={project.id} projectName={project.name} />
+        </TabsContent>
+
+        <TabsContent value="calendar" className="mt-4">
+          <ProjectCalendar projectId={project.id} projectName={project.name} />
         </TabsContent>
       </Tabs>
     </div>

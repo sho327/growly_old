@@ -119,6 +119,13 @@ const sidebarItems = [
     premium: false,
   },
   {
+    title: "カレンダー",
+    href: "/calendar",
+    icon: Calendar,
+    badge: undefined,
+    premium: false,
+  },
+  {
     title: "実績・ミッション",
     href: "/gamification",
     icon: Trophy,
