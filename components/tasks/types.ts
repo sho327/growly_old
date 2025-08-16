@@ -1,12 +1,39 @@
+export interface User {
+  id: string
+  name: string
+  avatar: string
+  email: string
+}
+
+export interface Reaction {
+  id: string
+  emoji: string
+  count: number
+  users: string[] // user IDs
+}
+
+export interface Attachment {
+  id: string
+  name: string
+  size: number
+  type: string
+  url: string
+  uploadedBy: User
+  uploadedAt: string
+}
+
 export interface Comment {
   id: string
   content: string
   createdAt: string
-  author: {
-    id: string
-    name: string
-    avatar: string
-  }
+  updatedAt?: string
+  author: User
+  mentions: string[] // user IDs
+  reactions: Reaction[]
+  attachments: Attachment[]
+  parentId?: string // for threaded comments
+  replies?: Comment[]
+  isEdited: boolean
 }
 
 export interface Task {
@@ -15,11 +42,7 @@ export interface Task {
   description: string
   status: "todo" | "in-progress" | "completed"
   priority: "high" | "medium" | "low"
-  assignee: {
-    id: string
-    name: string
-    avatar: string
-  } | null
+  assignee: User | null
   project: {
     id: string
     name: string
@@ -33,11 +56,7 @@ export interface Task {
     rating: number
     comment: string
     evaluatedAt: string
-    evaluatedBy: {
-      id: string
-      name: string
-      avatar: string
-    }
+    evaluatedBy: User
   } | null
   comments?: Comment[]
 }

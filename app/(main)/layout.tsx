@@ -10,6 +10,7 @@ import { LoginBonusModal } from "@/components/common/login-bonus-modal"
 import { LevelUpAnimation } from "@/components/common/level-up-animation"
 import { User as UserType } from "@/components/common/types"
 import { useLoginBonusStore } from "@/lib/stores/login-bonus-store"
+import { Toaster } from "@/components/ui/toaster"
 
 export default function MainLayout({
   children,
@@ -189,6 +190,7 @@ export default function MainLayout({
         newLevel={newLevel}
         onComplete={handleLevelUpComplete}
       />
+      <Toaster />
     </SidebarProvider>
   )
 }

@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Textarea } from "@/components/ui/textarea"
 import {
   Dialog,
   DialogContent,
@@ -25,7 +24,9 @@ import {
   Edit,
   Download
 } from "lucide-react"
-import { Task, Comment } from "./types"
+import { Task, Comment, User as UserType } from "./types"
+import { CommentItem } from "./comment-item"
+import { CommentInput } from "./comment-input"
 import { format } from "date-fns"
 import { ja } from "date-fns/locale/ja"
 
@@ -35,7 +36,14 @@ interface TaskDetailModalProps {
   onClose: () => void
   onStatusChange?: (taskId: string, newStatus: Task["status"]) => void
   onEdit?: (task: Task) => void
-  onAddComment?: (content: string) => void
+  onAddComment?: (content: string, mentions: string[], attachments: File[]) => void
+  onEditComment?: (commentId: string, content: string) => void
+  onDeleteComment?: (commentId: string) => void
+  onReplyComment?: (commentId: string, content: string) => void
+  onReactComment?: (commentId: string, emoji: string) => void
+  onDownloadAttachment?: (attachmentId: string) => void
+  currentUser: UserType
+  users: UserType[]
 }
 
 export function TaskDetailModal({ 
@@ -44,10 +52,16 @@ export function TaskDetailModal({
   onClose, 
   onStatusChange, 
   onEdit,
-  onAddComment 
+  onAddComment,
+  onEditComment,
+  onDeleteComment,
+  onReplyComment,
+  onReactComment,
+  onDownloadAttachment,
+  currentUser,
+  users
 }: TaskDetailModalProps) {
   const [activeTab, setActiveTab] = useState("details")
-  const [newComment, setNewComment] = useState("")
 
   if (!task) return null
 
@@ -106,12 +120,6 @@ export function TaskDetailModal({
   const getRatingBadge = (rating: number) => {
     const stars = "★".repeat(rating) + "☆".repeat(5 - rating)
     return `${stars} ${rating * 10}pt`
-  }
-
-  const handleSubmitComment = () => {
-    if (!newComment.trim() || !onAddComment) return
-    onAddComment(newComment)
-    setNewComment("")
   }
 
   return (
@@ -293,23 +301,17 @@ export function TaskDetailModal({
             <div className="space-y-3 max-h-60 overflow-y-auto">
               {task.comments && task.comments.length > 0 ? (
                 task.comments.map((comment) => (
-                  <div key={comment.id} className="flex gap-3 p-3 bg-gray-50 rounded-lg">
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage src={comment.author.avatar} alt={comment.author.name} />
-                      <AvatarFallback className="text-xs">
-                        {comment.author.name.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-medium text-sm">{comment.author.name}</span>
-                        <span className="text-xs text-muted-foreground">
-                          {format(new Date(comment.createdAt), "M/d H:mm", { locale: ja })}
-                        </span>
-                      </div>
-                      <p className="text-sm text-gray-700">{comment.content}</p>
-                    </div>
-                  </div>
+                  <CommentItem
+                    key={comment.id}
+                    comment={comment}
+                    currentUser={currentUser}
+                    onEdit={onEditComment}
+                    onDelete={onDeleteComment}
+                    onReply={onReplyComment}
+                    onReact={onReactComment}
+                    onDownloadAttachment={onDownloadAttachment}
+                    users={users}
+                  />
                 ))
               ) : (
                 <p className="text-sm text-muted-foreground text-center py-8">
@@ -320,29 +322,12 @@ export function TaskDetailModal({
 
             {onAddComment && (
               <div className="border-t pt-4">
-                <div className="space-y-3">
-                  <Textarea
-                    placeholder="コメントを入力..."
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    maxLength={500}
-                    rows={3}
-                    className="min-h-16"
-                  />
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-muted-foreground">
-                      {newComment.length}/500文字
-                    </span>
-                    <Button
-                      onClick={handleSubmitComment}
-                      disabled={!newComment.trim()}
-                      size="sm"
-                    >
-                      <MessageSquare className="h-4 w-4 mr-2" />
-                      コメント投稿
-                    </Button>
-                  </div>
-                </div>
+                <CommentInput
+                  currentUser={currentUser}
+                  users={users}
+                  onAddComment={onAddComment}
+                  placeholder="コメントを入力..."
+                />
               </div>
             )}
           </TabsContent>

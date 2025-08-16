@@ -1,18 +1,22 @@
 "use client"
 
 import { useState } from "react"
+import { useToast } from "@/hooks/use-toast"
 
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Crown, Palette, Zap, Gift } from "lucide-react"
+import { Crown, Palette, Zap, Gift, CheckCircle, ShoppingCart } from "lucide-react"
 import { ShopItemCard } from "./shop-item-card"
 import { ShopFilters } from "./shop-filters"
 import { ActiveFiltersDisplay } from "./active-filters-display"
 import { PurchaseModal } from "./purchase-modal"
+import { EquipModal } from "./equip-modal"
+import { CurrentEquipment } from "./current-equipment"
 import { ShopHeader } from "./shop-header"
 import { ShopItem, Category } from "./types"
 
 export default function Shop() {
+  const { toast } = useToast()
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [rarityFilter, setRarityFilter] = useState<string>("all")
@@ -20,6 +24,9 @@ export default function Shop() {
   const [priceMax, setPriceMax] = useState<string>("")
   const [selectedItem, setSelectedItem] = useState<ShopItem | null>(null)
   const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false)
+  const [isEquipModalOpen, setIsEquipModalOpen] = useState(false)
+  const [userPoints, setUserPoints] = useState(1250)
+  const [ownedItems, setOwnedItems] = useState<string[]>(["3"]) // 初期所有アイテム
 
   const shopItems: ShopItem[] = [
     {
@@ -30,7 +37,7 @@ export default function Shop() {
       category: "themes",
       rarity: "rare",
       image: "/placeholder.svg?height=120&width=120&text=🌸",
-      owned: false,
+      owned: ownedItems.includes("1"),
       featured: true,
     },
     {
@@ -41,7 +48,7 @@ export default function Shop() {
       category: "avatars",
       rarity: "epic",
       image: "/placeholder.svg?height=120&width=120&text=🥷",
-      owned: false,
+      owned: ownedItems.includes("2"),
       featured: false,
     },
     {
@@ -52,7 +59,7 @@ export default function Shop() {
       category: "badges",
       rarity: "legendary",
       image: "/placeholder.svg?height=120&width=120&text=🏆",
-      owned: true,
+      owned: ownedItems.includes("3"),
       featured: false,
     },
     {
@@ -63,7 +70,7 @@ export default function Shop() {
       category: "power-ups",
       rarity: "common",
       image: "/placeholder.svg?height=120&width=120&text=⚡",
-      owned: false,
+      owned: ownedItems.includes("4"),
       featured: true,
     },
     {
@@ -74,7 +81,7 @@ export default function Shop() {
       category: "themes",
       rarity: "rare",
       image: "/placeholder.svg?height=120&width=120&text=🌊",
-      owned: false,
+      owned: ownedItems.includes("5"),
       featured: false,
     },
     {
@@ -85,10 +92,20 @@ export default function Shop() {
       category: "avatars",
       rarity: "epic",
       image: "/placeholder.svg?height=120&width=120&text=🤖",
-      owned: false,
+      owned: ownedItems.includes("6"),
       featured: false,
     },
   ]
+  
+  // 装備状態管理
+  const [equippedItems, setEquippedItems] = useState<{
+    avatar?: ShopItem
+    theme?: ShopItem
+    badge?: ShopItem
+    powerUp?: ShopItem
+  }>({
+    badge: shopItems.find(item => item.id === "3") // 初期装備アイテム
+  })
 
   const categories: Category[] = [
     { id: "all", name: "すべて", icon: Crown },
@@ -119,9 +136,106 @@ export default function Shop() {
   }
 
   const confirmPurchase = () => {
-    console.log("Purchasing item:", selectedItem)
+    if (!selectedItem) return
+    
+    // ポイントチェック
+    if (userPoints < selectedItem.price) {
+      toast({
+        title: "⚠️ ポイント不足",
+        description: "ポイントが不足しています。",
+        variant: "destructive",
+      })
+      setIsPurchaseModalOpen(false)
+      setSelectedItem(null)
+      return
+    }
+
+    // 購入処理
+    setUserPoints(prev => prev - selectedItem.price)
+    setOwnedItems(prev => [...prev, selectedItem.id])
+    
+    // 成功トースト
+    toast({
+      title: "🛒 購入完了！",
+      description: `${selectedItem.name}を購入しました。`,
+      action: (
+        <div className="flex items-center gap-2">
+          <ShoppingCart className="w-4 h-4" />
+          <span className="text-sm">-{selectedItem.price}pt</span>
+        </div>
+      ),
+    })
+
     setIsPurchaseModalOpen(false)
     setSelectedItem(null)
+  }
+
+  const handleEquip = (item: ShopItem) => {
+    // 現在装備中の同カテゴリアイテムを取得
+    const currentEquipped = getCurrentEquippedItem(item.category)
+    const isCurrentlyEquipped = currentEquipped?.id === item.id
+    
+    if (isCurrentlyEquipped) {
+      // 装備外し処理
+      setEquippedItems(prev => ({
+        ...prev,
+        [item.category === "avatars" ? "avatar" : 
+         item.category === "themes" ? "theme" :
+         item.category === "badges" ? "badge" : "powerUp"]: undefined
+      }))
+      
+      // 装備外しトースト
+      toast({
+        title: "🎭 装備外し完了！",
+        description: `${item.name}を外しました。`,
+      })
+      return
+    }
+    
+    // 装備処理
+    setSelectedItem(item)
+    setIsEquipModalOpen(true)
+  }
+
+  const confirmEquip = () => {
+    if (!selectedItem) return
+    
+    // 装備処理
+    setEquippedItems(prev => ({
+      ...prev,
+      [selectedItem.category === "avatars" ? "avatar" : 
+       selectedItem.category === "themes" ? "theme" :
+       selectedItem.category === "badges" ? "badge" : "powerUp"]: selectedItem
+    }))
+    
+    // 成功トースト
+    toast({
+      title: "⚔️ 装備完了！",
+      description: `${selectedItem.name}を装備しました。`,
+    })
+
+    setIsEquipModalOpen(false)
+    setSelectedItem(null)
+  }
+
+  const getCurrentEquippedItem = (category: string) => {
+    switch (category) {
+      case "avatars":
+        return equippedItems.avatar
+      case "themes":
+        return equippedItems.theme
+      case "badges":
+        return equippedItems.badge
+      case "power-ups":
+        return equippedItems.powerUp
+      default:
+        return undefined
+    }
+  }
+
+  const isItemEquipped = (item: ShopItem) => {
+    const currentEquipped = getCurrentEquippedItem(item.category)
+    return currentEquipped?.id === item.id
   }
 
   const activeFiltersCount = [selectedCategory !== "all" ? "category" : null, rarityFilter !== "all" ? "rarity" : null, priceMin ? "min" : null, priceMax ? "max" : null].filter(Boolean).length
@@ -142,7 +256,13 @@ export default function Shop() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col gap-4">
-        <ShopHeader coinBalance={1250} />
+        <ShopHeader coinBalance={userPoints} />
+
+        {/* Current Equipment */}
+        <CurrentEquipment 
+          equippedItems={equippedItems} 
+          userName="田中太郎" 
+        />
 
         {/* Filters */}
         <ShopFilters
@@ -170,10 +290,10 @@ export default function Shop() {
       {featuredItems.length > 0 && (
         <div className="space-y-4">
           <div className="flex items-center gap-2">
-            <div className="p-2 bg-blue-100 rounded-xl">
-              <Gift className="w-4 h-4 text-blue-600" />
+            <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl">
+              <Gift className="w-4 h-4 text-white" />
             </div>
-            <h2 className="text-xl font-semibold text-slate-900">おすすめアイテム</h2>
+            <h2 className="text-xl font-semibold text-gray-900">おすすめアイテム</h2>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {featuredItems.map((item) => (
@@ -181,6 +301,8 @@ export default function Shop() {
                 key={item.id}
                 item={item}
                 onPurchase={handlePurchase}
+                onEquip={handleEquip}
+                isEquipped={isItemEquipped(item)}
                 variant="featured"
               />
             ))}
@@ -190,12 +312,12 @@ export default function Shop() {
 
       {/* Categories and Items */}
       <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
-        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-5 bg-slate-100 h-auto p-1">
+        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-5 bg-gray-100 h-auto p-1 rounded-lg">
           {categories.map((category) => (
             <TabsTrigger
               key={category.id}
               value={category.id}
-              className="flex items-center gap-2 py-2 px-3 border border-transparent data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:border-slate-300"
+              className="flex items-center gap-2 py-2 px-3 border border-transparent data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:border-gray-300 data-[state=active]:shadow-sm rounded-md transition-all"
             >
               <category.icon className="w-4 h-4" />
               <span className="hidden sm:inline">{category.name}</span>
@@ -210,19 +332,21 @@ export default function Shop() {
                 key={item.id}
                 item={item}
                 onPurchase={handlePurchase}
+                onEquip={handleEquip}
+                isEquipped={isItemEquipped(item)}
                 variant="regular"
               />
             ))}
           </div>
 
           {filteredItems.length === 0 && (
-            <Card className="border-2 border-dashed border-slate-200 bg-slate-50">
+            <Card className="border-2 border-dashed border-gray-200 bg-gray-50">
               <CardContent className="text-center py-16">
-                <div className="w-16 h-16 bg-slate-200 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Crown className="w-8 h-8 text-slate-400" />
+                <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Crown className="w-8 h-8 text-gray-400" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">アイテムが見つかりません</h3>
-                <p className="text-slate-600 max-w-md mx-auto">検索条件を変更するか、別のカテゴリをお試しください。</p>
+                <p className="text-gray-600 max-w-md mx-auto">検索条件を変更するか、別のカテゴリをお試しください。</p>
               </CardContent>
             </Card>
           )}
@@ -235,6 +359,16 @@ export default function Shop() {
         isOpen={isPurchaseModalOpen}
         onClose={() => setIsPurchaseModalOpen(false)}
         onConfirm={confirmPurchase}
+        userPoints={userPoints}
+      />
+
+      {/* Equip Modal */}
+      <EquipModal
+        item={selectedItem}
+        isOpen={isEquipModalOpen}
+        onClose={() => setIsEquipModalOpen(false)}
+        onConfirm={confirmEquip}
+        currentEquipped={selectedItem ? getCurrentEquippedItem(selectedItem.category) : undefined}
       />
     </div>
   )
