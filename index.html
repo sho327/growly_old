@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grasle - 草を育てるタスク管理</title>
+    <meta name="description" content="タスクを完了して草を育てる、楽しい協働型グループウェア。チームの生産性を向上させる新しい体験。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="nav">
+                <div class="logo">
+                    <div class="logo-icon">🌱</div>
+                    <span class="logo-text">Grasle</span>
+                </div>
+                <nav class="nav-menu" id="navMenu">
+                    <a href="#services" class="nav-link">サービス</a>
+                    <a href="#about" class="nav-link">について</a>
+                    <a href="#contact" class="nav-link">お問い合わせ</a>
+                </nav>
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        タスクを完了して<br>
+                        <span class="gradient-text">草を育てよう</span>
+                    </h1>
+                    <p class="hero-description">
+                        Grasleは、タスク管理を楽しいゲーム体験に変える協働型グループウェアです。<br>
+                        チームの生産性を向上させながら、みんなで草を育てましょう。
+                    </p>
+                    <div class="hero-status">
+                        <div class="status-badge">
+                            <span class="status-dot"></span>
+                            近日公開予定
+                        </div>
+                        <p class="status-text">現在開発中です。公開をお楽しみに！</p>
+                    </div>
+                    <div class="hero-actions">
+                        <button class="btn btn-primary" onclick="showNotifyModal()">
+                            公開通知を受け取る
+                        </button>
+                        <a href="#about" class="btn btn-secondary">詳しく見る</a>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="grass-garden">
+                        <div class="grass-container">
+                            <div class="grass-item active">🌱</div>
+                            <div class="grass-item active">🌿</div>
+                            <div class="grass-item active">🍀</div>
+                            <div class="grass-item">🌾</div>
+                            <div class="grass-item">🌳</div>
+                        </div>
+                        <div class="growth-indicator">
+                            <span class="growth-text">成長中...</span>
+                            <div class="growth-bar">
+                                <div class="growth-progress"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Grasleサービス</h2>
+                <p class="section-description">現在開発中のサービスと今後の展開予定</p>
+            </div>
+            
+            <div class="services-grid">
+                <!-- Growly -->
+                <div class="service-card featured">
+                    <div class="service-status">開発中</div>
+                    <div class="service-icon">🌱</div>
+                    <h3 class="service-title">Growly</h3>
+                    <p class="service-description">
+                        タスク完了で草を育てる協働型グループウェア。チームの生産性を楽しく向上させます。
+                    </p>
+                    <div class="service-features">
+                        <div class="feature">✓ タスク管理</div>
+                        <div class="feature">✓ 草育成システム</div>
+                        <div class="feature">✓ チーム協働</div>
+                        <div class="feature">✓ 進捗可視化</div>
+                    </div>
+                    <div class="service-footer">
+                        <span class="service-price">基本無料</span>
+                        <button class="btn btn-outline" onclick="showNotifyModal()">通知を受け取る</button>
+                    </div>
+                </div>
+
+                <!-- Future Service 1 -->
+                <div class="service-card">
+                    <div class="service-status coming-soon">予定</div>
+                    <div class="service-icon">🌿</div>
+                    <h3 class="service-title">Grasle Analytics</h3>
+                    <p class="service-description">
+                        チームの生産性を詳細に分析し、改善点を見つけるための分析ツール。
+                    </p>
+                    <div class="service-features">
+                        <div class="feature">✓ 詳細分析</div>
+                        <div class="feature">✓ レポート生成</div>
+                        <div class="feature">✓ 予測機能</div>
+                        <div class="feature">✓ API連携</div>
+                    </div>
+                    <div class="service-footer">
+                        <span class="service-price">検討中</span>
+                        <button class="btn btn-outline" disabled>準備中</button>
+                    </div>
+                </div>
+
+                <!-- Future Service 2 -->
+                <div class="service-card">
+                    <div class="service-status coming-soon">予定</div>
+                    <div class="service-icon">🌳</div>
+                    <h3 class="service-title">Grasle Connect</h3>
+                    <p class="service-description">
+                        複数のプロジェクトやチームを横断して管理できる統合プラットフォーム。
+                    </p>
+                    <div class="service-features">
+                        <div class="feature">✓ 統合管理</div>
+                        <div class="feature">✓ 横断分析</div>
+                        <div class="feature">✓ 権限管理</div>
+                        <div class="feature">✓ 企業向け機能</div>
+                    </div>
+                    <div class="service-footer">
+                        <span class="service-price">検討中</span>
+                        <button class="btn btn-outline" disabled>準備中</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2 class="about-title">なぜGrasleなのか？</h2>
+                    <p class="about-description">
+                        従来のタスク管理ツールは機能的でも、使い続けるモチベーションを維持するのが困難でした。
+                        Grasleは「草を育てる」という楽しい要素を加えることで、タスク管理を継続的で楽しい体験に変えます。
+                    </p>
+                    
+                    <div class="features-list">
+                        <div class="feature-item">
+                            <div class="feature-icon">🎯</div>
+                            <div class="feature-content">
+                                <h3>ゲーミフィケーション</h3>
+                                <p>タスク完了で草が育ち、レベルアップや称号獲得でモチベーション維持</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">👥</div>
+                            <div class="feature-content">
+                                <h3>チーム協働</h3>
+                                <p>メンバー同士の評価システムで、健全な競争と協力を促進</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature-item">
+                            <div class="feature-icon">📊</div>
+                            <div class="feature-content">
+                                <h3>可視化</h3>
+                                <p>個人・チームの活動を美しいグラフで可視化し、成長を実感</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="about-visual">
+                    <div class="demo-card">
+                        <div class="demo-header">
+                            <div class="demo-user">
+                                <div class="user-avatar">田</div>
+                                <div class="user-info">
+                                    <div class="user-name">田中太郎</div>
+                                    <div class="user-level">🏆 草の達人 • Lv.5</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="demo-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">1,450</div>
+                                <div class="stat-label">累積ポイント</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">52</div>
+                                <div class="stat-label">完了タスク</div>
+                            </div>
+                        </div>
+                        
+                        <div class="demo-tasks">
+                            <div class="task-item completed">
+                                <div class="task-check">✓</div>
+                                <span class="task-text">プロジェクト資料作成</span>
+                                <span class="task-points">+50pt</span>
+                            </div>
+                            <div class="task-item completed">
+                                <div class="task-check">✓</div>
+                                <span class="task-text">チームミーティング</span>
+                                <span class="task-points">+30pt</span>
+                            </div>
+                            <div class="task-item">
+                                <div class="task-check"></div>
+                                <span class="task-text">設計レビュー</span>
+                                <span class="task-points">40pt</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="contact-content">
+                <h2 class="contact-title">お問い合わせ・フィードバック</h2>
+                <p class="contact-description">
+                    Grasleについてのご質問やご要望がございましたら、お気軽にお声がけください。
+                </p>
+                
+                <div class="contact-methods">
+                    <a href="mailto:hello@grasle.com" class="contact-method">
+                        <div class="contact-icon">📧</div>
+                        <div class="contact-info">
+                            <div class="contact-label">メール</div>
+                            <div class="contact-value">hello@grasle.com</div>
+                        </div>
+                    </a>
+                    
+                    <a href="https://twitter.com/grasle_app" class="contact-method" target="_blank">
+                        <div class="contact-icon">🐦</div>
+                        <div class="contact-info">
+                            <div class="contact-label">Twitter</div>
+                            <div class="contact-value">@grasle_app</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <div class="logo-icon">🌱</div>
+                        <span class="logo-text">Grasle</span>
+                    </div>
+                    <p class="footer-description">
+                        個人開発者が作る、タスク管理を楽しくするサービス群
+                    </p>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="footer-section">
+                        <h3 class="footer-title">サービス</h3>
+                        <div class="footer-list">
+                            <a href="#services" class="footer-link">Growly</a>
+                            <span class="footer-link disabled">Analytics（予定）</span>
+                            <span class="footer-link disabled">Connect（予定）</span>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h3 class="footer-title">情報</h3>
+                        <div class="footer-list">
+                            <a href="#about" class="footer-link">サービスについて</a>
+                            <a href="#contact" class="footer-link">お問い合わせ</a>
+                            <a href="#" class="footer-link">プライバシー</a>
+                            <a href="#" class="footer-link">利用規約</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Grasle. Made with ❤️ by an indie developer.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Notification Modal -->
+    <div id="notifyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>公開通知を受け取る</h3>
+                <button class="modal-close" onclick="hideNotifyModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Growlyの公開時にメールでお知らせします。</p>
+                <form class="notify-form">
+                    <input type="email" placeholder="メールアドレス" class="notify-input" required>
+                    <button type="submit" class="btn btn-primary">通知を登録</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

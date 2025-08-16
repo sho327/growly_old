@@ -30,11 +30,13 @@ import {
   BarChart3,
   UserPlus,
   Copy,
+  Folder,
 } from "lucide-react"
 import Link from "next/link"
 import TaskList from "@/components/tasks/task-list"
 import ProjectWiki from "@/components/projects/project-wiki"
 import ProjectDashboard from "@/components/projects/project-dashboard"
+import ProjectFiles from "@/components/projects/project-files"
 import { MembersHeader } from "./members-header"
 import { MembersTable } from "./members-table"
 
@@ -356,6 +358,10 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
               <Users className="w-5 h-5 mr-2" />
               メンバー
             </TabsTrigger>
+            <TabsTrigger value="files" className="data-[state=active]:bg-white data-[state=active]:text-gray-900 text-sm font-medium whitespace-nowrap flex-shrink-0 px-4 py-3">
+              <Folder className="w-5 h-5 mr-2" />
+              ファイル
+            </TabsTrigger>
           </TabsList>
         </div>
 
@@ -398,6 +404,10 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
 
         <TabsContent value="wiki" className="mt-4">
           <ProjectWiki projectId={project.id} projectName={project.name} />
+        </TabsContent>
+
+        <TabsContent value="files" className="mt-4">
+          <ProjectFiles projectId={project.id} projectName={project.name} />
         </TabsContent>
       </Tabs>
     </div>
