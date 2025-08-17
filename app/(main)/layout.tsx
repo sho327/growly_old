@@ -273,6 +273,7 @@ export default function MainLayout({
           onMarkAllAsRead={handleMarkAllAsRead}
         />
         <main className="pt-4 pb-4 px-3 sm:px-4 min-w-0 bg-gray-50">
+        {/* <main className="pt-4 pb-4 px-3 sm:px-4 min-w-0 bg-gradient-to-br from-white via-green-25 to-emerald-50"> */}
           <div className="mx-auto w-full sm:max-w-8xl lg:max-w-8xl">{children}</div>
         </main>
       </SidebarInset>

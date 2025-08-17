@@ -52,7 +52,7 @@ export function Header({
   onMarkAllAsRead,
 }: HeaderProps) {
   return (
-    <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 sm:px-5 bg-white sticky top-0 z-40">
+    <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4 sm:px-5 bg-white sticky top-0 z-40 shadow-md">
       <SidebarTrigger className="-ml-1" />
       <div className="flex items-center gap-3 ml-2">
         {/* <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-emerald-500 to-green-500 rounded-xl shadow-sm">
