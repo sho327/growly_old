@@ -132,6 +132,15 @@ export const showGardenMessage = () => {
   })
 }
 
+export const showBugGameAvailableMessage = () => {
+  showAvatarMessage({
+    id: "bug-game-available",
+    content: "害虫駆除ゲームに挑戦してみよう！植物を守ってポイントを獲得できるよ🐛",
+    type: "game",
+    duration: 10000
+  })
+}
+
 export const showNoCommentsMessage = () => {
   showAvatarMessage({
     id: "no-comments",
@@ -193,6 +202,14 @@ export const showPageSpecificMessage = (page: string) => {
         id: "shop-welcome",
         content: "アイテムを購入してカスタマイズしましょう！",
         type: "welcome",
+        duration: 8000
+      })
+      break
+    case "garden":
+      showAvatarMessage({
+        id: "garden-welcome",
+        content: "ガーデンで植物を育てましょう！害虫駆除ゲームも挑戦できるよ🐛",
+        type: "garden",
         duration: 8000
       })
       break

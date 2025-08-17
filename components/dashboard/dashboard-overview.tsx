@@ -45,6 +45,11 @@ interface DashboardOverviewProps {
 }
 
 export function DashboardOverview({ user }: DashboardOverviewProps) {
+  // ページ固有メッセージを表示
+  useEffect(() => {
+    showPageSpecificMessage("dashboard")
+  }, [])
+
   // Zustand store for level up
   // const {
   //   showLevelUp,
