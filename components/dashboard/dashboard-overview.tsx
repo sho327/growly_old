@@ -409,19 +409,19 @@ export function DashboardOverview({ user }: DashboardOverviewProps) {
               </div>
             </div>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 relative z-10">
             {weeklyMissions.map((mission) => (
-              <div key={mission.id} className="space-y-2">
-                <div className="flex items-center justify-between">
+              <div key={mission.id} className="p-3 bg-white/80 backdrop-blur-sm rounded-xl border border-purple-100/50 hover:bg-white/95 hover:shadow-sm transition-all duration-200">
+                <div className="flex items-center justify-between mb-2">
                   <p className="text-sm font-medium text-gray-700">{mission.title}</p>
                   <span className="text-xs text-gray-500">
                     {mission.current}/{mission.target}
                   </span>
                 </div>
                 <div className="relative">
-                  <Progress value={mission.progress} className="h-2 bg-gray-200" />
+                  <Progress value={mission.progress} className="h-2 bg-gray-100" />
                   <div
-                    className={`absolute inset-0 h-2 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-full transition-all duration-500`}
+                    className={`absolute inset-0 h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-500 shadow-sm`}
                     style={{ width: `${String(mission.progress)}%` }}
                   ></div>
                 </div>
@@ -565,9 +565,9 @@ export function DashboardOverview({ user }: DashboardOverviewProps) {
               </div>
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="relative z-10">
             <GrassHistory tasks={userTasks} />
-            <div className="mt-6 text-center p-4 bg-gray-50 rounded-xl">
+            <div className="mt-6 text-center p-4 bg-gradient-to-br from-emerald-50/80 to-green-50/80 backdrop-blur-sm rounded-xl border border-emerald-100/50 shadow-sm">
               <div className="flex items-center justify-center gap-2 text-emerald-600 mb-2">
                 <Sparkles className="w-4 h-4" />
                 <span className="font-semibold">継続は力なり</span>
