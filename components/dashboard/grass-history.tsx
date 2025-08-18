@@ -118,11 +118,11 @@ export function GrassHistory({ tasks }: GrassHistoryProps) {
           <div className="flex items-center gap-2">
             <span className="text-xs">少ない</span>
             <div className="flex gap-1">
-              <div className="w-3 h-3 rounded-sm bg-gray-100 border border-gray-200"></div>
-              <div className="w-3 h-3 rounded-sm bg-emerald-100 border border-emerald-200"></div>
-              <div className="w-3 h-3 rounded-sm bg-emerald-200 border border-emerald-300"></div>
-              <div className="w-3 h-3 rounded-sm bg-emerald-300 border border-emerald-400"></div>
-              <div className="w-3 h-3 rounded-sm bg-emerald-400 border border-emerald-500"></div>
+              <div className="w-3 sm:w-4 h-3 sm:h-4 rounded-sm bg-gray-100 border border-gray-200"></div>
+              <div className="w-3 sm:w-4 h-3 sm:h-4 rounded-sm bg-emerald-100 border border-emerald-200"></div>
+              <div className="w-3 sm:w-4 h-3 sm:h-4 rounded-sm bg-emerald-200 border border-emerald-300"></div>
+              <div className="w-3 sm:w-4 h-3 sm:h-4 rounded-sm bg-emerald-300 border border-emerald-400"></div>
+              <div className="w-3 sm:w-4 h-3 sm:h-4 rounded-sm bg-emerald-400 border border-emerald-500"></div>
             </div>
             <span className="text-xs">多い</span>
           </div>
@@ -169,9 +169,9 @@ export function GrassHistory({ tasks }: GrassHistoryProps) {
                         <Tooltip key={dayIndex}>
                           <TooltipTrigger asChild>
                             <div
-                              className={`w-3 h-3 rounded-sm border cursor-pointer hover:ring-2 hover:ring-emerald-300 hover:ring-offset-1 relative ${getGrassIntensity(dateData.points)}`}
+                              className={`w-3 sm:w-4 h-3 sm:h-4 rounded-sm border cursor-pointer hover:ring-2 hover:ring-emerald-300 hover:ring-offset-1 relative ${getGrassIntensity(dateData.points)}`}
                             >
-                              {PlantIcon && <PlantIcon className="w-2 h-2 absolute inset-0 m-auto text-emerald-700" />}
+                              {PlantIcon && <PlantIcon className="w-2 sm:w-3 h-2 sm:h-3 absolute inset-0 m-auto text-emerald-700" />}
                             </div>
                           </TooltipTrigger>
                           <TooltipContent>

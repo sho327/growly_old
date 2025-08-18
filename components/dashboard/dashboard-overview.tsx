@@ -73,8 +73,72 @@ export function DashboardOverview({ user }: DashboardOverviewProps) {
     loginStreak: user.streak,
     totalLogins: 25,
   }
-
-  const userTasks: any[] = []
+  interface Task {
+    id: string
+    title: string
+    difficulty: number
+    completed: boolean
+    completedAt?: Date
+    assignee: string
+    projectId: string
+    rating?: number
+  }
+  const userTasks: Task[] = [
+    {
+      id: "",
+      title: "",
+      difficulty: 1,
+      completed: true,
+      completedAt: new Date("2025/02/01 00:00"),
+      assignee: "",
+      projectId: "",
+    },
+    {
+      id: "",
+      title: "",
+      difficulty: 2,
+      completed: true,
+      completedAt: new Date("2025/02/02 00:00"),
+      assignee: "",
+      projectId: "",
+    },
+    {
+      id: "",
+      title: "",
+      difficulty: 3,
+      completed: true,
+      completedAt: new Date("2025/02/03 00:00"),
+      assignee: "",
+      projectId: "",
+    },
+    {
+      id: "",
+      title: "",
+      difficulty: 1,
+      completed: true,
+      completedAt: new Date("2025/08/01 00:00"),
+      assignee: "",
+      projectId: "",
+    },
+    {
+      id: "",
+      title: "",
+      difficulty: 2,
+      completed: true,
+      completedAt: new Date("2025/08/02 00:00"),
+      assignee: "",
+      projectId: "",
+    },
+    {
+      id: "",
+      title: "",
+      difficulty: 3,
+      completed: true,
+      completedAt: new Date("2025/08/03 00:00"),
+      assignee: "",
+      projectId: "",
+    },
+  ]
   const thisMonthTasks: any[] = []
 
 
