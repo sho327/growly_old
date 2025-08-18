@@ -8,11 +8,11 @@ import { TaskListCardProps } from "./types"
 
 export function TaskListCard({ title, description, tasks, showViewAll = true }: TaskListCardProps) {
   return (
-    <Card>
+    <Card className="bg-white border-0 shadow-lg rounded-2xl">
       <CardHeader>
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
-            <CheckCircle className="w-5 h-5 text-green-600" />
+          <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg">
+            <CheckCircle className="w-6 h-6 text-white" />
           </div>
           <div>
             <CardTitle className="text-lg font-bold text-slate-900">{title}</CardTitle>

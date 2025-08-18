@@ -397,11 +397,11 @@ export function DashboardOverview({ user }: DashboardOverviewProps) {
           ]}
         />
         {/* Weekly Missions */}
-        <Card className="border-gray-200 bg-white shadow-sm">
+        <Card className="border-0 bg-white shadow-lg rounded-2xl">
           <CardHeader className="pb-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
-                <Calendar className="w-5 h-5 text-purple-600" />
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg">
+                <Calendar className="w-6 h-6 text-white" />
               </div>
               <div>
                 <CardTitle className="text-lg font-semibold text-gray-900">週次ミッション</CardTitle>
@@ -553,11 +553,11 @@ export function DashboardOverview({ user }: DashboardOverviewProps) {
         </Card> */}
 
         {/* 草履歴セクション */}
-        <Card className="border-gray-200 bg-white shadow-sm">
+        <Card className="border-0 bg-white shadow-lg rounded-2xl">
           <CardHeader className="pb-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
-                <Sprout className="w-5 h-5 text-emerald-600" />
+              <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-500 rounded-2xl flex items-center justify-center shadow-lg">
+                <Sprout className="w-6 h-6 text-white" />
               </div>
               <div>
                 <CardTitle className="text-lg font-semibold text-gray-900">成長記録</CardTitle>

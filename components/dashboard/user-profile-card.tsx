@@ -11,17 +11,17 @@ export function UserProfileCard({ user }: UserProfileCardProps) {
   const xpProgress = (user.xp / user.nextLevelXp) * 100
 
   return (
-    <Card className="col-span-2 bg-white border-slate-200 shadow-sm">
+    <Card className="col-span-2 bg-white border-0 shadow-lg rounded-2xl">
       <CardContent className="px-5 py-4">
         <div className="flex items-center gap-4 mb-3">
           <div className="relative">
-            <Avatar className="h-9 w-9 sm:h-11 sm:w-11 ring-2 ring-white/50 ring-offset-2">
+            <Avatar className="h-12 w-12 sm:h-14 sm:w-14 ring-2 ring-white/50 ring-offset-2">
               <AvatarImage src={user.avatar ?? "/placeholder.svg"} />
               <AvatarFallback className="bg-gradient-to-br from-green-400 to-emerald-600 text-white font-bold">
                 {user.name.charAt(0)}
               </AvatarFallback>
             </Avatar>
-            <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">
+            <div className="absolute -bottom-1 -right-1 w-7 h-7 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">
               {user.level}
             </div>
           </div>

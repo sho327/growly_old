@@ -32,11 +32,11 @@ const colorClasses = {
 
 export function AchievementListCard({ title, description, achievements, showViewAll = true }: AchievementListCardProps) {
   return (
-    <Card>
+    <Card className="bg-white border-0 shadow-lg rounded-2xl">
       <CardHeader>
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
-            <TrendingUp className="w-5 h-5 text-blue-600" />
+          <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl flex items-center justify-center shadow-lg">
+            <TrendingUp className="w-6 h-6 text-white" />
           </div>
           <div>
             <CardTitle className="text-lg font-bold text-slate-900">{title}</CardTitle>
