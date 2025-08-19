@@ -822,17 +822,17 @@ export function GardenView({ user }: GardenViewProps) {
       <GardenHeader userName={user.name} totalPoints={user.points} />
 
       {/* ユーザー情報カード */}
-      <Card className="mb-6">
+      <Card className="mb-6 border-0 bg-white shadow-lg rounded-2xl">
         <CardContent className="px-5 py-4">
           <div className="flex items-center gap-4 mb-3">
             <div className="relative">
-              <Avatar className="h-11 w-11 ring-2 ring-white/50 ring-offset-2">
+              <Avatar className="h-12 w-12 ring-2 ring-white/50 ring-offset-2">
                 <AvatarImage src="/placeholder.svg" />
                 <AvatarFallback className="bg-gradient-to-br from-green-400 to-emerald-600 text-white font-bold">
                   {user.name.charAt(0)}
                 </AvatarFallback>
               </Avatar>
-              <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">
+              <div className="absolute -bottom-1 -right-1 w-7 h-7 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">
                 {user.level}
               </div>
             </div>
@@ -868,45 +868,57 @@ export function GardenView({ user }: GardenViewProps) {
       </Card>
 
       {/* 収穫統計パネル */}
-      <Card className="mb-4">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-yellow-600" />
-            収穫実績
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">{harvestStats.totalHarvests}</div>
-              <div className="text-sm text-gray-600">総収穫数</div>
+      <Card className="mb-4 border-0 bg-white shadow-lg rounded-2xl">
+        <CardHeader className="pb-4">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-yellow-500 to-amber-500 rounded-2xl shadow-lg">
+              <Trophy className="w-6 h-6 text-white" />
             </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">{harvestStats.totalPointsEarned}</div>
-              <div className="text-sm text-gray-600">獲得ポイント</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600">{harvestStats.consecutiveHarvests}</div>
-              <div className="text-sm text-gray-600">連続収穫</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-orange-600">
-                {Object.keys(harvestStats.plantTypeCounts).length}
-              </div>
-              <div className="text-sm text-gray-600">栽培種類</div>
+            <div>
+              <CardTitle className="text-lg font-bold text-gray-900">収穫実績</CardTitle>
+              <p className="text-sm text-gray-600">あなたのガーデニング成果</p>
             </div>
           </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div className="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl border border-green-200">
+              <div className="text-3xl font-bold text-green-600 mb-1">{harvestStats.totalHarvests}</div>
+              <div className="text-sm font-semibold text-green-700">総収穫数</div>
+            </div>
+            <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
+              <div className="text-3xl font-bold text-blue-600 mb-1">{harvestStats.totalPointsEarned}</div>
+              <div className="text-sm font-semibold text-blue-700">獲得ポイント</div>
+            </div>
+            <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl border border-purple-200">
+              <div className="text-3xl font-bold text-purple-600 mb-1">{harvestStats.consecutiveHarvests}</div>
+              <div className="text-sm font-semibold text-purple-700">連続収穫</div>
+            </div>
+            <div className="text-center p-4 bg-gradient-to-br from-orange-50 to-red-50 rounded-xl border border-orange-200">
+              <div className="text-3xl font-bold text-orange-600 mb-1">
+                {Object.keys(harvestStats.plantTypeCounts).length}
+              </div>
+              <div className="text-sm font-semibold text-orange-700">栽培種類</div>
+            </div>
+          </div>
+          
           {Object.keys(harvestStats.plantTypeCounts).length > 0 && (
-            <div className="mt-4 pt-4 border-t">
-              <div className="text-sm font-medium text-gray-700 mb-2">お気に入り植物:</div>
+            <div className="bg-gradient-to-r from-gray-50 to-slate-50 rounded-xl p-4 border border-gray-200">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-6 h-6 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
+                  <span className="text-white text-xs font-bold">🌱</span>
+                </div>
+                <div className="text-sm font-bold text-gray-900">お気に入り植物</div>
+              </div>
               <div className="flex flex-wrap gap-2">
                 {Object.entries(harvestStats.plantTypeCounts)
                   .sort(([,a], [,b]) => b - a)
                   .slice(0, 3)
                   .map(([type, count]) => (
-                    <Badge key={type} variant="outline" className="text-xs">
+                    <Badge key={type} className="bg-white border-2 border-green-200 text-green-700 font-semibold px-3 py-1">
                       {type === 'vegetable' ? '🥬' : type === 'flower' ? '🌹' : type === 'fruit' ? '🍎' : '🌴'} 
-                      {type} ({count}回)
+                      {type === 'vegetable' ? '野菜' : type === 'flower' ? '花' : type === 'fruit' ? '果物' : '観葉'} 
+                      ({count}回)
                     </Badge>
                   ))}
               </div>
@@ -916,137 +928,210 @@ export function GardenView({ user }: GardenViewProps) {
       </Card>
 
       {/* ガーデンセクション */}
-      <Card className="overflow-hidden">
-        <CardHeader className="bg-gradient-to-r from-green-50 to-emerald-50 border-b">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <CardTitle className="flex items-center gap-2 text-green-800">
-              <TreePine className="w-5 h-5" />
-              マイガーデン ({gridSize}×{gridSize})
-            </CardTitle>
-            <div className="flex items-center gap-2">
-              <Badge variant="outline" className="border-green-200 text-green-700 text-xs sm:text-sm">
-                草ポイント: {user.points}
-              </Badge>
-              {!bugGameCompleted && (
-                <Button 
-                  onClick={startBugGame}
-                  className="bg-red-500 hover:bg-red-600 text-white text-xs sm:text-sm"
-                  size="sm"
-                >
-                  🐛 害虫駆除
-                </Button>
-              )}
+      <Card className="overflow-hidden border-0 bg-white shadow-lg rounded-2xl">
+        <CardHeader className="pb-4">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl shadow-lg">
+              <TreePine className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <CardTitle className="text-lg font-bold text-gray-900">マイガーデン</CardTitle>
+              <p className="text-sm text-gray-600">({gridSize}×{gridSize}) のガーデンエリア</p>
             </div>
           </div>
-          <div className="text-xs sm:text-sm text-green-700 mt-2">
-            💡 <strong>使い方:</strong> 空きマスをクリックして種を植え、植物をクリックして詳細確認・水やり・収穫ができます
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Badge className="bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 border-green-200 font-semibold">
+                💰 {user.points} ポイント
+              </Badge>
+              <div className="text-xs text-gray-500">
+                💡 空きマスをクリックして種を植え、植物をクリックして詳細確認・水やり・収穫ができます
+            </div>
+            </div>
+            {!bugGameCompleted && (
+              <Button 
+                onClick={startBugGame}
+                  className="bg-red-500 hover:bg-red-600 text-white text-xs sm:text-sm"
+                size="sm"
+              >
+                🐛 害虫駆除
+              </Button>
+            )}
           </div>
         </CardHeader>
         <CardContent className="p-3 sm:p-6">
           <div className={`grid gap-1 sm:gap-2 mx-auto`} style={{ 
-            gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
+              gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
             maxWidth: gridSize <= 4 ? '100%' : `${Math.min(gridSize * 50, 350)}px`
-          }}>
-            {Array.from({ length: totalCells }, (_, index) => {
-              const plant = getPlantInCell(index)
-              
-              return (
-                <TooltipProvider key={index}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div
-                        className={`
+            }}>
+              {Array.from({ length: totalCells }, (_, index) => {
+                const plant = getPlantInCell(index)
+                
+                return (
+                  <TooltipProvider key={index}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div
+                          className={`
                           aspect-square rounded-xl border-2 cursor-pointer
                           transition-all duration-300 hover:shadow-lg hover:scale-105
-                          ${plant 
+                            ${plant 
                             ? 'border-green-200 bg-gradient-to-br from-green-50 to-emerald-50 shadow-sm' 
                             : 'border-gray-200 bg-gradient-to-br from-gray-50 to-slate-50 hover:border-green-300 hover:from-green-50 hover:to-emerald-50'
-                          }
+                            }
                           ${plant?.isHarvestable ? 'border-yellow-300 bg-gradient-to-br from-yellow-50 to-amber-50 shadow-md' : ''}
                           ${plant?.health < 30 ? 'border-red-300 bg-gradient-to-br from-red-50 to-pink-50' : ''}
-                        `}
-                        onClick={() => handleCellClick(index)}
-                      >
-                        {plant ? (
-                          <div className="h-full flex flex-col items-center justify-center p-1 sm:p-2 relative">
-                            <div className="text-lg sm:text-2xl mb-1 drop-shadow-sm">
-                              {plant.health < 30 ? '🥀' : PLANT_GROWTH_ICONS[plant.type][plant.growthStage]}
-                            </div>
-                            {plant.hasBugs && (
-                              <div className="absolute top-0.5 right-0.5 sm:top-1 sm:right-1 text-sm sm:text-lg animate-pulse drop-shadow-sm">
-                                🐛
+                          `}
+                          onClick={() => handleCellClick(index)}
+                        >
+                          {plant ? (
+                            <div className="h-full flex flex-col items-center justify-center p-2 relative z-10">
+                              {/* 植物アイコン */}
+                              <div className="text-xl sm:text-2xl mb-1 drop-shadow-lg transform transition-transform duration-300 group-hover:scale-110 relative">
+                                {plant.health && plant.health < 30 ? '🥀' : PLANT_GROWTH_ICONS[plant.type][plant.growthStage]}
+                                
+                                {/* 害虫 */}
+                                {plant.hasBugs && (
+                                  <div className="absolute -top-0.5 -right-0.5 text-xs animate-bounce bg-white/80 rounded-full p-0.5 shadow-sm">
+                                    🐛
+                                  </div>
+                                )}
                               </div>
-                            )}
-                            <div className="text-xs text-center font-semibold text-gray-800 truncate w-full px-1">
-                              {plant.name}
-                            </div>
-                            {plant.health < 30 && (
-                              <div className="text-xs text-red-600 font-bold mt-0.5 sm:mt-1 bg-red-100 px-1 py-0.5 rounded-full">
-                                ⚠️ 枯れかけ
+                              
+                              {/* 植物名 */}
+                              <div className="text-xs text-center font-bold text-gray-800 truncate w-full px-0.5 mb-1">
+                  {plant.name}
+                </div>
+                              
+                              {/* 成長バー */}
+                              <div className="w-full mb-1">
+                                <div className="relative">
+                                  <div className="h-1.5 bg-gray-200/50 rounded-full overflow-hidden border border-gray-300/30">
+                                    <div
+                                      className={`h-full rounded-full transition-all duration-500 shadow-sm ${
+                                        plant.isHarvestable 
+                                          ? 'bg-gradient-to-r from-yellow-500 to-amber-600' 
+                                          : 'bg-gradient-to-r from-green-500 to-emerald-600'
+                                      }`}
+                                      style={{ width: `${plant.currentGrowthProgress}%` }}
+                                    />
+                </div>
+                </div>
+                </div>
+                              
+                              {/* ステータス情報 */}
+                              <div className="text-center text-xs mb-1">
+                                <div className="flex items-center justify-center gap-1">
+                                  <span className="text-gray-700 font-semibold">
+                                    {plant.isHarvestable ? '🎉 収穫可能' : `Lv.${plant.growthStage}`}
+                                  </span>
+                                  <span className="text-gray-400">•</span>
+                                  <span className={`font-bold ${getHealthColor(plant.health || 0)}`}>
+                                    {plant.health || 0}%
+                                  </span>
+              </div>
                               </div>
-                            )}
-                            <div className="w-full mt-1 sm:mt-2">
-                              <Progress 
-                                value={plant.currentGrowthProgress} 
-                                className="h-1.5 bg-gray-200" 
-                              />
+                              
+                              {/* 愛情値 */}
+                              <div className="flex gap-0.5 justify-center">
+                                {Array.from({ length: Math.min(plant.loveLevel, 5) }, (_, i) => (
+                                  <div key={i} className="w-1.5 h-1.5 bg-gradient-to-r from-pink-400 to-rose-500 rounded-full shadow-sm animate-pulse" />
+            ))}
+          </div>
+          
+                              {/* 枯れかけ警告 */}
+                              {plant.health && plant.health < 30 && (
+                                <div className="absolute top-1 right-1 text-xs bg-red-500 text-white px-1 py-0.5 rounded-full font-bold shadow-lg">
+                                  ⚠️ 枯れかけ
+          </div>
+                              )}
+                              
+                              {/* 肥料効果 */}
+                              {plant.appliedFertilizer && (
+                                <div className="absolute bottom-1 left-1 text-xs bg-green-500 text-white px-1 py-0.5 rounded-full font-bold shadow-lg">
+                                  💚 肥料効果
+            </div>
+                              )}
+              </div>
+                          ) : (
+                            /* 空きマス */
+                            <div className="h-full flex flex-col items-center justify-center relative z-10">
+                              <div className="text-2xl sm:text-3xl mb-1 text-amber-700/60 transform transition-transform duration-300 group-hover:scale-110">
+                                🟫
+            </div>
+                              <div className="text-xs text-amber-800 font-bold">肥沃な土</div>
+                              <div className="text-xs text-amber-600 mt-0.5">クリックして植える</div>
                             </div>
-                            <div className="text-xs text-gray-600 mt-0.5 sm:mt-1 font-medium">
-                              {plant.isHarvestable ? '🎉 収穫可能' : `Lv.${plant.growthStage}`}
-                            </div>
-                            <div className={`text-xs font-semibold ${getHealthColor(plant.health)}`}>
-                              {plant.health}%
-                            </div>
-                            <div className="flex gap-0.5 sm:gap-1 mt-1">
-                              {Array.from({ length: Math.min(plant.loveLevel, 5) }, (_, i) => (
-                                <div key={i} className="w-1.5 h-1.5 bg-gradient-to-r from-pink-400 to-rose-400 rounded-full shadow-sm" />
-                              ))}
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="h-full flex flex-col items-center justify-center">
-                            <Sprout className="w-4 h-4 sm:w-6 sm:h-6 text-gray-400 mb-1" />
-                            <div className="text-xs text-gray-500 font-medium">空きマス</div>
-                          </div>
-                        )}
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
+                          )}
+                        </div>
+                      </TooltipTrigger>
+                    <TooltipContent className="bg-white/95 backdrop-blur-sm border border-gray-200 shadow-xl rounded-lg p-3 max-w-xs">
                       {plant ? (
-                        <div className="space-y-1">
-                          <div className="font-medium">{plant.name}</div>
-                          <div className="text-xs">
-                            成長段階: {GROWTH_STAGES[plant.growthStage].name}
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-2">
+                            <div className="text-2xl">
+                              {plant.health && plant.health < 30 ? '🥀' : PLANT_GROWTH_ICONS[plant.type][plant.growthStage]}
+                            </div>
+              <div>
+                              <div className="font-bold text-base text-gray-900">{plant.name}</div>
+                              <div className="text-xs text-gray-500">
+                                {plant.rarity === "epic" ? "超レア" : plant.rarity === "rare" ? "レア" : "普通"}
+              </div>
+                            </div>
                           </div>
-                          <div className="text-xs">
-                            健康度: {plant.health}%
+                          
+                          <div className="grid grid-cols-2 gap-2">
+                            <div className="bg-gray-50 p-2 rounded-lg">
+                              <div className="text-xs text-gray-500 mb-0.5">成長段階</div>
+                              <div className="font-semibold text-sm text-gray-900">{GROWTH_STAGES[plant.growthStage].name}</div>
+                            </div>
+                            <div className="bg-gray-50 p-2 rounded-lg">
+                              <div className="text-xs text-gray-500 mb-0.5">健康度</div>
+                              <div className={`font-semibold text-sm ${getHealthColor(plant.health || 0)}`}>
+                                {plant.health || 0}%
+                              </div>
+                            </div>
+                            <div className="bg-gray-50 p-2 rounded-lg">
+                              <div className="text-xs text-gray-500 mb-0.5">進捗</div>
+                              <div className="font-semibold text-sm text-gray-900">{plant.currentGrowthProgress.toFixed(0)}%</div>
+                            </div>
+                            <div className="bg-gray-50 p-2 rounded-lg">
+                              <div className="text-xs text-gray-500 mb-0.5">愛情値</div>
+                              <div className="font-semibold text-sm text-gray-900">{plant.loveLevel}/10</div>
+                            </div>
                           </div>
-                          <div className="text-xs">
-                            進捗: {plant.currentGrowthProgress.toFixed(0)}%
-                          </div>
-                          <div className="text-xs text-gray-500">
+                          
+                          <div className="text-xs text-gray-600 bg-blue-50 p-2 rounded-lg border border-blue-200">
                             {(() => {
                               const daysSinceWatered = Math.floor((new Date().getTime() - plant.lastWatered.getTime()) / (1000 * 60 * 60 * 24))
-                              if (daysSinceWatered > 3) return `💧 ${daysSinceWatered}日前に水やり`
-                              return "💧 水やりOK"
+                              if (daysSinceWatered > 3) return `💧 ${daysSinceWatered}日前に水やり - 注意が必要です`
+                              return "💧 水やりOK - 健康な状態です"
                             })()}
                           </div>
+                          
                           {plant.isHarvestable && (
-                            <div className="text-xs text-yellow-600 font-medium">
+                            <div className="text-xs text-yellow-800 font-bold bg-yellow-100 p-2 rounded-lg border border-yellow-200">
                               🎉 収穫可能！クリックして収穫
                             </div>
                           )}
                           {!plant.isHarvestable && (
-                            <div className="text-xs text-blue-600">
+                            <div className="text-xs text-blue-800 bg-blue-100 p-2 rounded-lg border border-blue-200">
                               💧 クリックして水やり・詳細確認
                             </div>
                           )}
                         </div>
                       ) : (
-                        <div className="space-y-1">
-                          <div className="font-medium">空きマス</div>
-                          <div className="text-xs">🟫 土の状態</div>
-                          <div className="text-xs text-green-600">🌱 クリックして種を植える</div>
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-2">
+                            <div className="text-2xl">🟫</div>
+              <div>
+                              <div className="font-bold text-base text-gray-900">土の状態</div>
+                              <div className="text-xs text-gray-500">肥沃な土壌</div>
+              </div>
+                          </div>
+                          <div className="text-xs text-green-800 bg-green-100 p-2 rounded-lg border border-green-200">
+                            🌱 クリックして種を植える
+                          </div>
                         </div>
                       )}
                     </TooltipContent>
@@ -1054,9 +1139,9 @@ export function GardenView({ user }: GardenViewProps) {
                 </TooltipProvider>
               )
             })}
-          </div>
-        </CardContent>
-      </Card>
+            </div>
+          </CardContent>
+        </Card>
 
       {/* 種選択ダイアログ */}
       <Dialog open={showPlantSelector} onOpenChange={setShowPlantSelector}>
@@ -1110,17 +1195,17 @@ export function GardenView({ user }: GardenViewProps) {
           </DialogHeader>
           {selectedPlant && (
             <div className="space-y-4">
-              <div className="text-center">
-                <div className="text-4xl mb-2">
-                  {selectedPlant.health < 30 ? '🥀' : PLANT_GROWTH_ICONS[selectedPlant.type][selectedPlant.growthStage]}
-                </div>
+                              <div className="text-center">
+                  <div className="text-4xl mb-2">
+                    {selectedPlant.health && selectedPlant.health < 30 ? '🥀' : PLANT_GROWTH_ICONS[selectedPlant.type][selectedPlant.growthStage]}
+                  </div>
                 <div className="text-lg font-medium">{selectedPlant.name}</div>
                 <div className={`text-sm ${getRarityColor(selectedPlant.rarity)}`}>
                   {selectedPlant.rarity === "epic" ? "超レア" : selectedPlant.rarity === "rare" ? "レア" : "普通"}
                 </div>
               </div>
               
-              <div className="space-y-3">
+            <div className="space-y-3">
                 <div>
                   <div className="text-sm font-medium mb-1">成長段階</div>
                   <div className="flex items-center gap-2">
@@ -1128,20 +1213,20 @@ export function GardenView({ user }: GardenViewProps) {
                     <span className="text-sm text-gray-600">
                       {selectedPlant.currentGrowthProgress.toFixed(0)}%
                     </span>
-                  </div>
+                </div>
                   <div className="text-xs text-gray-500 mt-1">
                     {GROWTH_STAGES[selectedPlant.growthStage].name}
-                  </div>
+              </div>
                 </div>
                 
                 <div>
                   <div className="text-sm font-medium mb-1">健康度</div>
                   <div className="flex items-center gap-2">
-                    <Progress value={selectedPlant.health} className="flex-1" />
-                    <span className={`text-sm ${getHealthColor(selectedPlant.health)}`}>
-                      {selectedPlant.health}%
+                    <Progress value={selectedPlant.health || 0} className="flex-1" />
+                    <span className={`text-sm ${getHealthColor(selectedPlant.health || 0)}`}>
+                      {selectedPlant.health || 0}%
                     </span>
-                  </div>
+              </div>
                 </div>
                 
                 <div>
@@ -1156,11 +1241,11 @@ export function GardenView({ user }: GardenViewProps) {
                           }`}
                         />
                       ))}
-                    </div>
+              </div>
                     <span className="text-sm text-gray-600">{selectedPlant.loveLevel}/10</span>
-                  </div>
-                </div>
-                
+            </div>
+      </div>
+
                 <div className="text-sm">
                   <div className="font-medium mb-1">最終水やり</div>
                   <div className="text-gray-600">
@@ -1205,7 +1290,7 @@ export function GardenView({ user }: GardenViewProps) {
                       Math.floor((new Date().getTime() - selectedPlant.lastCheeredAt.getTime()) / (1000 * 60 * 60 * 24)) < 1}
                   >
                     🗣️ 応援する
-                  </Button>
+            </Button>
                   <Button 
                     onClick={() => {
                       setSelectedPlantForFertilizer(selectedPlant)
@@ -1215,7 +1300,7 @@ export function GardenView({ user }: GardenViewProps) {
                     variant="outline"
                   >
                     💰 肥料
-                  </Button>
+            </Button>
                 </div>
                 
                 {selectedPlant.hasBugs && (
@@ -1224,7 +1309,7 @@ export function GardenView({ user }: GardenViewProps) {
                     className="w-full bg-red-500 hover:bg-red-600 text-white"
                   >
                     🐛 害虫駆除
-                  </Button>
+            </Button>
                 )}
                 
                 {selectedPlant.isHarvestable && (
@@ -1239,7 +1324,7 @@ export function GardenView({ user }: GardenViewProps) {
                     収穫する
                   </Button>
                 )}
-              </div>
+          </div>
             </div>
           )}
         </DialogContent>
@@ -1326,8 +1411,8 @@ export function GardenView({ user }: GardenViewProps) {
                     onClick={() => exterminateBug(bug.id)}
                   >
                     {bug.type}
-                  </div>
-                )
+    </div>
+  )
               ))}
 
               {/* ゲーム説明 */}
