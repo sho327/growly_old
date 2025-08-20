@@ -67,6 +67,41 @@ interface ProjectCalendarProps {
 export default function ProjectCalendar({ projectId, projectName }: ProjectCalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date())
+  
+  // モックタスクデータ
+  const [tasks, setTasks] = useState([
+    {
+      id: "1",
+      title: "要件定義",
+      description: "プロジェクトの要件を詳細に定義し、仕様書を作成",
+      dueDate: "2024-01-15"
+    },
+    {
+      id: "2",
+      title: "設計",
+      description: "システム設計とUI/UXデザインの作成",
+      dueDate: "2024-02-01"
+    },
+    {
+      id: "3",
+      title: "開発",
+      description: "フロントエンドとバックエンドの実装",
+      dueDate: "2024-03-01"
+    },
+    {
+      id: "4",
+      title: "テスト",
+      description: "単体テスト、結合テスト、ユーザビリティテスト",
+      dueDate: "2024-03-15"
+    },
+    {
+      id: "5",
+      title: "デプロイ",
+      description: "本番環境へのデプロイとリリース",
+      dueDate: "2024-03-20"
+    }
+  ])
+  
   const [events, setEvents] = useState<CalendarEvent[]>([
     // タスクから自動生成されるイベント
     ...tasks.map((task) => ({
@@ -206,7 +241,6 @@ export default function ProjectCalendar({ projectId, projectName }: ProjectCalen
       }
     }
   ])
-  const [tasks, setTasks] = useState<any[]>([])
 
   const [showCreateEvent, setShowCreateEvent] = useState(false)
   const [editingEvent, setEditingEvent] = useState<CalendarEvent | null>(null)

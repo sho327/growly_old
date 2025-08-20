@@ -39,6 +39,8 @@ import TaskList from "@/components/tasks/task-list"
 import ProjectWiki from "@/components/projects/project-wiki"
 import ProjectFiles from "@/components/projects/project-files"
 import ProjectCalendar from "@/components/projects/project-calendar"
+import GanttChart from "@/components/projects/gantt-chart"
+import ProjectActivity from "@/components/projects/project-activity"
 import { MembersHeader } from "./members-header"
 import { MembersTable } from "./members-table"
 
@@ -51,6 +53,311 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
   const [isInviteOpen, setIsInviteOpen] = useState(false)
   const [inviteEmail, setInviteEmail] = useState("")
   const [inviteRole, setInviteRole] = useState("member")
+
+  // モックデータ
+  const mockTasks = [
+    {
+      id: "1",
+      name: "要件定義",
+      status: "completed" as const,
+      progress: 100,
+      startDate: "2025-08-01",
+      endDate: "2025-08-15",
+      actualStartDate: "2025-08-01",
+      actualEndDate: "2025-08-18",
+      assignee: "田中太郎",
+      priority: "high" as const,
+      description: "プロジェクトの要件を詳細に定義し、仕様書を作成"
+    },
+    {
+      id: "2",
+      name: "設計",
+      status: "in-progress" as const,
+      progress: 75,
+      startDate: "2025-08-10",
+      endDate: "2025-08-25",
+      actualStartDate: "2025-08-15",
+      actualEndDate: undefined,
+      assignee: "佐藤花子",
+      priority: "high" as const,
+      description: "システム設計とUI/UXデザインの作成"
+    },
+    {
+      id: "3",
+      name: "開発",
+      status: "in-progress" as const,
+      progress: 45,
+      startDate: "2025-08-20",
+      endDate: "2025-09-15",
+      actualStartDate: "2025-08-25",
+      actualEndDate: undefined,
+      assignee: "鈴木一郎",
+      priority: "medium" as const,
+      description: "フロントエンドとバックエンドの実装"
+    },
+    {
+      id: "4",
+      name: "テスト",
+      status: "not-started" as const,
+      progress: 0,
+      startDate: "2025-09-15",
+      endDate: "2025-10-15",
+      assignee: "高橋美咲",
+      priority: "medium" as const,
+      description: "単体テスト、結合テスト、ユーザビリティテスト"
+    },
+    {
+      id: "5",
+      name: "デプロイ",
+      status: "not-started" as const,
+      progress: 0,
+      startDate: "2025-10-10",
+      endDate: "2025-10-20",
+      assignee: "山田次郎",
+      priority: "low" as const,
+      description: "本番環境へのデプロイとリリース"
+    },
+    {
+      id: "6",
+      name: "データベース設計",
+      status: "in-progress" as const,
+      progress: 60,
+      startDate: "2025-08-05",
+      endDate: "2025-08-25",
+      actualStartDate: "2025-08-05",
+      actualEndDate: undefined,
+      assignee: "田中太郎",
+      priority: "high" as const,
+      description: "データベーススキーマの設計と実装"
+    },
+    {
+      id: "7",
+      name: "API開発",
+      status: "in-progress" as const,
+      progress: 30,
+      startDate: "2025-08-25",
+      endDate: "2025-09-20",
+      actualStartDate: "2025-08-28",
+      actualEndDate: undefined,
+      assignee: "鈴木一郎",
+      priority: "medium" as const,
+      description: "RESTful APIの開発"
+    },
+    {
+      id: "8",
+      name: "フロントエンド開発",
+      status: "in-progress" as const,
+      progress: 20,
+      startDate: "2025-09-01",
+      endDate: "2025-09-28",
+      actualStartDate: "2025-09-05",
+      actualEndDate: undefined,
+      assignee: "佐藤花子",
+      priority: "medium" as const,
+      description: "React/Next.jsでのフロントエンド開発"
+    },
+    {
+      id: "9",
+      name: "セキュリティテスト",
+      status: "not-started" as const,
+      progress: 0,
+      startDate: "2025-09-20",
+      endDate: "2025-10-10",
+      assignee: "高橋美咲",
+      priority: "high" as const,
+      description: "セキュリティ脆弱性のテスト"
+    },
+    {
+      id: "10",
+      name: "ドキュメント作成",
+      status: "not-started" as const,
+      progress: 0,
+      startDate: "2025-10-01",
+      endDate: "2025-10-25",
+      assignee: "山田次郎",
+      priority: "low" as const,
+      description: "技術文書とユーザーマニュアルの作成"
+    },
+    {
+      id: "11",
+      name: "パフォーマンス最適化",
+      status: "in-progress" as const,
+      progress: 25,
+      startDate: "2025-09-10",
+      endDate: "2025-09-28",
+      actualStartDate: "2025-09-12",
+      actualEndDate: undefined,
+      assignee: "田中太郎",
+      priority: "medium" as const,
+      description: "アプリケーションのパフォーマンス最適化"
+    },
+    {
+      id: "12",
+      name: "ユーザビリティテスト",
+      status: "not-started" as const,
+      progress: 0,
+      startDate: "2025-09-25",
+      endDate: "2025-10-05",
+      assignee: "高橋美咲",
+      priority: "high" as const,
+      description: "ユーザビリティテストの実施と改善"
+    },
+    {
+      id: "13",
+      name: "バックエンドAPI統合",
+      status: "in-progress" as const,
+      progress: 80,
+      startDate: "2025-08-30",
+      endDate: "2025-09-15",
+      actualStartDate: "2025-08-30",
+      actualEndDate: undefined,
+      assignee: "鈴木一郎",
+      priority: "high" as const,
+      description: "バックエンドAPIとの統合作業"
+    },
+    {
+      id: "14",
+      name: "データベース移行",
+      status: "completed" as const,
+      progress: 100,
+      startDate: "2025-08-15",
+      endDate: "2025-08-20",
+      actualStartDate: "2025-08-15",
+      actualEndDate: "2025-08-18",
+      assignee: "田中太郎",
+      priority: "high" as const,
+      description: "既存データベースから新DBへの移行"
+    },
+    {
+      id: "15",
+      name: "ログ機能実装",
+      status: "in-progress" as const,
+      progress: 60,
+      startDate: "2025-09-05",
+      endDate: "2025-09-20",
+      actualStartDate: "2025-09-05",
+      actualEndDate: undefined,
+      assignee: "佐藤花子",
+      priority: "medium" as const,
+      description: "システムログ機能の実装"
+    },
+    {
+      id: "16",
+      name: "通知システム",
+      status: "not-started" as const,
+      progress: 0,
+      startDate: "2025-09-20",
+      endDate: "2025-10-10",
+      assignee: "鈴木一郎",
+      priority: "medium" as const,
+      description: "プッシュ通知システムの実装"
+    },
+    {
+      id: "17",
+      name: "検索機能強化",
+      status: "in-progress" as const,
+      progress: 40,
+      startDate: "2025-09-01",
+      endDate: "2025-09-25",
+      actualStartDate: "2025-09-03",
+      actualEndDate: undefined,
+      assignee: "山田次郎",
+      priority: "low" as const,
+      description: "検索機能の強化と最適化"
+    },
+    {
+      id: "18",
+      name: "モバイル対応",
+      status: "not-started" as const,
+      progress: 0,
+      startDate: "2025-10-05",
+      endDate: "2025-10-30",
+      assignee: "高橋美咲",
+      priority: "high" as const,
+      description: "モバイルデバイス対応の実装"
+    },
+    {
+      id: "19",
+      name: "多言語対応",
+      status: "not-started" as const,
+      progress: 0,
+      startDate: "2025-10-10",
+      endDate: "2025-11-05",
+      assignee: "佐藤花子",
+      priority: "medium" as const,
+      description: "多言語対応機能の実装"
+    },
+    {
+      id: "20",
+      name: "最終テスト",
+      status: "not-started" as const,
+      progress: 0,
+      startDate: "2025-10-20",
+      endDate: "2025-11-10",
+      assignee: "田中太郎",
+      priority: "high" as const,
+      description: "システム全体の最終テスト"
+    }
+  ];
+
+  const mockActivities = [
+    {
+      id: "1",
+      type: "task-completed" as const,
+      title: "要件定義が完了しました",
+      description: "プロジェクトの要件定義フェーズが完了しました",
+      timestamp: "2024-01-15 14:30",
+      user: "田中太郎",
+      taskName: "要件定義",
+      priority: "high" as const
+    },
+    {
+      id: "2",
+      type: "task-started" as const,
+      title: "設計フェーズを開始",
+      description: "システム設計の作業を開始しました",
+      timestamp: "2024-01-16 09:00",
+      user: "佐藤花子",
+      taskName: "設計",
+      priority: "high" as const
+    },
+    {
+      id: "3",
+      type: "milestone" as const,
+      title: "第1マイルストーン達成",
+      description: "要件定義と基本設計が完了しました",
+      timestamp: "2024-01-20 16:00",
+      user: "プロジェクトマネージャー"
+    },
+    {
+      id: "4",
+      type: "task-started" as const,
+      title: "開発フェーズを開始",
+      description: "コア機能の開発を開始しました",
+      timestamp: "2024-01-25 10:00",
+      user: "鈴木一郎",
+      taskName: "開発",
+      priority: "medium" as const
+    },
+    {
+      id: "5",
+      type: "comment" as const,
+      title: "設計レビューコメント",
+      description: "設計書についてフィードバックを追加しました",
+      timestamp: "2024-01-26 15:30",
+      user: "田中太郎"
+    },
+    {
+      id: "6",
+      type: "task-delayed" as const,
+      title: "開発が遅延しています",
+      description: "予定より2日遅れています。追加リソースの検討が必要です",
+      timestamp: "2024-01-28 11:00",
+      user: "鈴木一郎",
+      taskName: "開発",
+      priority: "medium" as const
+    }
+  ];
 
 
   // Mock project data - in real app, this would come from API
@@ -368,6 +675,10 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
               <CalendarIcon className="w-5 h-5 mr-2" />
               カレンダー
             </TabsTrigger>
+            <TabsTrigger value="gantt" className="data-[state=active]:bg-white data-[state=active]:text-gray-900 text-sm font-medium whitespace-nowrap flex-shrink-0 px-4 py-3">
+              <Target className="w-5 h-5 mr-2" />
+              ガントチャート
+            </TabsTrigger>
           </TabsList>
         </div>
 
@@ -418,6 +729,10 @@ export default function ProjectDetail({ projectId }: ProjectDetailProps) {
 
         <TabsContent value="calendar" className="mt-4">
           <ProjectCalendar projectId={project.id} projectName={project.name} />
+        </TabsContent>
+
+        <TabsContent value="gantt" className="mt-4">
+          <GanttChart tasks={mockTasks} projectName={project.name} />
         </TabsContent>
       </Tabs>
     </div>
