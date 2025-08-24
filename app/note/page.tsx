@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -46,6 +47,7 @@ interface Note {
 }
 
 const NoteApp = () => {
+  const router = useRouter();
   const [notes, setNotes] = useState<Note[]>([
     {
       id: '1',
@@ -125,6 +127,18 @@ const NoteApp = () => {
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      // ファイルサイズチェック（5MB以下）
+      if (file.size > 5 * 1024 * 1024) {
+        alert('ファイルサイズは5MB以下にしてください。');
+        return;
+      }
+      
+      // 画像ファイルかチェック
+      if (!file.type.startsWith('image/')) {
+        alert('画像ファイルを選択してください。');
+        return;
+      }
+      
       const imageUrl = URL.createObjectURL(file);
       setNewNote(prev => ({
         ...prev,
@@ -189,7 +203,12 @@ const NoteApp = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative">
+      {/* 装飾的な背景要素 */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-indigo-100 rounded-full opacity-20 blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-100 rounded-full opacity-20 blur-3xl"></div>
+      </div>
       {/* ヘッダー */}
       <header className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-6 py-4">
@@ -217,7 +236,7 @@ const NoteApp = () => {
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-6 py-8">
+      <div className="max-w-6xl mx-auto px-6 py-8 relative z-10">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-3 mb-8 bg-white/60 backdrop-blur-sm p-1 rounded-2xl shadow-sm">
             <TabsTrigger value="browse" className="flex items-center gap-2 data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-indigo-600 rounded-xl transition-all">
@@ -272,7 +291,7 @@ const NoteApp = () => {
             {/* ノート一覧 */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredNotes.map((note) => (
-                <Card key={note.id} className="group hover:shadow-xl transition-all duration-300 overflow-hidden bg-white/80 backdrop-blur-sm border border-slate-200 hover:border-indigo-300">
+                <Card key={note.id} className="group hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 overflow-hidden bg-white/90 backdrop-blur-sm border border-slate-200 hover:border-indigo-300 rounded-2xl">
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
                       <CardTitle className="text-lg font-bold text-slate-800 group-hover:text-indigo-600 transition-colors line-clamp-2">
@@ -329,41 +348,14 @@ const NoteApp = () => {
                       </div>
                     </div>
 
-                    <div className="flex gap-2">
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button 
-                            onClick={() => setCurrentNote(note)}
-                            className="flex-1 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-medium rounded-xl"
-                          >
-                            <FileText className="w-4 h-4 mr-2" />
-                            読む
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-                          <DialogHeader>
-                            <DialogTitle className="text-xl font-bold text-slate-800">{note.title}</DialogTitle>
-                            <div className="flex items-center gap-4 text-sm text-slate-500">
-                              <span>by {note.author}</span>
-                              <span>{formatDate(note.createdAt)}</span>
-                            </div>
-                          </DialogHeader>
-                          <div className="prose prose-lg max-w-none">
-                            <div dangerouslySetInnerHTML={{ 
-                              __html: note.content
-                                .replace(/^# (.*$)/gim, '<h1 class="text-2xl font-bold text-slate-800 mb-4">$1</h1>')
-                                .replace(/^## (.*$)/gim, '<h2 class="text-xl font-semibold text-slate-800 mb-3">$1</h2>')
-                                .replace(/^### (.*$)/gim, '<h3 class="text-lg font-medium text-slate-800 mb-2">$1</h3>')
-                                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                                .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                                .replace(/`(.*?)`/g, '<code class="bg-slate-100 px-2 py-1 rounded">$1</code>')
-                                .replace(/^> (.*$)/gim, '<blockquote class="border-l-4 border-indigo-200 pl-4 italic bg-slate-50 py-2">$1</blockquote>')
-                                .replace(/^- (.*$)/gim, '<li class="ml-4">$1</li>')
-                                .replace(/\n/g, '<br>')
-                            }} />
-                          </div>
-                        </DialogContent>
-                      </Dialog>
+                                         <div className="flex gap-2">
+                       <Button 
+                         onClick={() => router.push(`/note/read/${note.id}`)}
+                         className="flex-1 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-medium rounded-xl"
+                       >
+                         <FileText className="w-4 h-4 mr-2" />
+                         読む
+                       </Button>
                       
                       <Button 
                         variant="outline" 
@@ -417,13 +409,17 @@ const NoteApp = () => {
                   </div>
 
                   {/* マークダウンツールバー */}
-                  <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                  <div className="bg-gradient-to-r from-slate-50 to-indigo-50 rounded-2xl p-6 border border-slate-200 shadow-sm">
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className="text-sm font-semibold text-slate-700">マークダウン</span>
+                      <div className="flex-1 h-px bg-gradient-to-r from-slate-200 to-transparent"></div>
+                    </div>
                     <div className="flex flex-wrap gap-2 mb-4">
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => insertMarkdown('# ')}
-                        className="border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 rounded-lg"
+                        className="border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 rounded-xl font-medium"
                       >
                         H1
                       </Button>
@@ -431,7 +427,7 @@ const NoteApp = () => {
                         variant="outline"
                         size="sm"
                         onClick={() => insertMarkdown('## ')}
-                        className="border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 rounded-lg"
+                        className="border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 rounded-xl font-medium"
                       >
                         H2
                       </Button>
@@ -439,7 +435,7 @@ const NoteApp = () => {
                         variant="outline"
                         size="sm"
                         onClick={() => insertMarkdown('### ')}
-                        className="border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 rounded-lg"
+                        className="border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 rounded-xl font-medium"
                       >
                         H3
                       </Button>
@@ -447,7 +443,7 @@ const NoteApp = () => {
                         variant="outline"
                         size="sm"
                         onClick={() => insertMarkdown('**太字**')}
-                        className="border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 rounded-lg"
+                        className="border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 rounded-xl font-medium"
                       >
                         B
                       </Button>
@@ -455,7 +451,7 @@ const NoteApp = () => {
                         variant="outline"
                         size="sm"
                         onClick={() => insertMarkdown('*斜体*')}
-                        className="border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 rounded-lg"
+                        className="border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 rounded-xl font-medium"
                       >
                         I
                       </Button>
@@ -463,7 +459,7 @@ const NoteApp = () => {
                         variant="outline"
                         size="sm"
                         onClick={() => insertMarkdown('`コード`')}
-                        className="border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 rounded-lg"
+                        className="border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 rounded-xl font-medium"
                       >
                         Code
                       </Button>
@@ -471,7 +467,7 @@ const NoteApp = () => {
                         variant="outline"
                         size="sm"
                         onClick={() => insertMarkdown('> 引用')}
-                        className="border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 rounded-lg"
+                        className="border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 rounded-xl font-medium"
                       >
                         引用
                       </Button>
@@ -479,7 +475,7 @@ const NoteApp = () => {
                         variant="outline"
                         size="sm"
                         onClick={() => insertMarkdown('- リスト')}
-                        className="border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 rounded-lg"
+                        className="border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 rounded-xl font-medium"
                       >
                         リスト
                       </Button>
@@ -487,7 +483,7 @@ const NoteApp = () => {
                         variant="outline"
                         size="sm"
                         onClick={() => fileInputRef.current?.click()}
-                        className="border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 rounded-lg"
+                        className="border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 rounded-xl font-medium"
                       >
                         <Image className="w-4 h-4" />
                       </Button>
@@ -500,16 +496,16 @@ const NoteApp = () => {
                       />
                     </div>
                     
-                    <div className="space-y-2">
-                      <label className="block text-sm font-semibold text-slate-700">内容</label>
-                      <Textarea
-                        value={newNote.content}
-                        onChange={(e) => setNewNote(prev => ({ ...prev, content: e.target.value }))}
-                        placeholder="マークダウンでノートの内容を入力してください..."
-                        rows={12}
-                        className="border-slate-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-xl font-mono text-sm"
-                      />
-                    </div>
+                                         <div className="space-y-2">
+                       <label className="block text-sm font-semibold text-slate-700">内容</label>
+                       <Textarea
+                         value={newNote.content}
+                         onChange={(e) => setNewNote(prev => ({ ...prev, content: e.target.value }))}
+                         placeholder="マークダウンでノートの内容を入力してください..."
+                         rows={12}
+                         className="border-slate-200 focus:border-indigo-500 focus:ring-indigo-500 rounded-2xl font-mono text-sm bg-white/50 backdrop-blur-sm"
+                       />
+                     </div>
                   </div>
 
                   {/* タグ */}
